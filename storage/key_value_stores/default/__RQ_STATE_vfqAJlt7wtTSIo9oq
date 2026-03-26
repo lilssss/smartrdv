@@ -1,0 +1,38 @@
+{
+  "sequence_counter": 14,
+  "forefront_sequence_counter": 0,
+  "forefront_requests": {},
+  "regular_requests": {
+    "https://www.doctolib.fr/ophtalmologue/paris": 0,
+    "https://www.doctolib.fr/centre-de-sante/paris/centre-medical-paris-9-chaussee-d-antin-ophtalys": 1,
+    "https://www.doctolib.fr/centre-medical-et-dentaire/paris/dentylis-belleville": 2,
+    "https://www.doctolib.fr/ophtalmologue/paris/monica-stroescu-40762738-a0bd-4808-b128-1ca6e24e6e3d": 3,
+    "https://www.doctolib.fr/ophtalmologue/paris-saint-denis/mikhael-lussato": 4,
+    "https://www.doctolib.fr/ophtalmologue/paris/theodoros-bufidus": 5,
+    "https://www.doctolib.fr/centre-de-sante/paris/groupe-ophtalys-centre-ophtalmologique": 6,
+    "https://www.doctolib.fr/ophtalmologue/paris/haythem-kahlaoui": 7,
+    "https://www.doctolib.fr/ophtalmologue/paris/ines-drira-paris": 8,
+    "https://www.doctolib.fr/ophtalmologue/paris/federico-maestri": 9,
+    "https://www.doctolib.fr/ophtalmologue/paris/amandine-barjol-paris": 10,
+    "https://www.doctolib.fr/cabinet-medical/experts-paris/point-vision-experts-paris": 11,
+    "https://www.doctolib.fr/cabinet-medical/paris/centre-du-chateau-orl-ophtalmo-dentaire-esthetique": 12,
+    "https://www.doctolib.fr/espic-etablissement-de-sante-prive-d-interet-collectif/paris/institut-francais-de-myopie-paris": 13
+  },
+  "in_progress_requests": [],
+  "handled_requests": [
+    "https://www.doctolib.fr/ophtalmologue/paris/ines-drira-paris",
+    "https://www.doctolib.fr/ophtalmologue/paris/haythem-kahlaoui",
+    "https://www.doctolib.fr/ophtalmologue/paris",
+    "https://www.doctolib.fr/cabinet-medical/paris/centre-du-chateau-orl-ophtalmo-dentaire-esthetique",
+    "https://www.doctolib.fr/ophtalmologue/paris/monica-stroescu-40762738-a0bd-4808-b128-1ca6e24e6e3d",
+    "https://www.doctolib.fr/cabinet-medical/experts-paris/point-vision-experts-paris",
+    "https://www.doctolib.fr/centre-de-sante/paris/centre-medical-paris-9-chaussee-d-antin-ophtalys",
+    "https://www.doctolib.fr/ophtalmologue/paris/amandine-barjol-paris",
+    "https://www.doctolib.fr/espic-etablissement-de-sante-prive-d-interet-collectif/paris/institut-francais-de-myopie-paris",
+    "https://www.doctolib.fr/ophtalmologue/paris/theodoros-bufidus",
+    "https://www.doctolib.fr/centre-medical-et-dentaire/paris/dentylis-belleville",
+    "https://www.doctolib.fr/ophtalmologue/paris/federico-maestri",
+    "https://www.doctolib.fr/ophtalmologue/paris-saint-denis/mikhael-lussato",
+    "https://www.doctolib.fr/centre-de-sante/paris/groupe-ophtalys-centre-ophtalmologique"
+  ]
+}

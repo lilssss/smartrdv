@@ -1,0 +1,17 @@
+{
+  "unique_key": "https://www.doctolib.fr/ophtalmologue/paris/federico-maestri",
+  "url": "https://www.doctolib.fr/ophtalmologue/paris/federico-maestri",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "state": 4,
+      "crawlDepth": 1
+    }
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-03-16 13:55:30.123235+00:00"
+}
