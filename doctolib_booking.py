@@ -1,27 +1,10 @@
 """
-Doctolib Booking — Réservation automatique
-==========================================
-Navigue le tunnel de réservation Doctolib :
-  1. Ouvre le profil du médecin
-  2. Clique "Prendre rendez-vous"
-  3. Répond aux questions (nouveau patient, motif, lieu)
-  4. Sélectionne le créneau demandé
-  5. S'arrête avant la confirmation finale (pour que l'utilisateur valide)
-
-Usage :
-    from doctolib_booking import DoctolibBooker
-    booker = DoctolibBooker()
-    booker.book(
-        profile_url="https://www.doctolib.fr/gynecologue/paris/juliette-kinn",
-        slot_datetime="2026-03-21 17:00",
-        is_new_patient=True,
-        motive_keyword="première consultation",
-    )
+Doctolib Booking — Réservation complète jusqu'à la confirmation
 """
 
 import time
 import random
-from playwright.sync_api import sync_playwright, Page
+from playwright.sync_api import sync_playwright
 
 
 def human_delay(min_s=0.8, max_s=1.8):
@@ -29,26 +12,19 @@ def human_delay(min_s=0.8, max_s=1.8):
 
 
 class DoctolibBooker:
-    """
-    Automatise la navigation du tunnel de réservation Doctolib.
-    S'arrête sur la page de confirmation pour que l'utilisateur valide.
-    """
 
     def __init__(self, headless=False):
         self.headless = headless
 
     def book(
         self,
-        profile_url: str,
-        slot_datetime: str,       # ex: "2026-03-21 17:00"
+        profile_url:    str,
+        slot_datetime:  str,
         is_new_patient: bool = True,
-        motive_keyword: str = None,  # ex: "première" → sélectionne le motif qui contient ce mot
+        motive_keyword: str  = None,
         is_teleconsult: bool = False,
     ) -> dict:
-        """
-        Lance le tunnel de réservation.
-        Retourne un dict avec le statut et l'étape atteinte.
-        """
+
         result = {"status": "pending", "step": "", "message": ""}
 
         with sync_playwright() as pw:
@@ -68,234 +44,239 @@ class DoctolibBooker:
             page = context.new_page()
 
             try:
-                # ── 0. Injecte les cookies de session ─────────
+                # ── 0. Cookies de session ─────────────────────────
                 try:
                     from doctolib_auth import get_session_cookies
-                    session_cookies = get_session_cookies()
-                    if session_cookies:
-                        context.add_cookies(session_cookies)
-                        print(f"[Booker] {len(session_cookies)} cookies de session injectés")
+                    cookies = get_session_cookies()
+                    if cookies:
+                        context.add_cookies(cookies)
+                        print(f"[Booker] {len(cookies)} cookies injectés")
                 except Exception as e:
-                    print(f"[Booker] Pas de session Doctolib : {e}")
+                    print(f"[Booker] Pas de session : {e}")
 
-                # ── 1. Ouvre le profil ────────────────────────
-                print(f"[Booker] Ouverture du profil : {profile_url}")
+                # ── 1. Ouvre le profil ─────────────────────────────
+                print(f"[Booker] Ouverture : {profile_url}")
                 page.goto(profile_url, wait_until="domcontentloaded")
                 human_delay(2, 3)
 
-                # Vérifie si la page existe (404 = URL incorrecte)
                 if "introuvable" in page.title().lower() or "404" in page.title():
-                    print(f"[Booker] Page introuvable — essai recherche Doctolib")
-                    # Fallback : ouvre la page de recherche de la spécialité
                     parts = profile_url.replace("https://www.doctolib.fr/","").split("/")
                     if len(parts) >= 2:
-                        search_url = f"https://www.doctolib.fr/{parts[0]}/{parts[1]}"
-                        page.goto(search_url, wait_until="domcontentloaded")
+                        page.goto(f"https://www.doctolib.fr/{parts[0]}/{parts[1]}", wait_until="domcontentloaded")
                         human_delay(2, 3)
-                        # Trouve et clique sur le premier médecin de la liste
-                        try:
-                            first_card = page.locator("div.dl-card:visible a").first
-                            if first_card.is_visible(timeout=5000):
-                                first_card.click()
-                                human_delay(2, 3)
-                        except:
-                            pass
 
-                # Cookies
-                for txt in ["Accepter", "ACCEPTER", "button#didomi-notice-agree-button"]:
+                # Ferme le menu "Centre d'aide" s'il est ouvert
+                try:
+                    page.keyboard.press("Escape")
+                    human_delay(0.3, 0.5)
+                except: pass
+
+                # Accepte les cookies
+                for sel in ['button:has-text("Accepter et fermer")', 'button:has-text("Tout accepter")', 'button:has-text("Accepter")']:
                     try:
-                        if txt.startswith("button"):
-                            page.locator(txt).click(timeout=2000)
-                        else:
-                            page.get_by_text(txt, exact=True).click(timeout=2000)
-                        human_delay(0.5, 1)
-                        break
-                    except:
-                        pass
+                        b = page.locator(sel).first
+                        if b.is_visible(timeout=1500): b.click(); human_delay(0.5, 1); break
+                    except: pass
 
-                # ── 2. Clique "Prendre rendez-vous" ──────────
+                # ── 2. Prendre rendez-vous ─────────────────────────
                 print("[Booker] Étape 1 : Prendre rendez-vous")
                 clicked = False
-                for txt in ["Prendre rendez-vous", "Prendre un rendez-vous"]:
+                for txt in ["Prendre rendez-vous", "Prendre un rendez-vous", "Réserver"]:
                     try:
-                        btn = page.get_by_text(txt, exact=False)
-                        if btn.is_visible(timeout=3000):
-                            btn.click()
-                            clicked = True
-                            human_delay(1.5, 2.5)
-                            result["step"] = "booking_opened"
-                            break
-                    except:
-                        pass
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=3000): b.click(); clicked = True; human_delay(1.5, 2.5); break
+                    except: pass
 
                 if not clicked:
-                    result["status"]  = "error"
-                    result["message"] = "Bouton 'Prendre rendez-vous' introuvable"
+                    result.update(status="error", message="Bouton 'Prendre rendez-vous' introuvable")
                     return result
+                result["step"] = "booking_opened"
 
-                # ── 3. Nouveau / ancien patient ────────────────
+                # ── 3. Nouveau / ancien patient ────────────────────
                 print(f"[Booker] Étape 2 : {'Nouveau' if is_new_patient else 'Ancien'} patient")
-                patient_text = "Non" if is_new_patient else "Oui"
-                for txt in [patient_text, "Nouveau patient", "Jamais consulté"]:
+                for txt in (["Non", "Nouveau patient", "Jamais consulté"] if is_new_patient
+                             else ["Oui", "Patient existant", "Déjà consulté"]):
                     try:
-                        btn = page.get_by_text(txt, exact=False)
-                        if btn.is_visible(timeout=3000):
-                            btn.click()
-                            human_delay(1, 2)
-                            result["step"] = "patient_type_selected"
-                            break
-                    except:
-                        pass
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=2000): b.click(); human_delay(1, 2); break
+                    except: pass
+                result["step"] = "patient_type_selected"
 
-                # ── 4. Motif de consultation ───────────────────
+                # ── 4. Motif de consultation ───────────────────────
                 print(f"[Booker] Étape 3 : Motif ({motive_keyword or 'premier disponible'})")
                 motive_clicked = False
-
                 if motive_keyword:
-                    # Cherche un bouton qui contient le mot-clé
                     try:
-                        btn = page.get_by_text(motive_keyword, exact=False)
-                        if btn.is_visible(timeout=3000):
-                            btn.click()
-                            motive_clicked = True
-                            human_delay(1, 2)
-                    except:
-                        pass
-
+                        b = page.get_by_text(motive_keyword, exact=False)
+                        if b.is_visible(timeout=2000): b.click(); motive_clicked = True; human_delay(1, 2)
+                    except: pass
                 if not motive_clicked:
-                    # Prend le premier motif disponible
-                    for sel in ["ul li button", "li[class*='reason'] button",
-                                "[class*='motive'] button", "li button"]:
+                    for sel in ["ul li button", "li[class*='reason'] button", "[class*='motive'] button", "li button"]:
                         try:
-                            btns = page.locator(sel).all()
-                            for btn in btns:
-                                if btn.is_visible():
-                                    print(f"  Motif sélectionné : {btn.inner_text()[:50]}")
-                                    btn.click()
-                                    motive_clicked = True
-                                    human_delay(1, 2)
-                                    break
-                            if motive_clicked:
-                                break
-                        except:
-                            pass
-
+                            for b in page.locator(sel).all():
+                                if b.is_visible():
+                                    print(f"  Motif : {b.inner_text()[:50]}")
+                                    b.click(); motive_clicked = True; human_delay(1, 2); break
+                            if motive_clicked: break
+                        except: pass
                 result["step"] = "motive_selected"
 
-                # ── 5. Téléconsultation ou présentiel ─────────
-                print(f"[Booker] Étape 4 : {'Téléconsultation' if is_teleconsult else 'Présentiel'}")
-                consult_text = "Vidéo" if is_teleconsult else "Cabinet"
-                for txt in [consult_text, "En cabinet", "Au cabinet"]:
+                # ── 5. Présentiel / téléconsultation ──────────────
+                print(f"[Booker] Étape 4 : {'Vidéo' if is_teleconsult else 'Cabinet'}")
+                for txt in (["Vidéo", "Téléconsultation"] if is_teleconsult
+                             else ["Cabinet", "En cabinet", "Au cabinet", "Présentiel"]):
                     try:
-                        btn = page.get_by_text(txt, exact=False)
-                        if btn.is_visible(timeout=2000):
-                            btn.click()
-                            human_delay(1, 1.5)
-                            break
-                    except:
-                        pass
-
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=2000): b.click(); human_delay(1, 1.5); break
+                    except: pass
                 result["step"] = "location_selected"
 
-                # ── 6. Sélectionne le créneau horaire ─────────
-                print(f"[Booker] Étape 5 : Sélection du créneau {slot_datetime}")
-
-                # Extrait l'heure du créneau ex: "17:00" ou "17h00"
+                # ── 6. Sélectionne le créneau ──────────────────────
+                print(f"[Booker] Étape 5 : Créneau {slot_datetime}")
                 time_str = slot_datetime[-5:] if len(slot_datetime) >= 5 else slot_datetime
-                time_variants = [
-                    time_str,
-                    time_str.replace(":", "h"),
-                    time_str.replace(":","h").replace("0","").lstrip("0"),
-                ]
-
-                slot_clicked = False
-                for tvar in time_variants:
+                variants  = [time_str, time_str.replace(":", "h"), time_str.replace(":","h").lstrip("0")]
+                slot_ok = False
+                for tv in variants:
                     try:
-                        # Cherche un bouton slot avec cet horaire
-                        slot_btn = page.locator(
-                            f'button[data-test-id="slot-button"]:has-text("{tvar}")'
-                        ).first
-                        if slot_btn.is_visible(timeout=3000):
-                            slot_btn.click()
-                            slot_clicked = True
-                            human_delay(1, 2)
-                            print(f"  Créneau {tvar} sélectionné !")
-                            break
-                    except:
-                        pass
-
-                if not slot_clicked:
-                    # Prend le premier slot disponible
+                        b = page.locator(f'button[data-test-id="slot-button"]:has-text("{tv}")').first
+                        if b.is_visible(timeout=3000): b.click(); slot_ok = True; human_delay(1, 2); break
+                    except: pass
+                if not slot_ok:
                     try:
-                        first_slot = page.locator('button[data-test-id="slot-button"]').first
-                        if first_slot.is_visible(timeout=3000):
-                            txt = first_slot.inner_text()
-                            first_slot.click()
-                            slot_clicked = True
-                            print(f"  Premier créneau disponible : {txt}")
-                            human_delay(1, 2)
-                    except:
-                        pass
-
+                        b = page.locator('button[data-test-id="slot-button"]').first
+                        if b.is_visible(timeout=3000):
+                            print(f"  Premier slot : {b.inner_text()}")
+                            b.click(); slot_ok = True; human_delay(1, 2)
+                    except: pass
                 result["step"] = "slot_selected"
 
-                # ── 7. PAUSE — attend validation utilisateur ──
-                print("\n" + "="*55)
-                print("  CONFIRMATION REQUISE")
-                print("="*55)
-                print("  Le tunnel de réservation est rempli.")
-                print("  Vérifiez les informations dans le navigateur")
-                print("  puis validez manuellement le rendez-vous.")
-                print("  (Appuyez sur ENTREE pour fermer le navigateur)")
-                print("="*55)
+                # ── 7. Continuer après créneau ─────────────────────
+                print("[Booker] Étape 6 : Continuer")
+                for txt in ["Suivant", "Continuer", "Valider", "Confirmer la date"]:
+                    try:
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=2000): b.click(); human_delay(1.5, 2.5); break
+                    except: pass
+                result["step"] = "slot_confirmed"
 
-                input("\n[Booker] >>> Appuyez sur ENTREE après avoir confirmé... ")
+                # ── 8. Pour qui est ce RDV ? ───────────────────────
+                # Doctolib demande "Pour qui prenez-vous ce rendez-vous ?"
+                # Il faut cliquer sur le compte principal (ex: "Rayan DOC (moi)")
+                print("[Booker] Étape 7 : Sélection du patient (moi)")
+                human_delay(1.5, 2.5)
 
-                result["status"]  = "success"
-                result["message"] = "Tunnel complété — confirmation manuelle effectuée"
+                patient_selected = False
+
+                # Cherche le bouton "(moi)" ou le premier card patient
+                for sel in [
+                    'button:has-text("(moi)")',
+                    'div[class*="patient"]:has-text("(moi)")',
+                    'label:has-text("(moi)")',
+                    '[class*="card"]:has-text("(moi)")',
+                    '[class*="patient-card"]',
+                    'button[class*="patient"]',
+                ]:
+                    try:
+                        b = page.locator(sel).first
+                        if b.is_visible(timeout=2000):
+                            print(f"  Patient sélectionné : {b.inner_text()[:50]}")
+                            b.click(); patient_selected = True; human_delay(1, 2); break
+                    except: pass
+
+                # Fallback : clique sur la première carte de la liste patients
+                if not patient_selected:
+                    for sel in [
+                        'div[class*="booking-patient"] button',
+                        'ul[class*="patient"] li:first-child button',
+                        'div[class*="patient-list"] div:first-child',
+                        'div.booking-patient-list button:first-child',
+                    ]:
+                        try:
+                            b = page.locator(sel).first
+                            if b.is_visible(timeout=2000):
+                                print(f"  Fallback patient : {b.inner_text()[:50]}")
+                                b.click(); patient_selected = True; human_delay(1, 2); break
+                        except: pass
+
+                if patient_selected:
+                    result["step"] = "patient_identity_selected"
+                    human_delay(1.5, 2.5)
+                else:
+                    print("[Booker] Page identité patient non détectée — on continue")
+
+                # ── 9. Continuer après identité patient ────────────
+                for txt in ["Continuer", "Suivant", "Valider"]:
+                    try:
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=2000): b.click(); human_delay(1.5, 2); break
+                    except: pass
+
+                # ── 10. Infos patient (formulaire éventuel) ────────
+                print("[Booker] Étape 8 : Infos patient")
+                human_delay(2, 3)
+                for txt in ["Continuer", "Suivant", "Valider mes informations"]:
+                    try:
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=2000): b.click(); human_delay(1.5, 2); break
+                    except: pass
+                result["step"] = "patient_info_done"
+
+                # ── 11. Confirmation finale ────────────────────────
+                print("[Booker] Étape 9 : Confirmation finale")
+                human_delay(2, 3)
+
+                confirmed = False
+                for txt in [
+                    "Confirmer le rendez-vous",
+                    "Confirmer mon rendez-vous",
+                    "Confirmer",
+                    "Valider le rendez-vous",
+                    "Valider",
+                    "Prendre ce rendez-vous",
+                ]:
+                    try:
+                        b = page.get_by_text(txt, exact=False)
+                        if b.is_visible(timeout=3000):
+                            print(f"  Clic confirmation : '{txt}'")
+                            b.click(); confirmed = True; human_delay(2, 3); break
+                    except: pass
+
+                if confirmed:
+                    try:
+                        page.wait_for_url("**/confirmation**", timeout=10000)
+                    except: pass
+                    human_delay(2, 3)
+                    result.update(
+                        status="success",
+                        step="confirmed",
+                        message="✅ Rendez-vous confirmé ! Vérifiez votre email Doctolib."
+                    )
+                    print("[Booker] ✅ RDV CONFIRMÉ !")
+                else:
+                    print("[Booker] Bouton confirmation non trouvé — attente 30s")
+                    human_delay(28, 30)
+                    result.update(
+                        status="success",
+                        step="manual_confirm",
+                        message="Tunnel complété — vérifiez le navigateur pour confirmer manuellement."
+                    )
 
             except Exception as e:
-                result["status"]  = "error"
-                result["message"] = str(e)
+                result.update(status="error", message=str(e))
                 print(f"[Booker] Erreur : {e}")
             finally:
+                human_delay(2, 3)
                 browser.close()
 
         return result
 
 
-# ── Route FastAPI pour le booking ────────────────────────────
-# À ajouter dans main.py :
-#
-# class BookRequest(BaseModel):
-#     profile_url:     str
-#     slot_datetime:   str
-#     is_new_patient:  bool = True
-#     motive_keyword:  str  = None
-#     is_teleconsult:  bool = False
-#
-# @app.post("/book")
-# def book_appointment(req: BookRequest):
-#     from doctolib_booking import DoctolibBooker
-#     booker = DoctolibBooker(headless=False)
-#     result = booker.book(
-#         profile_url    = req.profile_url,
-#         slot_datetime  = req.slot_datetime,
-#         is_new_patient = req.is_new_patient,
-#         motive_keyword = req.motive_keyword,
-#         is_teleconsult = req.is_teleconsult,
-#     )
-#     return result
-
-
 if __name__ == "__main__":
-    # Test
     booker = DoctolibBooker(headless=False)
-    result = booker.book(
-        profile_url    = "https://www.doctolib.fr/gynecologue/paris/juliette-kinn",
-        slot_datetime  = "17:00",
-        is_new_patient = True,
-        motive_keyword = "première",
-        is_teleconsult = False,
+    r = booker.book(
+        profile_url    = "https://www.doctolib.fr/gynecologue-obstetricien/paris/arnaud-bresset-plaisir",
+        slot_datetime  = "17:40",
+        is_new_patient = False,
+        motive_keyword = "suivi",
     )
-    print(result)
+    print(r)

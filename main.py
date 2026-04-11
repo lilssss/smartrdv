@@ -4,18 +4,11 @@ Backend FastAPI — SmartRDV
 Lance : python -m uvicorn main:app --reload --port 8000
 """
 from __future__ import annotations
-import json, os, subprocess
+import json, os, subprocess, threading
 from typing import Optional
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
-# ── Charge le .env si présent (clé Anthropic, etc.) ─────────
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass  # python-dotenv non installé → variables d'env normales
 
 from scheduler_optimizer import Weights, ScoringEngine, Optimizer
 from scraped_loader import load_scraped_data
@@ -86,9 +79,6 @@ class LoginRequest(BaseModel):
     email:    str
     password: str
 
-class ApiKeyRequest(BaseModel):
-    api_key: str
-
 # ── Helpers ───────────────────────────────────────────────────
 
 def build_weights(p: PrefsInput) -> Weights:
@@ -136,12 +126,12 @@ def status():
         with open("slots.json") as f:
             data = json.load(f)
         return {
-            "has_data":    True,
-            "scraped_at":  data.get("scraped_at"),
-            "specialty":   data.get("specialty"),
-            "location":    data.get("location"),
+            "has_data":      True,
+            "scraped_at":    data.get("scraped_at"),
+            "specialty":     data.get("specialty"),
+            "location":      data.get("location"),
             "practitioners": len(data.get("practitioners", [])),
-            "slots":       len(data.get("slots", [])),
+            "slots":         len(data.get("slots", [])),
         }
     except Exception as e:
         return {"has_data": False, "error": str(e)}
@@ -166,7 +156,6 @@ def recommend(req: RecommendRequest):
     practitioners = []
     raw_slots     = []
 
-    # Priorité 1 : crawler si spécialité correspond
     if os.path.exists("slots.json"):
         try:
             with open("slots.json", encoding="utf-8") as f:
@@ -180,7 +169,6 @@ def recommend(req: RecommendRequest):
         except Exception as e:
             print(f"[API] Erreur slots.json : {e}")
 
-    # Priorité 2 : mock
     if not raw_slots:
         from doctolib_client import DoctolibSession, DoctolibSearcher, DoctolibSlotFetcher, UserPreferences
         up = UserPreferences(preferred_hours=(req.preferences.preferred_hours_start, req.preferences.preferred_hours_end))
@@ -196,10 +184,6 @@ def recommend(req: RecommendRequest):
         raise HTTPException(status_code=404, detail="Aucun créneau disponible.")
 
     from doctolib_client import DoctolibAdapter, UserPreferences
-    travel_w = req.preferences.weight_travel
-    if req.preferences.prefer_close:
-        travel_w = min(0.35, travel_w + 0.15)
-
     print(f"[Recommend] preferred_day={req.preferences.preferred_day} hours=({req.preferences.preferred_hours_start},{req.preferences.preferred_hours_end})")
     up = UserPreferences(
         preferred_hours=(req.preferences.preferred_hours_start, req.preferences.preferred_hours_end),
@@ -209,15 +193,7 @@ def recommend(req: RecommendRequest):
     adapter       = DoctolibAdapter(up)
     scoring_slots = adapter.convert(raw_slots)
     ranked        = optimizer.rank(scoring_slots)
-
-    # Si un jour précis est demandé, vérifie qu'il existe dans les résultats
-    day_names = {0:"lundi",1:"mardi",2:"mercredi",3:"jeudi",4:"vendredi",5:"samedi",6:"dimanche"}
-    if req.preferences.preferred_day is not None:
-        good_count = sum(1 for s in scoring_slots if s.conflict == 0.0)
-        if good_count == 0:
-            print(f"[Recommend] Aucun créneau {day_names.get(req.preferences.preferred_day,'?')} — affiche les meilleurs disponibles")
-
-    top = ranked[:req.top_n]
+    top           = ranked[:req.top_n]
 
     prac_map = {}
     for p in practitioners:
@@ -249,104 +225,82 @@ def recommend(req: RecommendRequest):
 
 @app.post("/chat")
 def chat(req: ChatRequest):
-    # ── Clé Anthropic Claude ──────────────────────────────────
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if anthropic_key and anthropic_key.startswith("sk-ant"):
+    import os as _os
+
+    # Claude
+    api_key = _os.environ.get("ANTHROPIC_API_KEY","")
+    if api_key and api_key.startswith("sk-ant"):
         try:
             from anthropic import Anthropic
-            client = Anthropic(api_key=anthropic_key)
+            client = Anthropic(api_key=api_key)
             SYSTEM = """Tu es SmartRDV, assistant médical IA.
-Réponds UNIQUEMENT en JSON valide, sans markdown, sans explication :
-{"intent":"book"|"chat","specialty":"dermatologue"|"gynecologue"|"cardiologue"|"medecin-generaliste"|"ophtalmologue"|"psychiatre"|"dentiste"|"kinesitherapeute","location":"Paris","preferred_hours":[start,end],"preferred_day_num":0|1|2|3|4|5|6|null,"prefer_weekend":false,"is_new_patient":true|false|null,"motive":null,"is_teleconsult":false|null,"prefer_close":false,"message":"réponse courte en français"}
-Règles :
-- intent="book" si l'utilisateur veut prendre un rendez-vous médical
-- specialty : déduis la spécialité médicale la plus précise
-- preferred_day_num : lundi=0, mardi=1, mercredi=2, jeudi=3, vendredi=4, samedi=5, dimanche=6 — null si non précisé
-- preferred_hours : matin=[8,12], après-midi=[13,18], soir=[17,20], après le travail=[18,20], matin tôt=[7,9] — null si non précisé
-- message : résume ce que tu as compris en une phrase naturelle"""
+Réponds UNIQUEMENT en JSON :
+{"intent":"book"|"chat","specialty":"dermatologue|gynecologue|cardiologue|medecin-generaliste|ophtalmologue|psychiatre|dentiste|kinesitherapeute","location":"Paris","preferred_hours":[start,end],"preferred_day_num":0-6|null,"prefer_weekend":false,"is_new_patient":true|false|null,"motive":null,"is_teleconsult":false|null,"prefer_close":false,"message":"réponse en français"}
+Jours: lundi=0,mardi=1,mercredi=2,jeudi=3,vendredi=4,samedi=5,dimanche=6
+Horaires: matin=[8,12],après-midi=[13,18],soir=[17,20],après le travail=[18,20]"""
             msgs = req.history + [{"role":"user","content":req.message}]
-            resp  = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=500, system=SYSTEM, messages=msgs)
-            text = resp.content[0].text.strip().replace("```json","").replace("```","").strip()
-            parsed = json.loads(text)
-            print(f"[Claude] '{req.message}' → day={parsed.get('preferred_day_num')} hours={parsed.get('preferred_hours')} spec={parsed.get('specialty')}")
-            return parsed
-        except json.JSONDecodeError as e:
-            raise HTTPException(status_code=502, detail=f"Réponse Claude invalide : {e}")
+            resp = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=500, system=SYSTEM, messages=msgs)
+            text = resp.content[0].text
+            import json as _j
+            return _j.loads(text.replace("```json","").replace("```","").strip())
         except Exception as e:
-            print(f"[Chat] Erreur Claude API : {e}")
-            raise HTTPException(status_code=502, detail=f"Erreur Claude API : {str(e)}")
+            print(f"[Chat] Claude erreur : {e}")
 
-    # ── Clé Google Gemini ─────────────────────────────────────
-    google_key = os.environ.get("GOOGLE_API_KEY", "")
+    # Gemini
+    google_key = _os.environ.get("GOOGLE_API_KEY", "")
     if google_key and google_key.startswith("AIza"):
         PROMPT = """Tu es SmartRDV, assistant médical IA.
 Réponds UNIQUEMENT en JSON valide, sans markdown, sans explication :
-{"intent":"book","specialty":"dermatologue"|"gynecologue"|"cardiologue"|"medecin-generaliste"|"ophtalmologue"|"psychiatre"|"dentiste"|"kinesitherapeute","location":"Paris","preferred_hours":[start,end],"preferred_day_num":0|1|2|3|4|5|6|null,"prefer_weekend":false,"is_new_patient":true|false|null,"motive":null,"is_teleconsult":false|null,"prefer_close":false,"message":"réponse courte en français"}
+{"intent":"book"|"chat","specialty":"dermatologue|gynecologue|cardiologue|medecin-generaliste|ophtalmologue|psychiatre|dentiste|kinesitherapeute","location":"Paris","preferred_hours":[start,end],"preferred_day_num":0-6|null,"prefer_weekend":false,"is_new_patient":true|false|null,"motive":null,"is_teleconsult":false|null,"prefer_close":false,"message":"résumé en une phrase ce que tu as compris"}
 Règles :
 - intent="book" si l'utilisateur veut prendre un rendez-vous médical, sinon "chat"
-- specialty : déduis la spécialité médicale (gyné/gynéco/gynécologique → gynecologue, dermato/dermatologue → dermatologue, etc.)
+- specialty : déduis la spécialité médicale
 - preferred_day_num : lundi=0,mardi=1,mercredi=2,jeudi=3,vendredi=4,samedi=5,dimanche=6 — null si non précisé
 - preferred_hours : matin=[8,12], après-midi=[13,18], soir=[17,20], après le travail=[18,20] — null si non précisé
-- message : résume en une phrase ce que tu as compris
 
 Message utilisateur : """ + req.message
 
-        # Essaie plusieurs modèles Gemini dans l'ordre
-        gemini_models = [
-            "gemini-2.5-flash",
-            "gemini-2.5-pro",
-            "gemini-2.0-flash-lite",
-            "gemini-2.0-flash",
-        ]
-        last_error = None
-        for model in gemini_models:
+        for model in ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash-lite", "gemini-2.0-flash"]:
             try:
                 import requests as _req
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={google_key}"
-                payload = {"contents": [{"parts": [{"text": PROMPT}]}]}
-                r = _req.post(url, json=payload, timeout=15)
+                r = _req.post(url, json={"contents": [{"parts": [{"text": PROMPT}]}]}, timeout=15)
                 if r.status_code == 404:
-                    continue  # modèle pas disponible → essaie le suivant
+                    continue
                 r.raise_for_status()
+                import json as _j
                 text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
-                text = text.strip().replace("```json","").replace("```","").strip()
-                parsed = json.loads(text)
+                parsed = _j.loads(text.replace("```json","").replace("```","").strip())
                 print(f"[Gemini/{model}] '{req.message}' → day={parsed.get('preferred_day_num')} hours={parsed.get('preferred_hours')} spec={parsed.get('specialty')}")
                 return parsed
-            except json.JSONDecodeError as e:
-                raise HTTPException(status_code=502, detail=f"Réponse Gemini invalide (JSON) : {e}")
             except Exception as e:
-                last_error = str(e)
                 print(f"[Gemini/{model}] erreur : {e}")
                 continue
 
-        raise HTTPException(status_code=502, detail=f"Gemini inaccessible : {last_error}")
-
-    # ── Pas de clé → NLP local ────────────────────────────────
+    # NLP local fallback
     result = _nlp.analyze(req.message)
-    print(f"[NLP local] '{req.message}' → day_num={result.preferred_day_num} hours={result.preferred_hours} spec={result.specialty}")
+    print(f"[NLP] '{req.message}' → day_num={getattr(result,'preferred_day_num',None)} hours={result.preferred_hours} spec={result.specialty}")
     return {
-        "intent":           result.intent,
-        "specialty":        result.specialty,
-        "location":         result.location,
-        "preferred_hours":  result.preferred_hours,
-        "preferred_day_num":getattr(result, 'preferred_day_num', None),
-        "prefer_weekend":   result.prefer_weekend,
-        "prefer_close":     getattr(result, 'prefer_close', False),
-        "is_new_patient":   result.is_new_patient,
-        "motive":           result.motive,
-        "is_teleconsult":   result.is_teleconsult,
-        "message":          result.message,
-        "nlp_source":       "local_rules",
-        "confidence":       result.confidence,
-        "detected":         result.detected,
+        "intent":            result.intent,
+        "specialty":         result.specialty,
+        "location":          result.location,
+        "preferred_hours":   result.preferred_hours,
+        "preferred_day_num": getattr(result, 'preferred_day_num', None),
+        "prefer_weekend":    result.prefer_weekend,
+        "prefer_close":      getattr(result, 'prefer_close', False),
+        "is_new_patient":    result.is_new_patient,
+        "motive":            result.motive,
+        "is_teleconsult":    result.is_teleconsult,
+        "message":           result.message,
+        "nlp_source":        "local_rules",
+        "confidence":        result.confidence,
+        "detected":          result.detected,
     }
 
 # ── Crawl ─────────────────────────────────────────────────────
 
 @app.post("/crawl")
 def launch_crawl(req: CrawlRequest):
-    import threading
     def run():
         subprocess.run(["python","doctolib_crawler.py",req.specialty,req.location], capture_output=False)
     threading.Thread(target=run, daemon=True).start()
@@ -368,75 +322,124 @@ def auto_crawl(req: CrawlRequest):
 
 # ── Book ──────────────────────────────────────────────────────
 
+# État global du booking (thread séparé pour ne pas bloquer uvicorn)
+_book_state: dict = {"status": "idle", "result": None}
+
 @app.post("/book")
 def book_appointment(req: BookRequest):
-    from doctolib_booking import DoctolibBooker
-    booker = DoctolibBooker(headless=False)
-    result = booker.book(
-        profile_url=req.profile_url, slot_datetime=req.slot_datetime,
-        is_new_patient=req.is_new_patient, motive_keyword=req.motive_keyword,
-        is_teleconsult=req.is_teleconsult,
-    )
-    return result
+    global _book_state
+    if _book_state["status"] == "running":
+        return {"status": "running", "message": "Booking déjà en cours..."}
+
+    _book_state = {"status": "running", "result": None}
+
+    def run_booking():
+        global _book_state
+        try:
+            from doctolib_booking import DoctolibBooker
+            booker = DoctolibBooker(headless=False)
+            result = booker.book(
+                profile_url    = req.profile_url,
+                slot_datetime  = req.slot_datetime,
+                is_new_patient = req.is_new_patient,
+                motive_keyword = req.motive_keyword,
+                is_teleconsult = req.is_teleconsult,
+            )
+            _book_state = {"status": "done", "result": result}
+            print(f"[Book] Terminé : {result}")
+        except Exception as e:
+            _book_state = {"status": "error", "result": {"status": "error", "message": str(e)}}
+            print(f"[Book] Erreur : {e}")
+
+    threading.Thread(target=run_booking, daemon=True).start()
+    return {"status": "running", "message": "Navigateur ouvert — réservation en cours..."}
+
+@app.get("/book/status")
+def book_status():
+    return {
+        "booking_state": _book_state["status"],
+        "result":        _book_state.get("result"),
+    }
 
 # ── Auth ──────────────────────────────────────────────────────
 
+# État global du login (thread séparé pour ne pas bloquer uvicorn)
+_login_state: dict = {"status": "idle", "error": ""}
+
 @app.post("/auth/login")
 def auth_login(req: LoginRequest):
-    from doctolib_auth import login
-    try:
-        cookies = login(email=req.email, password=req.password, headless=False)
-        return {"status":"success","message":f"Connecté — {len(cookies)} cookies","email":req.email}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    global _login_state
+    if _login_state["status"] == "running":
+        return {"status": "running", "message": "Navigateur déjà ouvert, connecte-toi dedans."}
+
+    _login_state = {"status": "running", "error": ""}
+
+    def run_login():
+        global _login_state
+        try:
+            from doctolib_auth import login
+            cookies = login(email=req.email, password=req.password)
+            _login_state = {"status": "done", "error": ""}
+            print(f"[Auth] Login terminé — {len(cookies)} cookies")
+        except Exception as e:
+            _login_state = {"status": "error", "error": str(e)}
+            print(f"[Auth] Login erreur : {e}")
+
+    threading.Thread(target=run_login, daemon=True).start()
+    return {"status": "running", "message": "Navigateur ouvert — connecte-toi et saisis le code 2FA si demandé."}
 
 @app.get("/auth/status")
 def auth_status():
     from doctolib_auth import session_info
-    return session_info()
+    info = session_info()
+    info["login_state"] = _login_state["status"]
+    info["login_error"] = _login_state.get("error", "")
+    return info
 
 @app.post("/auth/logout")
 def auth_logout():
+    global _login_state
+    _login_state = {"status": "idle", "error": ""}
     from doctolib_auth import logout
     logout()
-    return {"status":"success","message":"Session supprimée"}
+    return {"status": "success", "message": "Session supprimée"}
 
-# ── Config API key ────────────────────────────────────────────
-
-@app.post("/config/apikey")
-def set_api_key(req: ApiKeyRequest):
-    key = req.api_key.strip()
-    env_path = ".env"
-
-    if key.startswith("sk-ant"):
-        os.environ["ANTHROPIC_API_KEY"] = key
-        env_var = "ANTHROPIC_API_KEY"
-        label = "Anthropic Claude"
-    elif key.startswith("AIza"):
-        os.environ["GOOGLE_API_KEY"] = key
-        env_var = "GOOGLE_API_KEY"
-        label = "Google Gemini"
-    else:
-        raise HTTPException(status_code=400, detail="Clé non reconnue — doit commencer par sk-ant (Anthropic) ou AIza (Google)")
-
-    # Persiste dans .env
-    lines = []
-    if os.path.exists(env_path):
-        with open(env_path) as f:
-            lines = [l for l in f.readlines() if not l.startswith(env_var)]
-    lines.append(f"{env_var}={key}\n")
-    with open(env_path, "w") as f:
-        f.writelines(lines)
-
-    masked = key[:10] + "..." + key[-4:]
-    return {"status": "success", "message": f"Clé {label} enregistrée ✅", "masked": masked, "provider": label}
+# ── Config API Key ─────────────────────────────────────────────
 
 @app.get("/config/apikey")
-def get_api_key_status():
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    google_key    = os.environ.get("GOOGLE_API_KEY", "")
-    if anthropic_key.startswith("sk-ant"):
-        return {"configured": True, "masked": anthropic_key[:10] + "..." + anthropic_key[-4:], "provider": "Claude"}
-    if google_key.startswith("AIza"):
-        return {"configured": True, "masked": google_key[:10] + "..." + google_key[-4:], "provider": "Gemini"}
-    return {"configured": False}
+def get_apikey():
+    key = os.environ.get("GOOGLE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    if not key:
+        return {"configured": False}
+    if key.startswith("AIza"):
+        return {"configured": True, "provider": "gemini", "preview": key[:10] + "..." + key[-4:]}
+    if key.startswith("sk-ant"):
+        return {"configured": True, "provider": "claude", "preview": key[:10] + "..." + key[-4:]}
+    return {"configured": True, "provider": "unknown", "preview": key[:6] + "..."}
+
+@app.post("/config/apikey")
+def set_apikey(body: dict):
+    key = body.get("key", "").strip()
+    if not key:
+        raise HTTPException(status_code=400, detail="Clé vide")
+    env_path  = ".env"
+    lines     = []
+    if os.path.exists(env_path):
+        with open(env_path) as f:
+            lines = f.readlines()
+    env_var   = "GOOGLE_API_KEY" if key.startswith("AIza") else "ANTHROPIC_API_KEY"
+    written   = False
+    new_lines = []
+    for line in lines:
+        if line.startswith("GOOGLE_API_KEY=") or line.startswith("ANTHROPIC_API_KEY="):
+            new_lines.append(f"{env_var}={key}\n")
+            written = True
+        else:
+            new_lines.append(line)
+    if not written:
+        new_lines.append(f"{env_var}={key}\n")
+    with open(env_path, "w") as f:
+        f.writelines(new_lines)
+    os.environ[env_var] = key
+    provider = "gemini" if key.startswith("AIza") else "claude"
+    return {"status": "ok", "provider": provider, "preview": key[:10] + "..." + key[-4:]}

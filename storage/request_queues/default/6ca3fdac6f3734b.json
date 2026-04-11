@@ -1,0 +1,17 @@
+{
+  "unique_key": "https://www.doctolib.fr/espic-etablissement-de-sante-prive-d-interet-collectif/paris/institut-francais-de-myopie-paris",
+  "url": "https://www.doctolib.fr/espic-etablissement-de-sante-prive-d-interet-collectif/paris/institut-francais-de-myopie-paris",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "state": 4,
+      "crawlDepth": 2
+    }
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-03-16 13:55:38.978930+00:00"
+}

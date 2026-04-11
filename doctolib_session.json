@@ -1,0 +1,147 @@
+{
+  "email": "rayandoc@atomicmail.io",
+  "logged_at": "2026-03-27T11:14:27.238686",
+  "cookies": [
+    {
+      "name": "ssid",
+      "value": "c122000win-2zNwz39jDXgF",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": 1808817230.210458,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "locale",
+      "value": "fr",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": 1782551666.165148,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "esid",
+      "value": "tLtLmAgDOqIQ9btTzQ0DQ2QY",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "EzZcSYq13L3SyQpggoYCqmOwHcX4YIvDlPVsOBH.m2E-1774606429-1.0.1.1-DFdOjgaxTDoqjb.ZPb36ySdhQazYJSIZX20n9KCFni06Lxz_OV5l7PEGosSo37TNBmtbv6Du30Li1Wa5ydAg2SolASUICWTRkAQ0lJlEsciLj0MjqOmoxUH9sJLlo3B7",
+      "domain": ".doctolib.fr",
+      "path": "/",
+      "expires": 1774608231.210934,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "UPPMtUW0VzB6qhOSLsyfcS8yO_gRWfAHR6eiSNCXKBc-1774606429015-0.0.1.1-604800000",
+      "domain": ".doctolib.fr",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "uvGddIyqE0pfzqXEfV5Nasw8w6NsqcheOD_DhNn3xKE-1774606430-1.0.1.1-FPPX_0_VFwar_dtPP0OAaQiVpN8Tpc2.h_fa7zGDq.Dyo631JFJxFa77TUG9te8v8vLiMzsWCiHuMb7Yzb0zSYR703Y4Fpu7VgdVqeForyzDHjYETnFym5oFIcNbqxxS",
+      "domain": ".doctolib.com",
+      "path": "/",
+      "expires": 1774608232.398506,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "l20zPpXRfBK.npbAnDBudJooTA1SvCG.SE8mLxwz2AM-1774606430328-0.0.1.1-604800000",
+      "domain": ".doctolib.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "didomi_token",
+      "value": "eyJ1c2VyX2lkIjoiMTlkMmVjOTMtNjIyZC02N2FkLTg0ODgtMDVmMGU5MDc0NzhjIiwiY3JlYXRlZCI6IjIwMjYtMDMtMjdUMTA6MTM6NTEuNzc5WiIsInVwZGF0ZWQiOiIyMDI2LTAzLTI3VDEwOjEzOjUzLjY4MFoiLCJ2ZW5kb3JzIjp7ImVuYWJsZWQiOlsiYzpkb2N0b2xpYmYtNFlDUnhmejQiXX0sInB1cnBvc2VzIjp7ImVuYWJsZWQiOlsiYW5hbHl0aWNzLVA4WUdqN0RIIiwiYW5hbHl0aWNzLU5HcXhXYm1uIiwiZGlzcGxheXRhLVY4a01lbllhIiwiZGlzcGxheXRhLVZyUFBWbkhoIiwibWVzdXJlZGEtREVUUXo2N0EiLCJhZHNwZXJmb3ItenhZcmhMVGQiXX0sInZlcnNpb24iOjJ9",
+      "domain": ".doctolib.fr",
+      "path": "/",
+      "expires": 1790414033,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "euconsent-v2",
+      "value": "CQhudUAQhudUAAHABBENCXFgAAAAAAAAAAAAAAAAAAAA.IAAA.YAAAAAAAAAAA",
+      "domain": ".doctolib.fr",
+      "path": "/",
+      "expires": 1790414033,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "altid",
+      "value": "{%22id%22:%22e3743e3c-dd4a-4e26-93c1-262f71b78fa3%22}",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": 1809166435,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "astid",
+      "value": "{%22id%22:%22e158a576-a5ce-430e-902c-977224063acc%22}",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "utm_b2b",
+      "value": "utm_source%3Ddirect%26utm_medium%3D",
+      "domain": ".doctolib.fr",
+      "path": "/",
+      "expires": 1774608264.926856,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_doctolib_token",
+      "value": "eyJhbGciOiJQUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXUnRhTWZ2RVg5cmV0R2J2X3BPcnB2TTItY2RkeEEyMUMxWGZwRWtLMHRnIn0.eyJleHAiOjE3NzQ2MDcwNjAsImlhdCI6MTc3NDYwNjQ2MCwianRpIjoidHJydHJvOmNlOWUzNjU4LTRlODItZjNmNy02NjFlLTcwMTJmZjk5NjFhOCIsImlzcyI6Imh0dHA6Ly9rZXljbG9hay1wYXRpZW50cy1odHRwLmtleWNsb2FrLnN2Yzo4MTgwL2F1dGhuL3BhdGllbnQvcmVhbG1zL2RvY3RvbGliLXBhdGllbnQiLCJzdWIiOiIzYTU3ZGI5Yi0wZjk5LTQwYTUtYWM1NC02NzMxNDY0MDZiZDUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJwYXRpZW50LXNoYWRvdy1mci1jbGllbnQiLCJzaWQiOiJhNDlkMjVjNy1kZDUzLTQzMmYtOGZiMS04MDY0MzRmMTJlZDkiLCJzY29wZSI6IiIsImRvY3RvaWQiOiI4NjMxMzY2NSJ9.QkkefEymlIsijenq1oPYiLGT-QVUyhOLVT9HKPNngsF4qDRGYHaR5LC4kU-zHQGgRBXUnrwJgBAB5KV5Mijvkk9rl6ys1CyXNJWDadLbeJVLYuzCoMU9_HfIOaEvwfJpPcwBv07Yy3c51YAXC0TawcckZ_khI4qKB1X8iqWAdAnR-cgEp1Ynj7IifzOjI7sYq771S37O4fLrA900jyBPqt88n7r4fDjJ4h73EToSvzzD6LZ60x1urIYECXSKjn0gYpn9nd2rJOFsIN9-O0IGwiSUxAH4CDpNjIaTD4jVYbRgvSNxJMrAmf1KiIVFioQRipRhaXXrKgUSJPGICz_t4g",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "_doctolib_session",
+      "value": "36vM9aWGjOwxLHKvhgnGOkj08Jshg%2BFCBYETVamfP9rkKS236o2RtdJ77iX16SqJ1fzWNIPx4M3ksicn5I9sA5csrfTjig6%2FRhyHEsIFjYoXJXu7qxyFW6VV7%2F45HODF9z2F7b7PXpFiwc0fqVe3bU31oz%2FE9oaOmLwMBPqq2Bxp%2FSZFZr5YL1MDbkPeZCraIbqtHXga%2BGBtg%2FGRTAWR97xa52GUmVa72r70PGBvupcEDI8%2FaLoUZkDJH36JwsmPgKpzl6nTtlwa0C5rQ6rg%2FBTsi2qbUPyciWgfMZIZNAZGBkO1zAu%2FKUwfyECNyxb%2B9YmIaL1%2FEkPOUr6umsZmydsiRnr2NZof%2BCdAjtst1xSDvu1xB6mrDE5RrFUWcawNLrGCADlhL%2FBvi701YQtUXAIdTpG07Cd7fdcEK6uwGZsrphA9y8YoxKCdVwLG9ZTGPTG9QK%2BO333gFWfmMR05JlgM9V7iZ%2BLIZtd%2FRTD91maAq58ebX8vgn61WvcGWnZj7kYAhodkAAlMaLVzhHDE6AVI1tYVX%2FJA0%2FZ8KBVrtrIrX4LegUq4nVPM4q90q69pedeW6X23vZ5aECZaLR7kslCFoZluQfAzRJZapVTZ3yR5xaaizmLOI%2FOrPtYY%2BWKfEMPvmVtaqUT1XVWIA50k1STVLEDiWBm11aRPqVu%2Fe%2BLuHCcNGcsxrQNMT6AvsAElGgRepkc5york6km2hiNlx%2FKdGo3TUXFtu98yfMlZJA615l0l3MuOIcha0lGzodpthUw60BjtxwnBSzxD37fo2Ylerwt2SgEWcxS%2FO1ww4%2BvdMStOrWh0ZFSLb5BLKBD%2FXCfErjxqES0zhBJBqwJwNGKdFM75zB%2BFGvAcpgKLJt5TZCmSEf6cDnnAQUImhNvKQZ8ZDLR1iZLVXHSCoEyjMxCyyTIgRbw2ptQFLzZ95RXoHBgdoUaXiPGJXhp4S8o5vz99fAlQZeu%2BpzNogtzyMQcqPtx9KsJ3as6lmYhDvepDC9Tcg6WB2y1BfcxRNMqcndGBifuNqsm%2Fgg%2B4L2rsAf5Rd4dY6KBF%2FK%2FUI5SU7uOPPDyc%2F1FcGpfhikC277R6df0SuljaAUn3gvRPcBbYKQy4Iok%2BttSuOZQqRZTdb7%2Blr0ljOZnaKsguoAkhu63cbd9yZnCQauICyQ8lof2vDsQhEpSTd831F%2BfJ3TqsNDP5KIQOp8rOyFptrudI9TZ%2BwXNzpxwqby7KpBkajTJGa4jcsguJRQSOdoo2LGgY0Jt0Xe%2BBdAxmxDRe5h6f6nl38K4J62VdONpeDb%2FwmRYvbPjHDY13K3sXRuF7gVT%2B7WIj--79rEBu7DrU5nGYfc--winoe2Wl5mL4UhI48yrU9g%3D%3D",
+      "domain": "www.doctolib.fr",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "is_logged": true
+}

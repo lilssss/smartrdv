@@ -3,155 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartRDV — Assistant médical IA</title>
+<title> — Assistant Scheduler IA</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #07090f;
-  --s1:       #0e1220;
-  --s2:       #151c2e;
-  --s3:       #1c2540;
-  --border:   rgba(255,255,255,0.06);
-  --border2:  rgba(255,255,255,0.12);
-  --text:     #e8edf8;
-  --muted:    #6b7899;
-  --accent:   #3d8ef8;
-  --accent2:  #6d4ef8;
-  --green:    #0fd99b;
-  --amber:    #f5a623;
-  --red:      #f87171;
-  --r:        14px;
-  --rsm:      9px;
+  --bg:      #07090f;
+  --s1:      #0e1220;
+  --s2:      #151c2e;
+  --s3:      #1c2540;
+  --border:  rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text:    #e8edf8;
+  --muted:   #6b7899;
+  --accent:  #3d8ef8;
+  --accent2: #6d4ef8;
+  --green:   #0fd99b;
+  --amber:   #f5a623;
+  --red:     #f87171;
+  --r:       14px;
+  --rsm:     9px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Inter',sans-serif;font-size:14px;
-  overflow:hidden;
-}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;overflow:hidden;}
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 70% 45% at 15% 5%,  rgba(61,142,248,.06) 0%,transparent 70%),
-    radial-gradient(ellipse 50% 35% at 85% 90%, rgba(109,78,248,.06) 0%,transparent 70%);
+    radial-gradient(ellipse 70% 45% at 15% 5%,rgba(61,142,248,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 35% at 85% 90%,rgba(109,78,248,.06) 0%,transparent 70%);
 }
+.app{position:relative;z-index:1;display:grid;grid-template-columns:260px 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden;}
 
-/* ── LAYOUT ── */
-.app{
-  position:relative;z-index:1;
-  display:grid;
-  grid-template-columns:260px 1fr;
-  grid-template-rows:56px 1fr;
-  height:100vh;
-  overflow:hidden;
-}
-
-/* ── TOPBAR ── */
-.topbar{
-  grid-column:1/-1;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;
-  border-bottom:0.5px solid var(--border);
-  background:rgba(14,18,32,.9);backdrop-filter:blur(12px);
-}
+/* TOPBAR */
+.topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:0.5px solid var(--border);background:rgba(14,18,32,.9);backdrop-filter:blur(12px);}
 .logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.3px}
 .logo span{color:var(--accent)}
 .topbar-right{display:flex;align-items:center;gap:12px}
-.api-badge{
-  font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;
-  background:rgba(13,217,155,.12);color:var(--green);border:0.5px solid rgba(13,217,155,.25);
-}
+.api-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;background:rgba(13,217,155,.12);color:var(--green);border:0.5px solid rgba(13,217,155,.25);}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ── SIDEBAR ── */
-.sidebar{
-  border-right:0.5px solid var(--border);
-  background:var(--s1);
-  padding:20px 16px;
-  display:flex;flex-direction:column;gap:20px;
-  overflow-y:auto;
-}
+/* SIDEBAR */
+.sidebar{border-right:0.5px solid var(--border);background:var(--s1);padding:20px 16px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;}
 .sidebar h3{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-
-/* Spécialités */
 .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.spec-btn{
-  padding:8px 6px;border-radius:var(--rsm);border:0.5px solid var(--border);
-  background:var(--s2);color:var(--muted);font-size:11px;cursor:pointer;
-  text-align:center;transition:all .15s;line-height:1.3
-}
+.spec-btn{padding:8px 6px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--s2);color:var(--muted);font-size:11px;cursor:pointer;text-align:center;transition:all .15s;line-height:1.3}
 .spec-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(61,142,248,.08)}
 .spec-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(61,142,248,.12);font-weight:500}
-
-/* Horaires */
 .time-row{display:flex;gap:8px;align-items:center}
 .time-row label{font-size:12px;color:var(--muted);width:40px;flex-shrink:0}
-.time-row select{
-  flex:1;background:var(--s2);border:0.5px solid var(--border);
-  border-radius:var(--rsm);color:var(--text);font-size:12px;padding:6px 8px;outline:none;
-}
+.time-row select{flex:1;background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:12px;padding:6px 8px;outline:none;}
 .time-row select:focus{border-color:var(--accent)}
-
-/* Poids */
 .weight-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .wd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .weight-row label{font-size:11px;color:var(--muted);flex:1}
 .weight-row input[type=range]{width:60px;flex-shrink:0}
 .weight-row .wv{font-size:11px;font-weight:500;color:var(--text);width:28px;text-align:right}
-
-/* Crawler */
 .crawl-section{display:flex;flex-direction:column;gap:8px}
-.crawl-btn{
-  padding:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:white;border:none;border-radius:var(--rsm);
-  font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
-  cursor:pointer;transition:opacity .15s;letter-spacing:.02em
-}
+.crawl-btn{padding:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:var(--rsm);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s;letter-spacing:.02em}
 .crawl-btn:hover{opacity:.88}
 .crawl-btn:disabled{opacity:.4;cursor:default}
 .crawl-status{font-size:11px;color:var(--muted);text-align:center}
 .crawl-status.ok{color:var(--green)}
 .crawl-status.running{color:var(--amber)}
 
-/* ── MAIN CHAT ── */
-.main{
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  background:var(--bg);
-}
-
-.chat{
-  flex:1;overflow-y:auto;
-  padding:20px 24px;
-  display:flex;flex-direction:column;gap:14px;
-  scroll-behavior:smooth;
-}
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.chat{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;}
 .chat::-webkit-scrollbar{width:3px}
 .chat::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-/* Welcome */
-.welcome{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;flex:1;text-align:center;padding:40px 20px;gap:12px
-}
-.welcome-icon{
-  width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:flex;align-items:center;justify-content:center;font-size:24px;
-  margin-bottom:4px;box-shadow:0 0 30px rgba(61,142,248,.3)
-}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;padding:40px 20px;gap:12px}
+.welcome-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:4px;box-shadow:0 0 30px rgba(61,142,248,.3)}
 .welcome h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
 .welcome p{color:var(--muted);font-size:13px;line-height:1.7;max-width:380px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px}
-.chip{
-  padding:7px 14px;background:var(--s2);border:0.5px solid var(--border2);
-  border-radius:20px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s
-}
+.chip{padding:7px 14px;background:var(--s2);border:0.5px solid var(--border2);border-radius:20px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s}
 .chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(61,142,248,.07)}
-
-/* Messages */
 .msg{display:flex;gap:10px;animation:msgIn .25s ease}
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .msg.user{flex-direction:row-reverse}
@@ -161,76 +88,40 @@ body::before{
 .bubble{max-width:76%;padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.7;word-break:break-word}
 .msg.ai  .bubble{background:var(--s2);border:0.5px solid var(--border);border-bottom-left-radius:4px}
 .msg.user .bubble{background:var(--accent);color:#fff;border-bottom-right-radius:4px}
-
-/* Typing */
 .typing-dots{display:flex;gap:4px;padding:3px 0}
 .typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:td .8s infinite}
 .typing-dots span:nth-child(2){animation-delay:.15s}
 .typing-dots span:nth-child(3){animation-delay:.3s}
 @keyframes td{0%,80%,100%{transform:scale(.75);opacity:.5}40%{transform:scale(1);opacity:1}}
-
-/* Result card */
-.res-card{
-  margin-top:8px;padding:16px;border-radius:12px;
-  background:linear-gradient(135deg,rgba(13,217,155,.08),rgba(61,142,248,.06));
-  border:0.5px solid rgba(13,217,155,.25);
-}
+.res-card{margin-top:8px;padding:16px;border-radius:12px;background:linear-gradient(135deg,rgba(13,217,155,.08),rgba(61,142,248,.06));border:0.5px solid rgba(13,217,155,.25);}
 .res-badge{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
 .res-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:2px}
-.res-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
 .score-total{font-size:12px;color:var(--muted);margin-bottom:10px}
 .score-total b{color:var(--green)}
-
-/* Bars */
 .bars{display:flex;flex-direction:column;gap:5px}
 .br{display:flex;align-items:center;gap:7px}
 .brl{font-size:10px;color:var(--muted);width:90px;flex-shrink:0}
 .brt{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
 .brf{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
 .brv{font-size:10px;color:var(--muted);width:28px;text-align:right}
-
-/* Ranked list */
 .ranked{display:flex;flex-direction:column;gap:5px;margin-top:10px}
-.ri{
-  display:flex;align-items:center;gap:9px;
-  padding:9px 12px;background:rgba(255,255,255,.02);
-  border:0.5px solid var(--border);border-radius:var(--rsm);
-}
+.ri{display:flex;align-items:center;gap:9px;padding:9px 12px;background:rgba(255,255,255,.02);border:0.5px solid var(--border);border-radius:var(--rsm);}
 .rn{font-size:11px;font-weight:600;color:var(--muted);width:18px;flex-shrink:0}
 .rl{flex:1;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rs{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
 .sg{background:rgba(13,217,155,.12);color:var(--green)}
 .sm{background:rgba(245,166,35,.12);color:var(--amber)}
 .sb{background:rgba(248,113,113,.12);color:var(--red)}
-
-/* Data source badge */
-.dsrc{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:10px;padding:2px 8px;border-radius:10px;
-  background:var(--s3);color:var(--muted);margin-top:8px;
-}
+.dsrc{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:2px 8px;border-radius:10px;background:var(--s3);color:var(--muted);margin-top:8px;}
 .dsrc.crawler{background:rgba(13,217,155,.1);color:var(--green)}
 
-/* ── INPUT AREA ── */
-.input-area{
-  padding:12px 24px 20px;
-  display:flex;align-items:center;gap:10px;
-  border-top:0.5px solid var(--border);
-  background:rgba(14,18,32,.6);backdrop-filter:blur(12px);
-}
-#user-input{
-  flex:1;background:var(--s2);border:0.5px solid var(--border2);
-  border-radius:24px;padding:10px 18px;
-  color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;
-  transition:border-color .15s;
-}
+/* INPUT */
+.input-area{padding:12px 24px 20px;display:flex;align-items:center;gap:10px;border-top:0.5px solid var(--border);background:rgba(14,18,32,.6);backdrop-filter:blur(12px);}
+#user-input{flex:1;background:var(--s2);border:0.5px solid var(--border2);border-radius:24px;padding:10px 18px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s;}
 #user-input::placeholder{color:var(--muted)}
 #user-input:focus{border-color:var(--accent)}
 .ibtns{display:flex;gap:8px;flex-shrink:0}
-.ibtn{
-  width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
+.ibtn{width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .ibtn.send{background:var(--accent);color:#fff}
 .ibtn.send:hover{background:#2d7ef0;transform:scale(1.05)}
 .ibtn.send:disabled{opacity:.35;cursor:default;transform:none}
@@ -243,19 +134,16 @@ body::before{
 <body>
 <div class="app">
 
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="logo">Smart<span>RDV</span></div>
+    <div class="logo">Assistant<span>Scheduler</span></div>
     <div class="topbar-right">
-      <span id="ai-mode-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;background:rgba(107,120,153,.15);color:var(--muted);border:0.5px solid rgba(255,255,255,.08)">✦ NLP local</span>
+      <span class="api-badge" id="ai-badge">+ Gemini AI</span>
       <span class="api-badge" id="src-badge">mock data</span>
       <div class="dot"></div>
     </div>
   </div>
 
-  <!-- SIDEBAR -->
   <div class="sidebar">
-
     <div>
       <h3>Spécialité</h3>
       <div class="spec-grid" id="spec-grid">
@@ -275,27 +163,19 @@ body::before{
       <div class="time-row" style="margin-bottom:8px">
         <label>Début</label>
         <select id="h-start">
-          <option value="7">7h00</option>
-          <option value="8">8h00</option>
-          <option value="9" selected>9h00</option>
-          <option value="10">10h00</option>
-          <option value="12">12h00</option>
-          <option value="14">14h00</option>
-          <option value="17">17h00</option>
-          <option value="18">18h00</option>
+          <option value="7">7h00</option><option value="8">8h00</option>
+          <option value="9" selected>9h00</option><option value="10">10h00</option>
+          <option value="12">12h00</option><option value="14">14h00</option>
+          <option value="17">17h00</option><option value="18">18h00</option>
         </select>
       </div>
       <div class="time-row">
         <label>Fin</label>
         <select id="h-end">
-          <option value="9">9h00</option>
-          <option value="10">10h00</option>
-          <option value="12" selected>12h00</option>
-          <option value="13">13h00</option>
-          <option value="17">17h00</option>
-          <option value="18">18h00</option>
-          <option value="19">19h00</option>
-          <option value="20">20h00</option>
+          <option value="9">9h00</option><option value="10">10h00</option>
+          <option value="12" selected>12h00</option><option value="13">13h00</option>
+          <option value="17">17h00</option><option value="18">18h00</option>
+          <option value="19">19h00</option><option value="20">20h00</option>
         </select>
       </div>
     </div>
@@ -310,16 +190,14 @@ body::before{
       <div id="auth-section" style="display:flex;flex-direction:column;gap:8px">
         <div id="auth-logged" style="display:none">
           <div style="font-size:11px;color:var(--green);margin-bottom:6px" id="auth-email-display">✅ Connecté</div>
-          <button onclick="doLogout()" style="width:100%;padding:7px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--muted);font-size:11px;cursor:pointer">
-            Se déconnecter
-          </button>
+          <button onclick="doLogout()" style="width:100%;padding:7px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--muted);font-size:11px;cursor:pointer">Se déconnecter</button>
         </div>
         <div id="auth-form">
           <input id="auth-email" type="email" placeholder="Email Doctolib"
             style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:12px;padding:7px 10px;outline:none;margin-bottom:6px">
           <input id="auth-pwd" type="password" placeholder="Mot de passe"
             style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:12px;padding:7px 10px;outline:none;margin-bottom:6px">
-          <button onclick="doLogin()" style="width:100%;padding:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:var(--rsm);font-size:12px;font-weight:600;cursor:pointer">
+          <button id="auth-btn" onclick="doLogin()" style="width:100%;padding:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:var(--rsm);font-size:12px;font-weight:600;cursor:pointer">
             Se connecter
           </button>
           <div id="auth-status" style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px"></div>
@@ -329,22 +207,17 @@ body::before{
 
     <div>
       <h3>Clé IA (Gemini ou Claude)</h3>
-      <div id="apikey-configured" style="display:none;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--green);margin-bottom:6px" id="apikey-masked">✅ Clé configurée</div>
-        <button onclick="resetApiKey()" style="width:100%;padding:7px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--muted);font-size:11px;cursor:pointer">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div id="apikey-display" style="font-size:11px;color:var(--muted)">Chargement...</div>
+        <button onclick="document.getElementById('apikey-input-row').style.display='flex'" style="width:100%;padding:7px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--muted);font-size:11px;cursor:pointer">
           Changer la clé
         </button>
-      </div>
-      <div id="apikey-form">
-        <input id="apikey-input" type="password" placeholder="AIza... ou sk-ant-..."
-          style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:12px;padding:7px 10px;outline:none;margin-bottom:6px;font-family:monospace"
-          onkeydown="if(event.key==='Enter')saveApiKey()">
-        <button onclick="saveApiKey()" style="width:100%;padding:8px;background:linear-gradient(135deg,#0fd99b44,#3d8ef844);color:var(--green);border:0.5px solid rgba(13,217,155,.3);border-radius:var(--rsm);font-size:12px;font-weight:600;cursor:pointer">
-          Enregistrer
-        </button>
-        <div id="apikey-status" style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px"></div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.4">
-          Colle ta clé Google (<b>AIza...</b>) ou Anthropic (<b>sk-ant-...</b>)
+        <div id="apikey-input-row" style="display:none;gap:6px;flex-direction:column">
+          <input id="apikey-input" type="text" placeholder="AIza... ou sk-ant-..."
+            style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:11px;padding:7px 10px;outline:none">
+          <button onclick="saveApiKey()" style="width:100%;padding:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:var(--rsm);font-size:11px;font-weight:600;cursor:pointer">
+            Sauvegarder
+          </button>
         </div>
       </div>
     </div>
@@ -355,16 +228,12 @@ body::before{
         <input id="crawl-city" type="text" value="Paris"
           style="background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:12px;padding:7px 10px;outline:none;width:100%"
           placeholder="Ville...">
-        <button class="crawl-btn" id="crawl-btn" onclick="launchCrawler()">
-          Lancer le crawler
-        </button>
+        <button class="crawl-btn" id="crawl-btn" onclick="launchCrawler()">Lancer le crawler</button>
         <div class="crawl-status" id="crawl-status">Données mock actives</div>
       </div>
     </div>
-
   </div>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="chat" id="chat">
       <div class="welcome" id="welcome">
@@ -379,7 +248,6 @@ body::before{
         </div>
       </div>
     </div>
-
     <div class="input-area">
       <input type="text" id="user-input" placeholder="Ex: je veux un gynécologue vendredi soir pas trop loin..."
         onkeydown="if(event.key==='Enter')send()">
@@ -395,23 +263,21 @@ body::before{
   </div>
 
 </div>
-
 <script>
 const API = "http://localhost:8000";
 
-// ── Weights ─────────────────────────────────────────────────
+// ── Weights ──────────────────────────────────────────────────
 const CRITERIA = [
-  {id:"conflict",     label:"Conflit agenda",   color:"#f87171"},
-  {id:"interruption", label:"Interruption",      color:"#f5a623"},
-  {id:"preference",   label:"Préférence horaire",color:"#0fd99b"},
-  {id:"travel",       label:"Trajet",            color:"#3d8ef8"},
-  {id:"fatigue",      label:"Fatigue journée",   color:"#a78bfa"},
+  {id:"conflict",     label:"Conflit agenda",    color:"#f87171"},
+  {id:"interruption", label:"Interruption",       color:"#f5a623"},
+  {id:"preference",   label:"Préférence horaire", color:"#0fd99b"},
+  {id:"travel",       label:"Trajet",             color:"#3d8ef8"},
+  {id:"fatigue",      label:"Fatigue journée",    color:"#a78bfa"},
 ];
 let weights = {conflict:.35, interruption:.20, preference:.25, travel:.12, fatigue:.08};
 
 function buildWeights() {
-  const el = document.getElementById('weights-container');
-  el.innerHTML = CRITERIA.map(c => `
+  document.getElementById('weights-container').innerHTML = CRITERIA.map(c=>`
     <div class="weight-row">
       <div class="wd" style="background:${c.color}"></div>
       <label>${c.label}</label>
@@ -420,81 +286,58 @@ function buildWeights() {
       <span class="wv" id="wv-${c.id}">${(weights[c.id]*100).toFixed(0)}%</span>
     </div>`).join('');
 }
-function onWeight(id, v) {
-  weights[id] = parseFloat(v);
-  const total = CRITERIA.reduce((s,c)=>s+weights[c.id],0);
-  if(total>0) CRITERIA.forEach(c=>{ weights[c.id]=+(weights[c.id]/total).toFixed(3); });
+function onWeight(id,v){
+  weights[id]=parseFloat(v);
+  const t=CRITERIA.reduce((s,c)=>s+weights[c.id],0);
+  if(t>0) CRITERIA.forEach(c=>{weights[c.id]=+(weights[c.id]/t).toFixed(3);});
   CRITERIA.forEach(c=>{
-    const el=document.getElementById('wv-'+c.id);
-    if(el) el.textContent=(weights[c.id]*100).toFixed(0)+'%';
-    const inp=document.querySelector(`input[oninput*="${c.id}"]`);
-    if(inp) inp.value=weights[c.id];
+    const e=document.getElementById('wv-'+c.id); if(e) e.textContent=(weights[c.id]*100).toFixed(0)+'%';
+    const i=document.querySelector(`input[oninput*="${c.id}"]`); if(i) i.value=weights[c.id];
   });
 }
 
 // ── Spec buttons ─────────────────────────────────────────────
 let activeSpec = "dermatologue";
-document.querySelectorAll('.spec-btn').forEach(btn => {
-  btn.onclick = () => {
+document.querySelectorAll('.spec-btn').forEach(btn=>{
+  btn.onclick=()=>{
     document.querySelectorAll('.spec-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    activeSpec = btn.dataset.spec;
+    btn.classList.add('active'); activeSpec=btn.dataset.spec;
   };
 });
 
 // ── Chat helpers ─────────────────────────────────────────────
 const chat = document.getElementById('chat');
-let history = [];
-let isRec = false, recognition = null;
+let history=[], isRec=false, recognition=null;
 
-function addMsg(role, html) {
+function addMsg(role,html){
   document.getElementById('welcome')?.remove();
-  const d = document.createElement('div');
-  d.className = `msg ${role}`;
-  d.innerHTML = `<div class="av ${role}">${role==='ai'?'✦':'U'}</div><div class="bubble">${html}</div>`;
-  chat.appendChild(d);
-  chat.scrollTop = chat.scrollHeight;
+  const d=document.createElement('div');
+  d.className=`msg ${role}`;
+  d.innerHTML=`<div class="av ${role}">${role==='ai'?'✦':'U'}</div><div class="bubble">${html}</div>`;
+  chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
 }
-function addTyping() {
-  const d = document.createElement('div');
-  d.className='msg ai'; d.id='typing';
+function addTyping(){
+  const d=document.createElement('div'); d.className='msg ai'; d.id='typing';
   d.innerHTML='<div class="av ai">✦</div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
   chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
 }
-function rmTyping(){ document.getElementById('typing')?.remove(); }
+function rmTyping(){document.getElementById('typing')?.remove();}
 
-// ── Build result HTML ────────────────────────────────────────
-function buildResult(data) {
-  const best = data.best;
-  const COLORS = {conflict:'#f87171',interruption:'#f5a623',preference:'#0fd99b',travel:'#3d8ef8',fatigue:'#a78bfa'};
-  const LBLS   = {conflict:'Conflit',interruption:'Interruption',preference:'Préférence',travel:'Trajet',fatigue:'Fatigue'};
-  const bars = Object.entries({conflict:best.conflict,interruption:best.interruption,preference:best.preference,travel:best.travel,fatigue:best.fatigue})
-    .map(([k,v])=>`<div class="br">
-      <span class="brl">${LBLS[k]}</span>
-      <div class="brt"><div class="brf" style="width:${Math.min(100,Math.round(v*350))}%;background:${COLORS[k]}"></div></div>
-      <span class="brv">${(v*100).toFixed(1)}</span>
-    </div>`).join('');
-  const others = data.ranked.slice(1,5).map((s,i)=>{
+// ── Build result ─────────────────────────────────────────────
+function buildResult(data){
+  const best=data.best;
+  const COLORS={conflict:'#f87171',interruption:'#f5a623',preference:'#0fd99b',travel:'#3d8ef8',fatigue:'#a78bfa'};
+  const LBLS={conflict:'Conflit',interruption:'Interruption',preference:'Préférence',travel:'Trajet',fatigue:'Fatigue'};
+  const bars=Object.entries({conflict:best.conflict,interruption:best.interruption,preference:best.preference,travel:best.travel,fatigue:best.fatigue})
+    .map(([k,v])=>`<div class="br"><span class="brl">${LBLS[k]}</span><div class="brt"><div class="brf" style="width:${Math.min(100,Math.round(v*350))}%;background:${COLORS[k]}"></div></div><span class="brv">${(v*100).toFixed(1)}</span></div>`).join('');
+  const others=data.ranked.slice(1,5).map((s,i)=>{
     const p=Math.round(s.total_score*100);
     const cls=p<25?'sg':p<45?'sm':'sb';
     return `<div class="ri"><span class="rn">#${i+2}</span><span class="rl">${s.label}</span><span class="rs ${cls}">${p}</span></div>`;
   }).join('');
-  const srcCls = data.data_source==='crawler'?'crawler':'';
-  const srcTxt = data.data_source==='crawler'?'Données Crawlee réelles':'Mock data';
-
-  // Stocke le meilleur créneau pour le booking
-  window._lastBest = best;
-  window._lastNLP  = window._currentNLP || {};
-  window._lastPractitioners = data;
-  window._practMap = data.practitioners_map || {};
-
-  // Stocke le profile_url réel du praticien recommandé
-  // On cherche dans les données du crawler le praticien correspondant
-  window._lastProfileUrl = '';
-  // Le label est "Dr X — Date Heure", on extrait le nom
-  const bestName = best.label.split(' — ')[0].trim();
-  console.log('[SmartRDV] Best doctor:', bestName, '| specialty:', data.specialty || window._currentNLP?.specialty);
-
+  const srcCls=data.data_source==='crawler'?'crawler':'';
+  const srcTxt=data.data_source==='crawler'?'Données Crawlee réelles':'Mock data';
+  window._lastBest=best; window._lastNLP=window._currentNLP||{}; window._practMap=data.practitioners_map||{};
   return `
     <div class="res-card">
       <div class="res-badge">★ Créneau recommandé</div>
@@ -502,218 +345,127 @@ function buildResult(data) {
       <div class="score-total">Score : <b>${Math.round(best.total_score*100)}</b>/100 — plus c'est bas, mieux c'est</div>
       <div class="bars">${bars}</div>
       <div style="display:flex;gap:8px;margin-top:12px">
-        <button onclick="launchBookingDirect()" id="book-btn" style="flex:1;padding:10px;background:linear-gradient(135deg,#3d8ef8,#6d4ef8);color:white;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">
-          📅 Réserver sur Doctolib →
+        <button onclick="launchBookingDirect()" style="flex:1;padding:10px;background:linear-gradient(135deg,#3d8ef8,#6d4ef8);color:white;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">
+          🗓 Réserver sur Doctolib →
         </button>
-        <button onclick="addToCalendar('${best.label.replace(/'/g,"\\'")}','${(window._currentNLP?.specialty||activeSpec)}')" style="padding:10px 14px;background:rgba(13,217,155,.15);color:var(--green);border:0.5px solid rgba(13,217,155,.3);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit" title="Ajouter à l'agenda">
-          🗓
-        </button>
-      </div>
-      <div id="calendar-actions" style="display:none;margin-top:10px;padding:10px;background:var(--s2);border-radius:9px;border:0.5px solid var(--border)">
-        <p style="font-size:11px;color:var(--muted);margin-bottom:8px">Ajouter à votre agenda :</p>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <a id="gcal-link" href="#" target="_blank" style="flex:1;text-align:center;padding:7px 10px;background:#4285f4;color:white;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none;min-width:120px">
-            Google Agenda
-          </a>
-          <button onclick="downloadICS('${best.label.replace(/'/g,"\\'")}','${(window._currentNLP?.specialty||activeSpec)}')" style="flex:1;padding:7px 10px;background:var(--s3);color:var(--text);border:0.5px solid var(--border2);border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;min-width:120px">
-            ↓ Fichier .ics
-          </button>
-          <button onclick="downloadICS('${best.label.replace(/'/g,"\\'")}','${(window._currentNLP?.specialty||activeSpec)}','outlook')" style="flex:1;padding:7px 10px;background:#0078d4;color:white;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;min-width:120px">
-            Outlook / Apple
-          </button>
-        </div>
       </div>
     </div>
     ${others?`<p style="font-size:11px;color:var(--muted);margin:10px 0 4px">${data.ranked.length-1} autres options :</p><div class="ranked">${others}</div>`:''}
     <span class="dsrc ${srcCls}">${srcTxt} · ${data.total_slots_analyzed} créneaux analysés</span>`;
 }
 
-// ── Appel API backend ────────────────────────────────────────
-async function callBackend(parsedIntent) {
-  // Sync sidebar avec NLP
-  const spec   = parsedIntent.specialty || activeSpec;
-  const hStart = parsedIntent.preferred_hours?.[0] ?? parseInt(document.getElementById('h-start').value);
-  const hEnd   = parsedIntent.preferred_hours?.[1] ?? parseInt(document.getElementById('h-end').value);
-
-  // Met à jour la sidebar visuellement
-  document.querySelectorAll('.spec-btn').forEach(b => b.classList.toggle('active', b.dataset.spec === spec));
-  activeSpec = spec;
-  document.getElementById('h-start').value = hStart;
-  document.getElementById('h-end').value   = hEnd;
-
-  const body = {
-    specialty: spec,
-    location:  parsedIntent.location || "Paris",
-    top_n: 8,
-    preferences: {
-      preferred_hours_start: hStart,
-      preferred_hours_end:   hEnd,
-      prefer_weekend:  parsedIntent.prefer_weekend || false,
-      preferred_day:   parsedIntent.preferred_day_num ?? null,
-      prefer_close:    parsedIntent.prefer_close    || false,
-      busy_days: [],
-      weight_conflict:     weights.conflict,
-      weight_interruption: weights.interruption,
-      weight_preference:   weights.preference,
-      weight_travel:       parsedIntent.prefer_close ? Math.min(0.35, weights.travel + 0.15) : weights.travel,
-      weight_fatigue:      weights.fatigue,
-    }
-  };
-
-  const res = await fetch(`${API}/recommend`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(body)
+// ── Backend calls ─────────────────────────────────────────────
+async function callBackend(parsedIntent){
+  const spec=parsedIntent.specialty||activeSpec;
+  const hStart=parsedIntent.preferred_hours?.[0]??parseInt(document.getElementById('h-start').value);
+  const hEnd=parsedIntent.preferred_hours?.[1]??parseInt(document.getElementById('h-end').value);
+  document.querySelectorAll('.spec-btn').forEach(b=>b.classList.toggle('active',b.dataset.spec===spec));
+  activeSpec=spec;
+  document.getElementById('h-start').value=hStart;
+  document.getElementById('h-end').value=hEnd;
+  const res=await fetch(`${API}/recommend`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      specialty:spec, location:parsedIntent.location||"Paris", top_n:8,
+      preferences:{
+        preferred_hours_start:hStart, preferred_hours_end:hEnd,
+        prefer_weekend:parsedIntent.prefer_weekend||false,
+        preferred_day:parsedIntent.preferred_day_num??null,
+        prefer_close:parsedIntent.prefer_close||false,
+        busy_days:[],
+        weight_conflict:weights.conflict, weight_interruption:weights.interruption,
+        weight_preference:weights.preference,
+        weight_travel:parsedIntent.prefer_close?Math.min(0.35,weights.travel+0.15):weights.travel,
+        weight_fatigue:weights.fatigue,
+      }
+    })
   });
   if(!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  document.getElementById('src-badge').textContent =
-    data.data_source === 'crawler' ? '✅ données crawlee' : 'mock data';
-  if(data.warning) {
-    addMsg('ai', `<p style="color:var(--amber);font-size:12px">⚠ ${data.warning}<br>Relance le crawler pour obtenir plus de créneaux.</p>`);
-  }
+  const data=await res.json();
+  document.getElementById('src-badge').textContent=data.data_source==='crawler'?'✅ données crawlee':'mock data';
+  if(data.warning) addMsg('ai',`<p style="color:var(--amber);font-size:12px">⚠ ${data.warning}</p>`);
   return data;
 }
 
-async function callClaude(msg) {
-  const r = await fetch(`${API}/chat`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({message: msg, history: history})
-  });
-  if(!r.ok) {
-    let detail = `HTTP ${r.status}`;
-    try { const d = await r.json(); detail = d.detail || detail; } catch{}
-    throw new Error(detail);
-  }
+async function callClaude(msg){
+  const r=await fetch(`${API}/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history})});
+  if(!r.ok) throw new Error(`HTTP ${r.status}`);
   return await r.json();
 }
 
-
-async function send() {
-  const inp = document.getElementById('user-input');
-  const msg = inp.value.trim();
-  if(!msg) return;
-  inp.value='';
-  document.getElementById('send-btn').disabled=true;
-  addMsg('user', msg);
-  addTyping();
-
+async function send(){
+  const inp=document.getElementById('user-input');
+  const msg=inp.value.trim(); if(!msg) return;
+  inp.value=''; document.getElementById('send-btn').disabled=true;
+  addMsg('user',msg); addTyping();
   try {
-    const parsed = await callClaude(msg);
-    window._currentNLP = parsed;  // stocke pour le booking
-    rmTyping();
+    const parsed=await callClaude(msg);
+    window._currentNLP=parsed; rmTyping();
     history.push({role:'user',content:msg});
     history.push({role:'assistant',content:JSON.stringify(parsed)});
-
-    // Met à jour la spécialité active si détectée
-    if(parsed.specialty) {
-      document.querySelectorAll('.spec-btn').forEach(b=>{
-        b.classList.toggle('active', b.dataset.spec===parsed.specialty);
-      });
-      activeSpec = parsed.specialty;
+    if(parsed.specialty){
+      document.querySelectorAll('.spec-btn').forEach(b=>b.classList.toggle('active',b.dataset.spec===parsed.specialty));
+      activeSpec=parsed.specialty;
     }
-
-    if(parsed.preferred_hours) {
-      document.getElementById('h-start').value = parsed.preferred_hours[0];
-      document.getElementById('h-end').value   = parsed.preferred_hours[1];
+    if(parsed.preferred_hours){
+      document.getElementById('h-start').value=parsed.preferred_hours[0];
+      document.getElementById('h-end').value=parsed.preferred_hours[1];
     }
-
-    if(parsed.intent==='book') {
-      const requestedSpec = parsed.specialty || activeSpec;
-
-      // Vérifie si le crawler a les données pour cette spécialité
-      let needsCrawl = false;
-      try {
-        const statusR = await fetch(`${API}/status`);
-        const statusD = await statusR.json();
-        if(!statusD.has_data) {
-          needsCrawl = true;
-        } else {
-          // Spécialité différente de celle crawlée → recrawl auto
-          const crawledSpec = (statusD.specialty || '').toLowerCase().replace(/-/g,'');
-          const reqSpec     = requestedSpec.toLowerCase().replace(/-/g,'');
-          if(crawledSpec && crawledSpec !== reqSpec && !crawledSpec.includes(reqSpec) && !reqSpec.includes(crawledSpec)) {
-            needsCrawl = true;
-          }
+    if(parsed.intent==='book'){
+      const requestedSpec=parsed.specialty||activeSpec;
+      let needsCrawl=false;
+      try{
+        const sd=await (await fetch(`${API}/status`)).json();
+        if(!sd.has_data){ needsCrawl=true; }
+        else {
+          const cs=(sd.specialty||'').toLowerCase().replace(/-/g,'');
+          const rs=requestedSpec.toLowerCase().replace(/-/g,'');
+          if(cs&&cs!==rs&&!cs.includes(rs)&&!rs.includes(cs)) needsCrawl=true;
         }
-      } catch(e) {}
-
-      let html = `<p>${parsed.message}</p>`;
-
-      // Lance le crawler automatiquement si nécessaire
-      if(needsCrawl) {
-        const loc = parsed.location || 'Paris';
-        html += `<br><p style="color:var(--amber);font-size:12px">⟳ Je lance le crawler pour trouver des créneaux de ${requestedSpec} à ${loc}... (~30 secondes)</p>`;
-        addMsg('ai', html);
-
-        // Met à jour la sidebar
-        document.getElementById('crawl-status').className = 'crawl-status running';
-        document.getElementById('crawl-status').textContent = `⟳ Crawl ${requestedSpec} en cours...`;
-
-        try {
-          const crawlR = await fetch(`${API}/crawl/auto`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({specialty: requestedSpec, location: loc})
-          });
-          const crawlD = await crawlR.json();
-          if(crawlD.status === 'success') {
-            document.getElementById('crawl-status').className = 'crawl-status ok';
-            document.getElementById('crawl-status').textContent = `✅ ${crawlD.slots_count} créneaux (${requestedSpec})`;
-            document.getElementById('src-badge').textContent = '✅ données crawlee';
-            // Maintenant cherche les créneaux
-            html = `<p>${parsed.message}</p><br>`;
-            try {
-              const data = await callBackend(parsed);
-              html += buildResult(data);
-            } catch(e) {
-              html += `<p style="color:var(--amber)">⚠ Backend inaccessible.</p>`;
-            }
-            // Replace le dernier message
-            const msgs = document.querySelectorAll('.msg.ai');
-            const lastMsg = msgs[msgs.length - 1];
-            if(lastMsg) lastMsg.querySelector('.bubble').innerHTML = html;
-          } else {
-            addMsg('ai', `<p style="color:var(--red)">Crawl échoué : ${crawlD.message}</p>`);
-          }
-        } catch(e) {
-          addMsg('ai', '<p style="color:var(--red)">Erreur crawl automatique.</p>');
-        }
+      }catch(e){}
+      let html=`<p>${parsed.message}</p>`;
+      if(needsCrawl){
+        const loc=parsed.location||'Paris';
+        html+=`<br><p style="color:var(--amber);font-size:12px">⟳ Je lance le crawler pour ${requestedSpec} à ${loc}... (~30s)</p>`;
+        addMsg('ai',html);
+        document.getElementById('crawl-status').className='crawl-status running';
+        document.getElementById('crawl-status').textContent=`⟳ Crawl ${requestedSpec}...`;
+        try{
+          const cd=await (await fetch(`${API}/crawl/auto`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specialty:requestedSpec,location:loc})})).json();
+          if(cd.status==='success'){
+            document.getElementById('crawl-status').className='crawl-status ok';
+            document.getElementById('crawl-status').textContent=`✅ ${cd.slots_count} créneaux (${requestedSpec})`;
+            document.getElementById('src-badge').textContent='✅ données crawlee';
+            html=`<p>${parsed.message}</p><br>`;
+            try{ html+=buildResult(await callBackend(parsed)); }catch(e){ html+=`<p style="color:var(--amber)">⚠ Backend inaccessible.</p>`; }
+            const lastMsg=document.querySelectorAll('.msg.ai');
+            if(lastMsg.length) lastMsg[lastMsg.length-1].querySelector('.bubble').innerHTML=html;
+          } else { addMsg('ai',`<p style="color:var(--red)">Crawl échoué.</p>`); }
+        }catch(e){ addMsg('ai','<p style="color:var(--red)">Erreur crawl.</p>'); }
       } else {
-        // Données déjà disponibles → cherche directement
-        html += '<br>';
-        try {
-          const data = await callBackend(parsed);
-          html += buildResult(data);
-        } catch(e) {
-          html += `<p style="color:var(--amber)">⚠ Backend inaccessible — vérifie que uvicorn tourne sur le port 8000.</p>`;
-        }
-        addMsg('ai', html);
+        html+='<br>';
+        try{ html+=buildResult(await callBackend(parsed)); }
+        catch(e){ html+=`<p style="color:var(--amber)">⚠ Backend inaccessible.</p>`; }
+        addMsg('ai',html);
       }
-    } else {
-      addMsg('ai', `<p>${parsed.message}</p>`);
-    }
-  } catch(e) {
-    rmTyping();
-    addMsg('ai',`<p style="color:var(--red)">Erreur : ${e.message}</p>`);
-    console.error(e);
+    } else { addMsg('ai',`<p>${parsed.message}</p>`); }
+  } catch(e){
+    rmTyping(); addMsg('ai','<p style="color:var(--red)">Erreur — vérifie ta connexion.</p>'); console.error(e);
   }
-  document.getElementById('send-btn').disabled=false;
-  inp.focus();
+  document.getElementById('send-btn').disabled=false; inp.focus();
 }
 
-function suggest(el) { document.getElementById('user-input').value=el.textContent; send(); }
+function suggest(el){ document.getElementById('user-input').value=el.textContent; send(); }
 
 // ── Vocal ─────────────────────────────────────────────────────
-function toggleMic() {
+function toggleMic(){
   if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){
     addMsg('ai','<p>Reconnaissance vocale non supportée. Utilisez Chrome.</p>'); return;
   }
   if(isRec){ recognition?.stop(); return; }
-  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition = new SR();
-  recognition.lang='fr-FR'; recognition.continuous=false; recognition.interimResults=true;
-  const mic=document.getElementById('mic-btn');
-  const inp=document.getElementById('user-input');
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR(); recognition.lang='fr-FR'; recognition.continuous=false; recognition.interimResults=true;
+  const mic=document.getElementById('mic-btn'), inp=document.getElementById('user-input');
   recognition.onstart=()=>{ isRec=true; mic.classList.add('rec'); inp.placeholder='🎙 Parlez maintenant...'; };
   recognition.onresult=e=>{ inp.value=[...e.results].map(r=>r[0].transcript).join(''); };
   recognition.onend=()=>{ isRec=false; mic.classList.remove('rec'); inp.placeholder='Ex: je veux un gynécologue vendredi soir...'; if(inp.value.trim())send(); };
@@ -721,108 +473,162 @@ function toggleMic() {
   recognition.start();
 }
 
-// ── Crawler ──────────────────────────────────────────────────
-async function launchCrawler() {
-  const btn     = document.getElementById('crawl-btn');
-  const status  = document.getElementById('crawl-status');
-  const city    = document.getElementById('crawl-city').value.trim() || 'Paris';
-  const spec    = activeSpec;
-
-  btn.disabled = true;
-  status.className = 'crawl-status running';
-  status.textContent = '⟳ Crawler en cours...';
-
-  try {
-    const r = await fetch(`${API}/crawl`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({specialty:spec, location:city})
-    });
+// ── Crawler ───────────────────────────────────────────────────
+async function launchCrawler(){
+  const btn=document.getElementById('crawl-btn'), status=document.getElementById('crawl-status');
+  const city=document.getElementById('crawl-city').value.trim()||'Paris';
+  btn.disabled=true; status.className='crawl-status running'; status.textContent='⟳ Crawler en cours...';
+  try{
+    const r=await fetch(`${API}/crawl`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specialty:activeSpec,location:city})});
     if(r.ok){
-      status.className='crawl-status running';
-      status.textContent='⟳ Crawlee tourne en fond... (~2 min)';
-      // Polling pour savoir quand c'est fini
-      const poll = setInterval(async ()=>{
-        try {
-          const s = await fetch(`${API}/status`);
-          const d = await s.json();
-          if(d.has_data && d.slots>0){
-            clearInterval(poll);
-            status.className='crawl-status ok';
-            status.textContent=`✅ ${d.slots} créneaux — ${d.specialty}`;
-            document.getElementById('src-badge').textContent='✅ données crawlee';
-            btn.disabled=false;
+      const poll=setInterval(async()=>{
+        try{ const d=await (await fetch(`${API}/status`)).json();
+          if(d.has_data&&d.slots>0){ clearInterval(poll); status.className='crawl-status ok'; status.textContent=`✅ ${d.slots} créneaux — ${d.specialty}`; document.getElementById('src-badge').textContent='✅ données crawlee'; btn.disabled=false; }
+        }catch{}
+      },5000);
+      setTimeout(()=>{ clearInterval(poll); btn.disabled=false; },180000);
+    } else { throw new Error(); }
+  }catch(e){ status.className='crawl-status'; status.textContent='⚠ Backend inaccessible'; btn.disabled=false; }
+}
+
+// ── Auth Doctolib ─────────────────────────────────────────────
+window._doctolibLogged=false;
+
+fetch(`${API}/auth/status`).then(r=>r.json()).then(d=>{
+  if(d.connected&&d.is_logged) _setLoggedIn(d.email);
+}).catch(()=>{});
+
+function _setLoggedIn(email){
+  window._doctolibLogged=true;
+  document.getElementById('auth-form').style.display='none';
+  document.getElementById('auth-logged').style.display='block';
+  document.getElementById('auth-email-display').textContent=`✅ Connecté : ${email}`;
+  document.getElementById('auth-status').textContent='';
+}
+
+async function doLogin(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pwd=document.getElementById('auth-pwd').value;
+  const status=document.getElementById('auth-status');
+  const btn=document.getElementById('auth-btn');
+  if(!email||!pwd){ status.textContent='Email et mot de passe requis.'; return; }
+  status.style.color='var(--muted)'; status.textContent='⏳ Ouverture du navigateur...'; btn.disabled=true;
+  try{
+    const d=await (await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pwd})})).json();
+    if(d.status==='running'){
+      status.textContent='🌐 Connecte-toi dans Chromium (+ code 2FA si demandé)...';
+      _pollLoginStatus(email);
+    } else {
+      status.style.color='var(--red)'; status.textContent=`❌ ${d.detail||d.message||'Erreur'}`; btn.disabled=false;
+    }
+  }catch(e){ status.style.color='var(--red)'; status.textContent='❌ Backend inaccessible.'; btn.disabled=false; }
+}
+
+function _pollLoginStatus(email){
+  const status=document.getElementById('auth-status'), btn=document.getElementById('auth-btn');
+  let attempts=0;
+  const iv=setInterval(async()=>{
+    attempts++;
+    try{
+      const d=await (await fetch(`${API}/auth/status`)).json();
+      if(d.login_state==='done'&&d.connected){ clearInterval(iv); btn.disabled=false; _setLoggedIn(email); }
+      else if(d.login_state==='error'){ clearInterval(iv); btn.disabled=false; status.style.color='var(--red)'; status.textContent=`❌ ${d.login_error||'Échec connexion'}`; }
+      else if(attempts>=60){ clearInterval(iv); btn.disabled=false; status.style.color='var(--red)'; status.textContent='❌ Timeout — réessaie.'; }
+    }catch(e){}
+  },3000);
+}
+
+async function doLogout(){
+  await fetch(`${API}/auth/logout`,{method:'POST'}).catch(()=>{});
+  window._doctolibLogged=false;
+  document.getElementById('auth-form').style.display='block';
+  document.getElementById('auth-logged').style.display='none';
+}
+
+// ── Booking complet ──────────────────────────────────────────
+async function launchBookingDirect(){
+  const best=window._lastBest, nlp=window._lastNLP||{};
+  if(!best){ addMsg('ai','<p>Aucun créneau sélectionné.</p>'); return; }
+
+  const isNew=nlp.is_new_patient??true;
+  const motive=nlp.motive??null;
+  const isTele=nlp.is_teleconsult??false;
+  const timeMatch=best.label.match(/(\d{1,2}:\d{2})$/);
+  const slotTime=timeMatch?timeMatch[1]:'09:00';
+
+  const bestName=best.label.split(' — ')[0].trim();
+  let profileUrl='';
+  try{
+    const pracs=await fetch(`${API}/practitioners`).then(r=>r.json());
+    const match=pracs.find(p=>p.name===bestName||(p.name||'').toLowerCase().includes(bestName.toLowerCase())||bestName.toLowerCase().includes((p.name||'').toLowerCase()));
+    if(match?.profile_url) profileUrl=match.profile_url;
+  }catch(e){}
+
+  if(!profileUrl){
+    const spec=window._currentNLP?.specialty||activeSpec||'medecin-generaliste';
+    const loc=(window._currentNLP?.location||'Paris').toLowerCase();
+    const slug=bestName.toLowerCase().replace(/^dr\.?\s+/i,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-');
+    profileUrl=`https://www.doctolib.fr/${spec}/${loc}/${slug}`;
+  }
+
+  addMsg('ai',`<p>🗓 Réservation en cours pour <b>${best.label}</b>...<br><span style="color:var(--muted);font-size:12px">Un navigateur Doctolib va s'ouvrir et remplir toutes les étapes automatiquement.</span></p>`);
+
+  try{
+    const d=await (await fetch(`${API}/book`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({profile_url:profileUrl,slot_datetime:slotTime,is_new_patient:isNew,motive_keyword:motive,is_teleconsult:isTele})
+    })).json();
+
+    if(d.status==='running'){
+      // Polling toutes les 4s jusqu'à confirmation
+      const iv=setInterval(async()=>{
+        try{
+          const s=await (await fetch(`${API}/book/status`)).json();
+          if(s.booking_state==='done'){
+            clearInterval(iv);
+            const res=s.result;
+            if(res?.status==='success'){
+              addMsg('ai',`<p style="color:var(--green)">✅ ${res.message}</p>`);
+            } else {
+              addMsg('ai',`<p style="color:var(--amber)">⚠ ${res?.message||'Erreur booking'}</p>`);
+            }
+          } else if(s.booking_state==='error'){
+            clearInterval(iv);
+            addMsg('ai',`<p style="color:var(--red)">❌ ${s.result?.message||'Erreur inconnue'}</p>`);
           }
-        } catch{}
-      }, 5000);
-      setTimeout(()=>{ clearInterval(poll); btn.disabled=false; }, 180000);
+        }catch(e){}
+      },4000);
+      setTimeout(()=>clearInterval(iv),180000);
     } else {
-      throw new Error(`HTTP ${r.status}`);
+      addMsg('ai',`<p style="color:var(--red)">❌ ${d.message||'Erreur'}</p>`);
     }
-  } catch(e) {
-    status.className='crawl-status';
-    status.textContent='⚠ Backend inaccessible';
-    btn.disabled=false;
+  }catch(e){
+    addMsg('ai','<p style="color:var(--red)">Backend inaccessible — vérifie uvicorn.</p>');
   }
 }
 
-// ── API Key Anthropic ────────────────────────────────────────
-async function saveApiKey() {
-  const key = document.getElementById('apikey-input').value.trim();
-  const status = document.getElementById('apikey-status');
-  if(!key) return;
-  status.textContent = '⟳ Enregistrement...';
-  status.style.color = 'var(--muted)';
-  try {
-    const r = await fetch(`${API}/config/apikey`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({api_key: key})
-    });
-    const d = await r.json();
-    if(r.ok) {
-      status.textContent = '';
-      document.getElementById('apikey-form').style.display='none';
-      document.getElementById('apikey-configured').style.display='block';
-      document.getElementById('apikey-masked').textContent = `✅ ${d.provider} — ${d.masked}`;
-      document.getElementById('ai-mode-badge').textContent = `✦ ${d.provider} AI`;
-      document.getElementById('ai-mode-badge').style.background='rgba(13,217,155,.12)';
-      document.getElementById('ai-mode-badge').style.color='var(--green)';
-    } else {
-      status.textContent = `⚠ ${d.detail || 'Erreur'}`;
-      status.style.color = 'var(--red)';
+// ── API Key ───────────────────────────────────────────────────
+async function saveApiKey(){
+  const key=document.getElementById('apikey-input').value.trim(); if(!key) return;
+  try{
+    const d=await (await fetch(`${API}/config/apikey`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key})})).json();
+    if(d.status==='ok'){
+      document.getElementById('apikey-display').textContent=`✅ ${d.provider==='gemini'?'Gemini':'Claude'} — ${d.preview}`;
+      document.getElementById('apikey-display').style.color='var(--green)';
+      document.getElementById('apikey-input-row').style.display='none';
+      document.getElementById('ai-badge').textContent=`+ ${d.provider==='gemini'?'Gemini':'Claude'} AI`;
     }
-  } catch(e) {
-    status.textContent = '⚠ Backend inaccessible';
-    status.style.color = 'var(--amber)';
-  }
+  }catch(e){}
 }
 
-function resetApiKey() {
-  document.getElementById('apikey-configured').style.display='none';
-  document.getElementById('apikey-form').style.display='block';
-  document.getElementById('apikey-input').value='';
-  document.getElementById('apikey-status').textContent='';
-}
-
-async function checkApiKey() {
-  try {
-    const r = await fetch(`${API}/config/apikey`);
-    const d = await r.json();
-    if(d.configured) {
-      document.getElementById('apikey-form').style.display='none';
-      document.getElementById('apikey-configured').style.display='block';
-      document.getElementById('apikey-masked').textContent = `✅ ${d.provider} — ${d.masked}`;
-      document.getElementById('ai-mode-badge').textContent = `✦ ${d.provider} AI`;
-      document.getElementById('ai-mode-badge').style.background='rgba(13,217,155,.12)';
-      document.getElementById('ai-mode-badge').style.color='var(--green)';
-    }
-  } catch(e) {}
-}
+fetch(`${API}/config/apikey`).then(r=>r.json()).then(d=>{
+  const el=document.getElementById('apikey-display');
+  if(d.configured){ el.textContent=`✅ ${d.provider==='gemini'?'Gemini':'Claude'} — ${d.preview}`; el.style.color='var(--green)'; document.getElementById('ai-badge').textContent=`+ ${d.provider==='gemini'?'Gemini':'Claude'} AI`; }
+  else { el.textContent='Aucune clé configurée'; }
+}).catch(()=>{});
 
 // ── Init ─────────────────────────────────────────────────────
 buildWeights();
-checkApiKey();
-
-// Vérifie si des données crawler existent
 fetch(`${API}/status`).then(r=>r.json()).then(d=>{
   if(d.has_data&&d.slots>0){
     document.getElementById('crawl-status').textContent=`✅ ${d.slots} créneaux (${d.specialty})`;
@@ -830,164 +636,7 @@ fetch(`${API}/status`).then(r=>r.json()).then(d=>{
     document.getElementById('src-badge').textContent='✅ données crawlee';
   }
 }).catch(()=>{});
-
-// Message d'accueil
-setTimeout(()=>{
-  addMsg('ai','<p>Bonjour ! Décrivez votre besoin médical — je trouve le meilleur créneau selon votre emploi du temps et vos préférences. Vous pouvez aussi parler 🎙</p>');
-}, 500);
-
-// ── Agenda — parsing du label "Dr X — Wed 01/04 13:15" ──────
-function parseSlotLabel(label) {
-  // label format: "Dr Aurélie TRABELSI — Wed 01/04 13:15"
-  const parts  = label.split(' — ');
-  const doctor = parts[0].trim();
-  const dateStr = parts[parts.length - 1].trim(); // "Wed 01/04 13:15"
-  const m = dateStr.match(/(\d{1,2})\/(\d{2})\s+(\d{1,2}):(\d{2})/);
-  if(!m) return null;
-  const day=m[1].padStart(2,'0'), month=m[2], hour=m[3].padStart(2,'0'), min=m[4];
-  const year = new Date().getFullYear();
-  return { doctor, day, month, year, hour, min,
-    dateISO: `${year}-${month}-${day}T${hour}:${min}:00`,
-    dateCompact: `${year}${month}${day}T${hour}${min}00`,
-  };
-}
-
-function addToCalendar(label, specialty) {
-  const s = parseSlotLabel(label);
-  if(!s) return;
-  const SPEC = {dermatologue:'Dermatologue',gynecologue:'Gynécologue',cardiologue:'Cardiologue','medecin-generaliste':'Médecin généraliste',ophtalmologue:'Ophtalmologue',psychiatre:'Psychiatre',dentiste:'Dentiste',kinesitherapeute:'Kinésithérapeute'};
-  const title = encodeURIComponent(`RDV ${SPEC[specialty]||specialty} — ${s.doctor}`);
-  const details = encodeURIComponent(`Rendez-vous médical avec ${s.doctor}\nSpécialité : ${SPEC[specialty]||specialty}\nOrganisé via SmartRDV`);
-  // Heure de fin : +1h
-  const endHour = String(parseInt(s.hour)+1).padStart(2,'0');
-  const startDT = s.dateCompact;
-  const endDT   = `${s.year}${s.month}${s.day}T${endHour}${s.min}00`;
-  const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDT}/${endDT}&details=${details}`;
-  document.getElementById('gcal-link').href = gcalUrl;
-  document.getElementById('calendar-actions').style.display = 'block';
-}
-
-function downloadICS(label, specialty, type='ics') {
-  const s = parseSlotLabel(label);
-  if(!s) return;
-  const SPEC = {dermatologue:'Dermatologue',gynecologue:'Gynécologue',cardiologue:'Cardiologue','medecin-generaliste':'Médecin généraliste',ophtalmologue:'Ophtalmologue',psychiatre:'Psychiatre',dentiste:'Dentiste',kinesitherapeute:'Kinésithérapeute'};
-  const title = `RDV ${SPEC[specialty]||specialty} - ${s.doctor}`;
-  const endHour = String(parseInt(s.hour)+1).padStart(2,'0');
-  const now = new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)+'Z';
-  const ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//SmartRDV//FR',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    'BEGIN:VEVENT',
-    `DTSTART:${s.dateCompact}`,
-    `DTEND:${s.year}${s.month}${s.day}T${endHour}${s.min}00`,
-    `DTSTAMP:${now}`,
-    `SUMMARY:${title}`,
-    `DESCRIPTION:Rendez-vous médical avec ${s.doctor}\\nOrganisé via SmartRDV`,
-    `UID:smartrdv-${s.dateCompact}@smartrdv`,
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
-  const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = `rdv-${s.doctor.replace(/\s+/g,'-').toLowerCase()}.ics`;
-  a.click(); URL.revokeObjectURL(url);
-}
-
-// ── Booking direct ───────────────────────────────────────────
-async function launchBookingDirect() {
-  const best = window._lastBest;
-  const nlp  = window._lastNLP || {};
-  if(!best) { addMsg('ai','<p>Aucun créneau sélectionné.</p>'); return; }
-
-  const isNew  = nlp.is_new_patient ?? true;
-  const motive = nlp.motive         ?? null;
-  const isTele = nlp.is_teleconsult ?? false;
-  const spec   = window._currentNLP?.specialty || activeSpec;
-
-  // Vérifie si connecté à Doctolib
-  let isLoggedIn = false;
-  try {
-    const authR = await fetch(`${API}/auth/status`);
-    const authD = await authR.json();
-    isLoggedIn = authD.connected;
-  } catch(e) {}
-
-  if(!isLoggedIn) {
-    addMsg('ai', `<p style="color:var(--amber)">⚠ Connecte-toi d'abord à Doctolib dans la sidebar (section "Compte Doctolib") pour réserver automatiquement.</p>
-    <p style="margin-top:8px;font-size:12px;color:var(--muted)">Ou <b>ajoute le créneau à ton agenda</b> et réserve manuellement sur Doctolib.</p>`);
-    return;
-  }
-
-  const timeMatch = best.label.match(/(\d{1,2}:\d{2})$/);
-  const slotTime  = timeMatch ? timeMatch[1] : '09:00';
-
-  const bestName = best.label.split(' — ')[0].trim();
-  let profileUrl = '';
-  try {
-    const pracs = await fetch(`${API}/practitioners`).then(r=>r.json());
-    const match = pracs.find(p =>
-      p.name === bestName ||
-      (p.name||'').toLowerCase().includes(bestName.toLowerCase()) ||
-      bestName.toLowerCase().includes((p.name||'').toLowerCase())
-    );
-    if(match?.profile_url) profileUrl = match.profile_url;
-  } catch(e) {}
-
-  if(!profileUrl) {
-    const loc  = (window._currentNLP?.location || 'Paris').toLowerCase();
-    const slug = bestName.toLowerCase()
-      .replace(/^(dr\.?|pr\.?)\s+/i,'')
-      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-      .replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-');
-    profileUrl = `https://www.doctolib.fr/${spec}/${loc}/${slug}`;
-  }
-
-  const btn = document.getElementById('book-btn');
-  if(btn) { btn.disabled=true; btn.textContent='⟳ Ouverture Doctolib...'; }
-
-  addMsg('ai', `<p>🚀 Lancement de la réservation pour <b>${bestName}</b>...<br>
-    <span style="color:var(--muted);font-size:12px">Le navigateur Doctolib va s'ouvrir — validez manuellement la confirmation finale.</span></p>`);
-
-  try {
-    const r = await fetch(`${API}/book`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        profile_url:    profileUrl,
-        slot_datetime:  slotTime,
-        is_new_patient: isNew,
-        motive_keyword: motive,
-        is_teleconsult: isTele,
-      })
-    });
-    const d = await r.json();
-    if(d.status === 'success') {
-      addMsg('ai',`
-        <p style="color:var(--green)">✅ Tunnel Doctolib complété !</p>
-        <p style="font-size:12px;color:var(--muted);margin-top:6px">N'oublie pas d'ajouter ce rendez-vous à ton agenda :</p>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button onclick="addToCalendar('${best.label.replace(/'/g,"\\'")}','${spec}');document.getElementById('calendar-actions') && document.getElementById('calendar-actions').scrollIntoView()" 
-            style="padding:8px 14px;background:#4285f4;color:white;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer">
-            📅 Google Agenda
-          </button>
-          <button onclick="downloadICS('${best.label.replace(/'/g,"\\'")}','${spec}')"
-            style="padding:8px 14px;background:var(--s3);color:var(--text);border:0.5px solid var(--border2);border-radius:7px;font-size:12px;font-weight:600;cursor:pointer">
-            ↓ .ics (Outlook/Apple)
-          </button>
-        </div>`);
-    } else {
-      addMsg('ai',`<p style="color:var(--amber)">⚠ ${d.message || "Erreur booking"}</p>`);
-      if(btn) { btn.disabled=false; btn.textContent='📅 Réserver sur Doctolib →'; }
-    }
-  } catch(e) {
-    addMsg('ai','<p style="color:var(--red)">Backend inaccessible — vérifie uvicorn.</p>');
-    if(btn) { btn.disabled=false; btn.textContent='📅 Réserver sur Doctolib →'; }
-  }
-}
-
+setTimeout(()=>{ addMsg('ai','<p>Bonjour ! Décrivez votre besoin médical — je trouve le meilleur créneau selon votre emploi du temps et vos préférences. Vous pouvez aussi parler 🎙</p>'); },500);
 </script>
 </body>
 </html>

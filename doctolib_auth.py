@@ -1,44 +1,26 @@
 """
-Doctolib Auth — Connexion compte patient
-==========================================
-Se connecte une seule fois avec email + mot de passe,
-sauvegarde les cookies de session dans un fichier local,
-les réutilise automatiquement pour tous les bookings suivants.
-
-Usage :
-    python doctolib_auth.py          → connexion manuelle
-    from doctolib_auth import get_session_cookies
+Doctolib Auth — Connexion manuelle + 2FA + capture cookies
+Utilise page.wait_for_url() pour détecter la connexion de façon fiable.
 """
 
 import json
 import os
-import getpass
+import time
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
 SESSION_FILE = "doctolib_session.json"
 
-# ============================================================
-# CONNEXION
-# ============================================================
 
-def login(email: str = None, password: str = None, headless: bool = False) -> dict:
-    """
-    Ouvre Doctolib, connecte le compte patient, sauvegarde les cookies.
-    Retourne les cookies de session.
-    """
-    if not email:
-        email    = input("[Auth] Email Doctolib : ").strip()
-    if not password:
-        password = getpass.getpass("[Auth] Mot de passe : ")
+def login(email: str = None, password: str = None, headless: bool = False) -> list:
+    print(f"\n[Auth] Ouverture du navigateur pour {email}...")
 
-    print(f"\n[Auth] Connexion en cours pour {email}...")
-
-    cookies = []
+    is_logged = False
+    cookies   = []
 
     with sync_playwright() as pw:
         browser = pw.chromium.launch(
-            headless=headless,
+            headless=False,
             args=["--disable-blink-features=AutomationControlled"]
         )
         context = browser.new_context(
@@ -51,184 +33,103 @@ def login(email: str = None, password: str = None, headless: bool = False) -> di
         )
         page = context.new_page()
 
-        # ── Ouvre Doctolib ────────────────────────────────────
-        page.goto("https://www.doctolib.fr", wait_until="domcontentloaded")
+        page.goto("https://www.doctolib.fr/sessions/new", wait_until="domcontentloaded")
+        page.wait_for_timeout(2000)
 
-        # Accepte les cookies
-        for txt in ["Accepter", "ACCEPTER"]:
+        # Accepte les cookies si bandeau présent
+        for txt in ["Accepter et fermer", "Tout accepter", "Accepter"]:
             try:
-                btn = page.get_by_text(txt, exact=True)
-                if btn.is_visible(timeout=2000):
+                btn = page.locator(f'button:has-text("{txt}")').first
+                if btn.is_visible(timeout=1500):
                     btn.click()
                     page.wait_for_timeout(800)
                     break
             except:
                 pass
 
-        # ── Clique "Se connecter" ─────────────────────────────
+        # Pré-remplit l'email
+        if email:
+            for sel in ['input[name="username"]', 'input[type="email"]', 'input[id="username"]']:
+                try:
+                    f = page.locator(sel).first
+                    if f.is_visible(timeout=1500):
+                        f.fill(email)
+                        break
+                except:
+                    pass
+
+        print("[Auth] Connecte-toi dans la fenetre (email + mot de passe + code 2FA).")
+        print("[Auth] La fenetre se fermera automatiquement une fois sur 'Mes rendez-vous'.")
+
+        # ── Attend que l'URL corresponde à une page connectée ────
+        # wait_for_url supporte les glob patterns, timeout en ms
         try:
-            btn = page.get_by_text("Se connecter", exact=False)
-            if btn.is_visible(timeout=3000):
-                btn.click()
-                page.wait_for_timeout(1500)
-        except:
-            page.goto("https://www.doctolib.fr/sessions/new")
-            page.wait_for_timeout(1500)
-
-        # ── Remplit email + mot de passe ──────────────────────
-        try:
-            # Email
-            email_field = page.locator('input[type="email"], input[name="email"], input[id*="email"]').first
-            email_field.wait_for(state="visible", timeout=5000)
-            email_field.fill(email)
-            page.wait_for_timeout(500)
-
-            # Mot de passe
-            pwd_field = page.locator('input[type="password"]').first
-            pwd_field.wait_for(state="visible", timeout=5000)
-            pwd_field.fill(password)
-            page.wait_for_timeout(500)
-
-            # Soumet le formulaire
-            pwd_field.press("Enter")
-            page.wait_for_timeout(3000)
-
-            print("[Auth] Formulaire soumis...")
+            page.wait_for_url(
+                "**/account/**",
+                timeout=180_000,   # 3 minutes
+                wait_until="domcontentloaded"
+            )
+            is_logged = True
+            print(f"[Auth] Connexion confirmee ! URL : {page.url}")
+            page.wait_for_timeout(1500)  # Laisse les cookies se charger
 
         except Exception as e:
-            print(f"[Auth] Erreur formulaire : {e}")
-            print("[Auth] Connecte-toi manuellement dans le navigateur...")
-            input("[Auth] >>> Appuie sur ENTREE une fois connecté... ")
+            print(f"[Auth] Timeout ou erreur : {e}")
+            print("[Auth] Cookies sauvegardes quand meme.")
 
-        # ── Vérifie la connexion ──────────────────────────────
-        is_logged = page.evaluate("""
-            () => document.body.innerHTML.includes('Mon compte') ||
-                  document.body.innerHTML.includes('Mes rendez-vous') ||
-                  !!document.querySelector('[data-test="account-menu"]') ||
-                  !!document.querySelector('[href*="mes-rdv"]')
-        """)
-
-        if is_logged:
-            print("[Auth] ✅ Connecté !")
-        else:
-            print("[Auth] ⚠️  Connexion non détectée")
-            # 2FA ou autre vérification ?
-            title = page.title()
-            print(f"[Auth] Page actuelle : {title}")
-            if "vérification" in title.lower() or "code" in title.lower():
-                print("[Auth] Une vérification 2FA est peut-être requise")
-                print("[Auth] Complète-la dans le navigateur puis appuie sur ENTREE")
-                input("[Auth] >>> ")
-
-        # ── Sauvegarde les cookies ────────────────────────────
         cookies = context.cookies()
         browser.close()
 
-    # Sauvegarde dans le fichier session
     session_data = {
-        "email":      email,
-        "logged_at":  datetime.now().isoformat(),
-        "cookies":    cookies,
+        "email":        email or "",
+        "logged_at":    datetime.now().isoformat(),
+        "cookies":      cookies,
+        "is_logged":    is_logged,
     }
     with open(SESSION_FILE, "w", encoding="utf-8") as f:
         json.dump(session_data, f, ensure_ascii=False, indent=2)
 
-    print(f"[Auth] Session sauvegardée ({len(cookies)} cookies) → {SESSION_FILE}")
+    print(f"[Auth] {len(cookies)} cookies sauvegardes -> {SESSION_FILE}")
     return cookies
 
 
-# ============================================================
-# CHARGEMENT DE LA SESSION
-# ============================================================
-
 def get_session_cookies() -> list:
-    """
-    Retourne les cookies de session sauvegardés.
-    Si pas de session ou session expirée → relance la connexion.
-    """
     if not os.path.exists(SESSION_FILE):
-        print("[Auth] Pas de session — connexion requise")
-        return login()
-
+        raise Exception("Pas de session — connecte-toi via la sidebar SmartRDV")
     with open(SESSION_FILE, encoding="utf-8") as f:
         data = json.load(f)
-
-    cookies   = data.get("cookies", [])
-    logged_at = data.get("logged_at", "")
-    email     = data.get("email", "")
-
-    print(f"[Auth] Session existante : {email} (connecté le {logged_at[:10]})")
-
-    # Vérifie si la session est encore valide
-    if _is_session_valid(cookies):
-        print("[Auth] ✅ Session valide — réutilisation")
-        return cookies
-    else:
-        print("[Auth] Session expirée — reconnexion nécessaire")
-        return login(email=email)
-
-
-def _is_session_valid(cookies: list) -> bool:
-    """
-    Vérifie rapidement si les cookies Doctolib sont encore valides.
-    """
-    doctolib_cookies = [c for c in cookies if "doctolib" in c.get("domain", "")]
-    if not doctolib_cookies:
-        return False
-
-    # Cherche le cookie de session principal
-    session_cookie = next(
-        (c for c in cookies if "_doctolib_session" in c.get("name", "")),
-        None
-    )
-    if not session_cookie:
-        return False
-
-    # Vérifie l'expiration si disponible
-    expires = session_cookie.get("expires", -1)
-    if expires > 0:
-        import time
-        if time.time() > expires:
-            return False
-
-    return True
+    print(f"[Auth] Session : {data.get('email','')} (le {data.get('logged_at','')[:10]})")
+    return data.get("cookies", [])
 
 
 def session_info() -> dict:
-    """Retourne les infos de la session courante."""
     if not os.path.exists(SESSION_FILE):
         return {"connected": False, "message": "Pas de session"}
     with open(SESSION_FILE, encoding="utf-8") as f:
         data = json.load(f)
     return {
-        "connected":  True,
-        "email":      data.get("email", ""),
-        "logged_at":  data.get("logged_at", ""),
+        "connected":     True,
+        "email":         data.get("email", ""),
+        "logged_at":     data.get("logged_at", ""),
         "cookies_count": len(data.get("cookies", [])),
+        "is_logged":     data.get("is_logged", False),
     }
 
 
 def logout():
-    """Supprime la session sauvegardée."""
     if os.path.exists(SESSION_FILE):
         os.remove(SESSION_FILE)
-        print("[Auth] Session supprimée")
-    else:
-        print("[Auth] Pas de session à supprimer")
+        print("[Auth] Session supprimee")
 
-
-# ============================================================
-# ENTRY POINT
-# ============================================================
 
 if __name__ == "__main__":
-    import sys
+    import sys, getpass
     if len(sys.argv) > 1 and sys.argv[1] == "logout":
         logout()
     elif len(sys.argv) > 1 and sys.argv[1] == "info":
-        info = session_info()
-        print(json.dumps(info, indent=2, ensure_ascii=False))
+        print(json.dumps(session_info(), indent=2, ensure_ascii=False))
     else:
-        cookies = login()
-        print(f"\n✅ Connecté — {len(cookies)} cookies sauvegardés")
-        print("Tu peux maintenant utiliser SmartRDV pour réserver automatiquement.")
+        em = input("Email Doctolib : ").strip()
+        pw = getpass.getpass("Mot de passe : ")
+        cookies = login(email=em, password=pw)
+        print(f"\n{len(cookies)} cookies sauvegardes")

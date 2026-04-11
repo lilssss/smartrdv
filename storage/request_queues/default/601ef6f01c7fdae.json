@@ -1,0 +1,16 @@
+{
+  "unique_key": "https://www.doctolib.fr/ophtalmologue/paris",
+  "url": "https://www.doctolib.fr/ophtalmologue/paris",
+  "method": "GET",
+  "payload": null,
+  "headers": {},
+  "user_data": {
+    "__crawlee": {
+      "state": 4
+    }
+  },
+  "retry_count": 0,
+  "no_retry": false,
+  "loaded_url": null,
+  "handled_at": "2026-03-16 13:54:52.034034+00:00"
+}
