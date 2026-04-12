@@ -7,3 +7,5 @@ sqlalchemy>=2.0.0
 # Crawlee — scraping anti-détection
 crawlee[playwright]
 playwright
+#   Telegram Bot API
+python-telegram-bot>=20.0

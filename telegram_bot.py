@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 
 # ── Config ────────────────────────────────────────────────────
-TELEGRAM_TOKEN = "8092250364:AAHO2X3uFXIvBRlYh3M_OK6BaneBJT1cnrE"  # ← remplace après avoir révoqué
+TELEGRAM_TOKEN = "METS_TON_TOKEN_ICI"
 API_BASE       = "http://localhost:8000"
 
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +27,9 @@ def call_chat(message: str, history: list = []) -> dict:
     return r.json()
 
 def call_crawl_auto(specialty: str, location: str = "Paris") -> dict:
-    r = requests.post(f"{API_BASE}/crawl/auto", json={"specialty": specialty, "location": location}, timeout=120)
+    r = requests.post(f"{API_BASE}/crawl/auto",
+        json={"specialty": specialty or "medecin-generaliste", "location": location or "Paris"},
+        timeout=300)
     r.raise_for_status()
     return r.json()
 
@@ -39,15 +41,20 @@ def call_recommend(specialty: str, location: str, preferred_day: int = None,
         "preferred_day":         preferred_day,
     }
     r = requests.post(f"{API_BASE}/recommend",
-        json={"specialty": specialty, "location": location, "top_n": 5, "preferences": prefs},
+        json={
+            "specialty":  specialty or "medecin-generaliste",
+            "location":   location or "Paris",
+            "top_n":      5,
+            "preferences": prefs
+        },
         timeout=20)
     r.raise_for_status()
     return r.json()
 
 def call_book(profile_url: str, slot_time: str) -> dict:
     r = requests.post(f"{API_BASE}/book", json={
-        "profile_url": profile_url,
-        "slot_datetime": slot_time,
+        "profile_url":    profile_url,
+        "slot_datetime":  slot_time,
         "is_new_patient": True,
     }, timeout=10)
     r.raise_for_status()
@@ -59,7 +66,6 @@ def call_book_status() -> dict:
     return r.json()
 
 # ── État des conversations ────────────────────────────────────
-# user_id → {"history": [], "nlp": {}, "data": {}}
 user_sessions = {}
 
 def get_session(user_id: int) -> dict:
@@ -71,7 +77,7 @@ def get_session(user_id: int) -> dict:
 
 async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    user_sessions.pop(update.effective_user.id, None)  # reset session
+    user_sessions.pop(update.effective_user.id, None)
     await update.message.reply_text(
         f"👋 Bonjour {user.first_name} ! Je suis *SmartRDV*, ton assistant médical IA.\n\n"
         "Dis-moi simplement ce dont tu as besoin :\n"
@@ -128,9 +134,9 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(nlp.get("message", "Comment puis-je t'aider ?"))
         return
 
-    # ── Booking intent ────────────────────────────────────────
-    specialty = nlp.get("specialty", "medecin-generaliste")
-    location  = nlp.get("location", "Paris")
+    # ── Booking intent — valeurs avec fallback ────────────────
+    specialty = nlp.get("specialty") or "medecin-generaliste"
+    location  = nlp.get("location") or "Paris"
 
     await update.message.reply_text(
         f"🔍 {nlp.get('message', '')}\n\n⏳ Je crawle Doctolib pour *{specialty}* à *{location}*...",
@@ -148,10 +154,10 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     # ── Recommend ─────────────────────────────────────────────
     try:
         data = call_recommend(
-            specialty      = specialty,
-            location       = location,
-            preferred_day  = nlp.get("preferred_day_num"),
-            preferred_hours= nlp.get("preferred_hours"),
+            specialty       = specialty,
+            location        = location,
+            preferred_day   = nlp.get("preferred_day_num"),
+            preferred_hours = nlp.get("preferred_hours"),
         )
         session["data"] = data
     except Exception as e:
@@ -162,7 +168,6 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     best   = data["best"]
     ranked = data.get("ranked", [])[:5]
 
-    # Boutons pour les 5 meilleurs créneaux
     keyboard = []
     for i, slot in enumerate(ranked):
         label = slot["label"]
@@ -174,8 +179,8 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         )])
     keyboard.append([InlineKeyboardButton("❌ Annuler", callback_data="cancel")])
 
-    warning = data.get("warning", "")
-    msg = f"🏥 *Meilleur créneau trouvé :*\n\n"
+    warning = data.get("warning") or ""
+    msg  = f"🏥 *Meilleur créneau trouvé :*\n\n"
     msg += f"👨‍⚕️ *{best['label']}*\n"
     msg += f"📊 Score : {int(best['total_score']*100)}/100 _(plus c'est bas, mieux c'est)_\n"
     if warning:
@@ -205,9 +210,9 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         return
 
     if data.startswith("book:"):
-        idx     = int(data.split(":")[1])
-        ranked  = session.get("data", {}).get("ranked", [])
-        nlp     = session.get("nlp", {})
+        idx    = int(data.split(":")[1])
+        ranked = session.get("data", {}).get("ranked", [])
+        nlp    = session.get("nlp", {})
 
         if idx >= len(ranked):
             await query.edit_message_text("❌ Créneau invalide.")
@@ -215,10 +220,8 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
         slot      = ranked[idx]
         label     = slot["label"]
-        time_match = label.split(":")
-        slot_time  = label[-5:] if len(label) >= 5 else "09:00"
+        slot_time = label[-5:] if len(label) >= 5 else "09:00"
 
-        # Récupère le profile_url depuis les practitioners
         best_name   = label.split(" — ")[0].strip()
         profile_url = ""
         prac_map    = session.get("data", {}).get("practitioners_map", {})
@@ -226,8 +229,8 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             profile_url = prac_map[best_name]
 
         if not profile_url:
-            spec = nlp.get("specialty", "medecin-generaliste")
-            loc  = nlp.get("location", "Paris").lower()
+            spec = nlp.get("specialty") or "medecin-generaliste"
+            loc  = (nlp.get("location") or "Paris").lower()
             slug = best_name.lower().replace("dr. ","").replace("dr ","").replace(" ","-")
             profile_url = f"https://www.doctolib.fr/{spec}/{loc}/{slug}"
 
@@ -238,14 +241,12 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             parse_mode="Markdown"
         )
 
-        # Lance le booking
         try:
             call_book(profile_url, slot_time)
         except Exception as e:
             await ctx.bot.send_message(user_id, f"❌ Erreur booking : {e}")
             return
 
-        # Poll le statut toutes les 5s pendant 3 minutes
         import asyncio
         for _ in range(36):
             await asyncio.sleep(5)
@@ -255,22 +256,16 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                 result = status.get("result", {})
                 if state == "done":
                     if result.get("status") == "success":
-                        await ctx.bot.send_message(
-                            user_id,
+                        await ctx.bot.send_message(user_id,
                             f"✅ *{result.get('message', 'Rendez-vous confirmé !')}*",
-                            parse_mode="Markdown"
-                        )
+                            parse_mode="Markdown")
                     else:
-                        await ctx.bot.send_message(
-                            user_id,
-                            f"⚠️ {result.get('message', 'Erreur lors de la réservation')}"
-                        )
+                        await ctx.bot.send_message(user_id,
+                            f"⚠️ {result.get('message', 'Erreur lors de la réservation')}")
                     return
                 elif state == "error":
-                    await ctx.bot.send_message(
-                            user_id,
-                            f"❌ {result.get('message', 'Erreur inconnue')}"
-                        )
+                    await ctx.bot.send_message(user_id,
+                        f"❌ {result.get('message', 'Erreur inconnue')}")
                     return
             except:
                 pass
