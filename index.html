@@ -205,22 +205,6 @@ body::before{
       </div>
     </div>
 
-    <div>
-      <h3>Clé IA (Gemini ou Claude)</h3>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <div id="apikey-display" style="font-size:11px;color:var(--muted)">Chargement...</div>
-        <button onclick="document.getElementById('apikey-input-row').style.display='flex'" style="width:100%;padding:7px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--muted);font-size:11px;cursor:pointer">
-          Changer la clé
-        </button>
-        <div id="apikey-input-row" style="display:none;gap:6px;flex-direction:column">
-          <input id="apikey-input" type="text" placeholder="AIza... ou sk-ant-..."
-            style="width:100%;background:var(--s2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-size:11px;padding:7px 10px;outline:none">
-          <button onclick="saveApiKey()" style="width:100%;padding:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:var(--rsm);font-size:11px;font-weight:600;cursor:pointer">
-            Sauvegarder
-          </button>
-        </div>
-      </div>
-    </div>
 
     <div>
       <h3>Crawler Crawlee</h3>
@@ -605,20 +589,6 @@ async function launchBookingDirect(){
   }catch(e){
     addMsg('ai','<p style="color:var(--red)">Backend inaccessible — vérifie uvicorn.</p>');
   }
-}
-
-// ── API Key ───────────────────────────────────────────────────
-async function saveApiKey(){
-  const key=document.getElementById('apikey-input').value.trim(); if(!key) return;
-  try{
-    const d=await (await fetch(`${API}/config/apikey`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key})})).json();
-    if(d.status==='ok'){
-      document.getElementById('apikey-display').textContent=`✅ ${d.provider==='gemini'?'Gemini':'Claude'} — ${d.preview}`;
-      document.getElementById('apikey-display').style.color='var(--green)';
-      document.getElementById('apikey-input-row').style.display='none';
-      document.getElementById('ai-badge').textContent=`+ ${d.provider==='gemini'?'Gemini':'Claude'} AI`;
-    }
-  }catch(e){}
 }
 
 fetch(`${API}/config/apikey`).then(r=>r.json()).then(d=>{

@@ -1,0 +1,3 @@
+[console_scripts]
+crawlee=crawlee._cli:cli
+
