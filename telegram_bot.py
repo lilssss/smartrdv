@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 
 # ── Config ────────────────────────────────────────────────────
-TELEGRAM_TOKEN = "METS_TON_TOKEN_ICI"
+TELEGRAM_TOKEN = "8092250364:AAHO2X3uFXIvBRlYh3M_OK6BaneBJT1cnrE"
 API_BASE       = "http://localhost:8000"
 
 logging.basicConfig(level=logging.INFO)

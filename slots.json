@@ -1,51 +1,51 @@
 {
-  "scraped_at": "2026-04-12T11:55:42.355273",
-  "specialty": "gynecologue",
+  "scraped_at": "2026-04-14T00:20:31.060603",
+  "specialty": "dermatologue",
   "location": "Paris",
   "practitioners": [
     {
       "id": 1,
-      "name": "Dr Vanessa GAYET",
-      "specialty": "gynecologue",
+      "name": "Dr Alina-Sinziana DUTU",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/vanessa-gayet-paris",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/alina-sinziana-dutu",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 38
+      "slots_count": 0
     },
     {
       "id": 2,
-      "name": "Dr Iptissem NAOURA",
-      "specialty": "gynecologue",
+      "name": "Dr Nina Roos",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue/paris/iptissem-naoura",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/nina-roos",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 7
+      "slots_count": 18
     },
     {
       "id": 3,
-      "name": "Dr ABDESLAM FAHD",
-      "specialty": "gynecologue",
+      "name": "Dr Ines NAKOURI-DUHAMEL",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue/paris/abdeslam-fahd",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/ines-nakouri-duhamel",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 2
+      "slots_count": 0
     },
     {
       "id": 4,
-      "name": "Dr Margaux Jegaden",
-      "specialty": "gynecologue",
+      "name": "Dr Chirine Rezzag",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/margaux-jegaden-6af580ac-25cd-47db-b174-d578a443477e",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/chirine-rezzag-paris",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
@@ -53,71 +53,71 @@
     },
     {
       "id": 5,
-      "name": "Dr Lionel LARUE",
-      "specialty": "gynecologue",
+      "name": "Dr Noémie FINKEL-TAPIERO",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/lionel-larue",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/noemie-finkel-tapiero",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 10
+      "slots_count": 0
     },
     {
       "id": 6,
-      "name": "Dr Céline BERNABE-DUPONT",
-      "specialty": "gynecologue",
+      "name": "Dr Gilles Battesti",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/levallois-perret/celine-bernabe-dupont",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/gilles-battesti",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 51
+      "slots_count": 14
     },
     {
       "id": 7,
-      "name": "Dr Silvia Alvarez",
-      "specialty": "gynecologue",
+      "name": "Dr Jessica Fareau",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/silvia-alvarez",
+      "profile_url": "https://www.doctolib.fr/dermatologue/gemenos/jessica-fareau",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 1
+      "slots_count": 0
     },
     {
       "id": 8,
-      "name": "Médecin inconnu",
-      "specialty": "gynecologue",
+      "name": "Cabinet de dermatologie chirurgicale",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "",
+      "profile_url": "https://www.doctolib.fr/cabinet-medical/paris/centre-cabinet-de-dermatologie-chirurgicale",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 1
+      "slots_count": 221
     },
     {
       "id": 9,
-      "name": "Dr Patrick Cohen-Scali",
-      "specialty": "gynecologue",
+      "name": "Dr CECILE TOLEDANO",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/patrick-cohen-scali",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/cecile-toledano-paris",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 16
+      "slots_count": 0
     },
     {
       "id": 10,
-      "name": "Hôpital Pierre Rouquès – Maternité Les Bluets",
-      "specialty": "gynecologue",
+      "name": "Dr Olivier BAYROU",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/espic-etablissement-de-sante-prive-d-interet-collectif/paris/hopital-pierre-rouques-maternite-les-bluets",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/olivier-bayrou",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
@@ -125,600 +125,328 @@
     },
     {
       "id": 11,
-      "name": "Dr DANIA KARACHOULI",
-      "specialty": "gynecologue",
+      "name": "Dr Romain Hembert",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/dania-karachouli",
+      "profile_url": "https://www.doctolib.fr/dermatologue/saint-cloud/romain-hembert-saint-mande",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 16
+      "slots_count": 0
     },
     {
       "id": 12,
-      "name": "Dr Chloé BENZEKRI",
-      "specialty": "gynecologue",
+      "name": "Dr Alizée Bozonnat",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/paris/chloe-benzekri-paris",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/alizee-bozonnat",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 4
+      "slots_count": 0
     },
     {
       "id": 13,
-      "name": "Médecin inconnu",
-      "specialty": "gynecologue",
+      "name": "Dr Nicolas BACHOT",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/nicolas-bachot",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 2
+      "slots_count": 0
     },
     {
       "id": 14,
-      "name": "Médecin inconnu",
-      "specialty": "gynecologue",
+      "name": "Dr SOPHIE LIPOWICZ",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "",
+      "profile_url": "https://www.doctolib.fr/dermatologue/paris/sophie-lipowicz-paris",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 12
+      "slots_count": 0
     },
     {
       "id": 15,
-      "name": "Dr Audrey VOULGAROPOULOS",
-      "specialty": "gynecologue",
+      "name": "Centre Médical Ramsay Santé Auber",
+      "specialty": "dermatologue",
       "address": "",
       "city": "Paris",
-      "profile_url": "https://www.doctolib.fr/gynecologue-obstetricien/antony/audrey-voulgaropoulos-2141b21d-1cee-4171-b078-c6b23ae701de",
+      "profile_url": "https://www.doctolib.fr/centre-de-sante/paris/centre-medical-ramsay-sante-auber",
       "agenda_ids": [],
       "practice_ids": [],
       "visit_motive_ids": [],
-      "slots_count": 4
+      "slots_count": 0
     }
   ],
   "slots": [
     {
-      "start_date": "09:30",
-      "end_date": "09:30",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "09:45",
-      "end_date": "09:45",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "10:00",
-      "end_date": "10:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "10:15",
-      "end_date": "10:15",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "14:50",
-      "end_date": "14:50",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "15:05",
-      "end_date": "15:05",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "15:20",
-      "end_date": "15:20",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "15:35",
-      "end_date": "15:35",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "11:05",
-      "end_date": "11:05",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "11:50",
-      "end_date": "11:50",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "12:05",
-      "end_date": "12:05",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "12:35",
-      "end_date": "12:35",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "dom"
-    },
-    {
-      "start_date": "2026-04-17T11:05:00.000+02:00",
-      "end_date": "2026-04-17T11:05:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T16:40:00.000+02:00",
-      "end_date": "2026-04-17T16:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T17:25:00.000+02:00",
-      "end_date": "2026-04-17T17:25:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T09:30:00.000+02:00",
-      "end_date": "2026-04-20T09:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T09:45:00.000+02:00",
-      "end_date": "2026-04-20T09:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T10:15:00.000+02:00",
-      "end_date": "2026-04-20T10:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T10:30:00.000+02:00",
-      "end_date": "2026-04-20T10:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T10:45:00.000+02:00",
-      "end_date": "2026-04-20T10:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T11:20:00.000+02:00",
-      "end_date": "2026-04-20T11:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T15:40:00.000+02:00",
-      "end_date": "2026-04-20T15:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T15:55:00.000+02:00",
-      "end_date": "2026-04-20T15:55:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T16:10:00.000+02:00",
-      "end_date": "2026-04-20T16:10:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T16:25:00.000+02:00",
-      "end_date": "2026-04-20T16:25:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T14:30:00.000+02:00",
-      "end_date": "2026-04-21T14:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T14:45:00.000+02:00",
-      "end_date": "2026-04-21T14:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T15:00:00.000+02:00",
-      "end_date": "2026-04-21T15:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T15:15:00.000+02:00",
-      "end_date": "2026-04-21T15:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T15:30:00.000+02:00",
-      "end_date": "2026-04-21T15:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T15:45:00.000+02:00",
-      "end_date": "2026-04-21T15:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T16:00:00.000+02:00",
-      "end_date": "2026-04-21T16:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T16:15:00.000+02:00",
-      "end_date": "2026-04-21T16:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T16:30:00.000+02:00",
-      "end_date": "2026-04-21T16:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T16:45:00.000+02:00",
-      "end_date": "2026-04-21T16:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T17:00:00.000+02:00",
-      "end_date": "2026-04-21T17:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T17:15:00.000+02:00",
-      "end_date": "2026-04-21T17:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T17:45:00.000+02:00",
-      "end_date": "2026-04-21T17:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 1,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-05-11T15:20:00.000+02:00",
-      "end_date": "2026-05-11T15:20:00.000+02:00",
+      "start_date": "2026-06-23T15:15:00.000+02:00",
+      "end_date": "2026-06-23T15:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-11T15:40:00.000+02:00",
-      "end_date": "2026-05-11T15:40:00.000+02:00",
+      "start_date": "2026-06-23T15:30:00.000+02:00",
+      "end_date": "2026-06-23T15:30:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-15T11:20:00.000+02:00",
-      "end_date": "2026-05-15T11:20:00.000+02:00",
+      "start_date": "2026-06-23T16:00:00.000+02:00",
+      "end_date": "2026-06-23T16:00:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-15T14:00:00.000+02:00",
-      "end_date": "2026-05-15T14:00:00.000+02:00",
+      "start_date": "2026-06-23T16:45:00.000+02:00",
+      "end_date": "2026-06-23T16:45:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-15T14:20:00.000+02:00",
-      "end_date": "2026-05-15T14:20:00.000+02:00",
+      "start_date": "2026-06-25T10:15:00.000+02:00",
+      "end_date": "2026-06-25T10:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-15T14:40:00.000+02:00",
-      "end_date": "2026-05-15T14:40:00.000+02:00",
+      "start_date": "2026-06-25T11:15:00.000+02:00",
+      "end_date": "2026-06-25T11:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-15T15:40:00.000+02:00",
-      "end_date": "2026-05-15T15:40:00.000+02:00",
+      "start_date": "2026-06-25T11:45:00.000+02:00",
+      "end_date": "2026-06-25T11:45:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-04T16:00:00.000+02:00",
-      "end_date": "2026-05-04T16:00:00.000+02:00",
+      "start_date": "2026-06-25T12:00:00.000+02:00",
+      "end_date": "2026-06-25T12:00:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 3,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-05-04T16:15:00.000+02:00",
-      "end_date": "2026-05-04T16:15:00.000+02:00",
+      "start_date": "2026-06-25T12:15:00.000+02:00",
+      "end_date": "2026-06-25T12:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 3,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-23T15:45:00.000+02:00",
-      "end_date": "2026-04-23T15:45:00.000+02:00",
+      "start_date": "2026-06-25T14:00:00.000+02:00",
+      "end_date": "2026-06-25T14:00:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-24T14:45:00.000+02:00",
-      "end_date": "2026-04-24T14:45:00.000+02:00",
+      "start_date": "2026-06-25T14:15:00.000+02:00",
+      "end_date": "2026-06-25T14:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-24T15:00:00.000+02:00",
-      "end_date": "2026-04-24T15:00:00.000+02:00",
+      "start_date": "2026-06-25T14:30:00.000+02:00",
+      "end_date": "2026-06-25T14:30:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T14:15:00.000+02:00",
-      "end_date": "2026-04-27T14:15:00.000+02:00",
+      "start_date": "2026-06-25T14:45:00.000+02:00",
+      "end_date": "2026-06-25T14:45:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T14:45:00.000+02:00",
-      "end_date": "2026-04-27T14:45:00.000+02:00",
+      "start_date": "2026-06-25T15:15:00.000+02:00",
+      "end_date": "2026-06-25T15:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T15:00:00.000+02:00",
-      "end_date": "2026-04-27T15:00:00.000+02:00",
+      "start_date": "2026-06-25T15:30:00.000+02:00",
+      "end_date": "2026-06-25T15:30:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T15:15:00.000+02:00",
-      "end_date": "2026-04-27T15:15:00.000+02:00",
+      "start_date": "2026-06-25T16:00:00.000+02:00",
+      "end_date": "2026-06-25T16:00:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T15:45:00.000+02:00",
-      "end_date": "2026-04-27T15:45:00.000+02:00",
+      "start_date": "2026-06-25T16:15:00.000+02:00",
+      "end_date": "2026-06-25T16:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T16:15:00.000+02:00",
-      "end_date": "2026-04-27T16:15:00.000+02:00",
+      "start_date": "2026-06-25T16:30:00.000+02:00",
+      "end_date": "2026-06-25T16:30:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 5,
+      "practitioner_id": 2,
       "source": "api"
     },
     {
-      "start_date": "2026-04-27T17:15:00.000+02:00",
-      "end_date": "2026-04-27T17:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 5,
-      "source": "api"
-    },
-    {
-      "start_date": "08:30",
-      "end_date": "08:30",
+      "start_date": "2026-04-28T09:45:00.000+02:00",
+      "end_date": "2026-04-28T09:45:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "08:50",
-      "end_date": "08:50",
+      "start_date": "2026-04-28T10:15:00.000+02:00",
+      "end_date": "2026-04-28T10:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "09:10",
-      "end_date": "09:10",
+      "start_date": "2026-04-28T10:30:00.000+02:00",
+      "end_date": "2026-04-28T10:30:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "09:30",
-      "end_date": "09:30",
+      "start_date": "2026-04-28T10:45:00.000+02:00",
+      "end_date": "2026-04-28T10:45:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "09:00",
-      "end_date": "09:00",
+      "start_date": "2026-04-28T11:00:00.000+02:00",
+      "end_date": "2026-04-28T11:00:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "09:20",
-      "end_date": "09:20",
+      "start_date": "2026-04-28T11:45:00.000+02:00",
+      "end_date": "2026-04-28T11:45:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "09:40",
-      "end_date": "09:40",
+      "start_date": "2026-04-28T12:00:00.000+02:00",
+      "end_date": "2026-04-28T12:00:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "10:30",
-      "end_date": "10:30",
+      "start_date": "2026-04-28T12:15:00.000+02:00",
+      "end_date": "2026-04-28T12:15:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
     },
     {
-      "start_date": "09:30",
-      "end_date": "09:30",
+      "start_date": "2026-04-28T12:30:00.000+02:00",
+      "end_date": "2026-04-28T12:30:00.000+02:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 6,
-      "source": "dom"
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-28T15:15:00.000+02:00",
+      "end_date": "2026-04-28T15:15:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 6,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-28T15:30:00.000+02:00",
+      "end_date": "2026-04-28T15:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 6,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-28T16:00:00.000+02:00",
+      "end_date": "2026-04-28T16:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 6,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-28T16:15:00.000+02:00",
+      "end_date": "2026-04-28T16:15:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 6,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-28T17:15:00.000+02:00",
+      "end_date": "2026-04-28T17:15:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 6,
+      "source": "api"
     },
     {
       "start_date": "09:50",
       "end_date": "09:50",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 6,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
@@ -726,623 +454,23 @@
       "end_date": "10:10",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 6,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
-      "start_date": "11:00",
-      "end_date": "11:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "dom"
-    },
-    {
-      "start_date": "2026-04-17T09:00:00.000+02:00",
-      "end_date": "2026-04-17T09:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T09:20:00.000+02:00",
-      "end_date": "2026-04-17T09:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T09:40:00.000+02:00",
-      "end_date": "2026-04-17T09:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T10:00:00.000+02:00",
-      "end_date": "2026-04-17T10:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T11:00:00.000+02:00",
-      "end_date": "2026-04-17T11:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T15:10:00.000+02:00",
-      "end_date": "2026-04-17T15:10:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T15:30:00.000+02:00",
-      "end_date": "2026-04-17T15:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T15:50:00.000+02:00",
-      "end_date": "2026-04-17T15:50:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-17T16:10:00.000+02:00",
-      "end_date": "2026-04-17T16:10:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-18T09:30:00.000+02:00",
-      "end_date": "2026-04-18T09:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-18T09:50:00.000+02:00",
-      "end_date": "2026-04-18T09:50:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-18T10:30:00.000+02:00",
-      "end_date": "2026-04-18T10:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T08:30:00.000+02:00",
-      "end_date": "2026-04-20T08:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T08:50:00.000+02:00",
-      "end_date": "2026-04-20T08:50:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T09:30:00.000+02:00",
-      "end_date": "2026-04-20T09:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T09:50:00.000+02:00",
-      "end_date": "2026-04-20T09:50:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T10:10:00.000+02:00",
-      "end_date": "2026-04-20T10:10:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T11:00:00.000+02:00",
-      "end_date": "2026-04-20T11:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T12:00:00.000+02:00",
-      "end_date": "2026-04-20T12:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T12:40:00.000+02:00",
-      "end_date": "2026-04-20T12:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T13:00:00.000+02:00",
-      "end_date": "2026-04-20T13:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T13:20:00.000+02:00",
-      "end_date": "2026-04-20T13:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T13:40:00.000+02:00",
-      "end_date": "2026-04-20T13:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T14:00:00.000+02:00",
-      "end_date": "2026-04-20T14:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T14:20:00.000+02:00",
-      "end_date": "2026-04-20T14:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T14:40:00.000+02:00",
-      "end_date": "2026-04-20T14:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T15:00:00.000+02:00",
-      "end_date": "2026-04-20T15:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T15:20:00.000+02:00",
-      "end_date": "2026-04-20T15:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T15:40:00.000+02:00",
-      "end_date": "2026-04-20T15:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T16:00:00.000+02:00",
-      "end_date": "2026-04-20T16:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T16:50:00.000+02:00",
-      "end_date": "2026-04-20T16:50:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T08:30:00.000+02:00",
-      "end_date": "2026-04-21T08:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T10:00:00.000+02:00",
-      "end_date": "2026-04-21T10:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T10:20:00.000+02:00",
-      "end_date": "2026-04-21T10:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T10:40:00.000+02:00",
-      "end_date": "2026-04-21T10:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T11:00:00.000+02:00",
-      "end_date": "2026-04-21T11:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T11:20:00.000+02:00",
-      "end_date": "2026-04-21T11:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T11:40:00.000+02:00",
-      "end_date": "2026-04-21T11:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T12:00:00.000+02:00",
-      "end_date": "2026-04-21T12:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 6,
-      "source": "api"
-    },
-    {
-      "start_date": "18:00",
-      "end_date": "18:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 7,
-      "source": "dom"
-    },
-    {
-      "start_date": "2026-04-23T14:40:00.000+02:00",
-      "end_date": "2026-04-23T14:40:00.000+02:00",
+      "start_date": "10:30",
+      "end_date": "10:30",
       "agenda_id": 0,
       "visit_motive_id": 0,
       "practitioner_id": 8,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-20T10:40:00.000+02:00",
-      "end_date": "2026-04-20T10:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T10:20:00.000+02:00",
-      "end_date": "2026-04-21T10:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-21T11:40:00.000+02:00",
-      "end_date": "2026-04-21T11:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-22T09:40:00.000+02:00",
-      "end_date": "2026-04-22T09:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-22T11:40:00.000+02:00",
-      "end_date": "2026-04-22T11:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-22T15:40:00.000+02:00",
-      "end_date": "2026-04-22T15:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-22T16:20:00.000+02:00",
-      "end_date": "2026-04-22T16:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-22T16:40:00.000+02:00",
-      "end_date": "2026-04-22T16:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-22T17:00:00.000+02:00",
-      "end_date": "2026-04-22T17:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T10:40:00.000+02:00",
-      "end_date": "2026-04-23T10:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T11:00:00.000+02:00",
-      "end_date": "2026-04-23T11:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T16:00:00.000+02:00",
-      "end_date": "2026-04-23T16:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T16:20:00.000+02:00",
-      "end_date": "2026-04-23T16:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T16:40:00.000+02:00",
-      "end_date": "2026-04-23T16:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T17:00:00.000+02:00",
-      "end_date": "2026-04-23T17:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-23T17:20:00.000+02:00",
-      "end_date": "2026-04-23T17:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 9,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-21T14:20:00.000+02:00",
-      "end_date": "2026-07-21T14:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-21T14:40:00.000+02:00",
-      "end_date": "2026-07-21T14:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-21T15:20:00.000+02:00",
-      "end_date": "2026-07-21T15:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-21T15:40:00.000+02:00",
-      "end_date": "2026-07-21T15:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-22T11:00:00.000+02:00",
-      "end_date": "2026-07-22T11:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-22T11:20:00.000+02:00",
-      "end_date": "2026-07-22T11:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-22T11:40:00.000+02:00",
-      "end_date": "2026-07-22T11:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-23T10:00:00.000+02:00",
-      "end_date": "2026-07-23T10:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-23T10:20:00.000+02:00",
-      "end_date": "2026-07-23T10:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-23T11:20:00.000+02:00",
-      "end_date": "2026-07-23T11:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-23T11:40:00.000+02:00",
-      "end_date": "2026-07-23T11:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-23T15:00:00.000+02:00",
-      "end_date": "2026-07-23T15:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-23T15:40:00.000+02:00",
-      "end_date": "2026-07-23T15:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-24T10:40:00.000+02:00",
-      "end_date": "2026-07-24T10:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-24T11:20:00.000+02:00",
-      "end_date": "2026-07-24T11:20:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-07-24T11:40:00.000+02:00",
-      "end_date": "2026-07-24T11:40:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 11,
-      "source": "api"
-    },
-    {
-      "start_date": "09:40",
-      "end_date": "09:40",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 12,
       "source": "dom"
     },
     {
-      "start_date": "10:00",
-      "end_date": "10:00",
+      "start_date": "11:40",
+      "end_date": "11:40",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 12,
-      "source": "dom"
-    },
-    {
-      "start_date": "10:20",
-      "end_date": "10:20",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 12,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
@@ -1350,152 +478,1736 @@
       "end_date": "10:40",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 12,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
-      "start_date": "2026-05-11T17:20:00.000+02:00",
-      "end_date": "2026-05-11T17:20:00.000+02:00",
+      "start_date": "10:50",
+      "end_date": "10:50",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 13,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-05-12T16:30:00.000+02:00",
-      "end_date": "2026-05-12T16:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 13,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T14:45:00.000+02:00",
-      "end_date": "2026-04-30T14:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T15:00:00.000+02:00",
-      "end_date": "2026-04-30T15:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T15:15:00.000+02:00",
-      "end_date": "2026-04-30T15:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T15:30:00.000+02:00",
-      "end_date": "2026-04-30T15:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T15:45:00.000+02:00",
-      "end_date": "2026-04-30T15:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T16:15:00.000+02:00",
-      "end_date": "2026-04-30T16:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T16:30:00.000+02:00",
-      "end_date": "2026-04-30T16:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T16:45:00.000+02:00",
-      "end_date": "2026-04-30T16:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T17:00:00.000+02:00",
-      "end_date": "2026-04-30T17:00:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T17:15:00.000+02:00",
-      "end_date": "2026-04-30T17:15:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T17:30:00.000+02:00",
-      "end_date": "2026-04-30T17:30:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "2026-04-30T17:45:00.000+02:00",
-      "end_date": "2026-04-30T17:45:00.000+02:00",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 14,
-      "source": "api"
-    },
-    {
-      "start_date": "14:30",
-      "end_date": "14:30",
-      "agenda_id": 0,
-      "visit_motive_id": 0,
-      "practitioner_id": 15,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
-      "start_date": "15:20",
-      "end_date": "15:20",
+      "start_date": "11:00",
+      "end_date": "11:00",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 15,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
-      "start_date": "15:40",
-      "end_date": "15:40",
+      "start_date": "11:10",
+      "end_date": "11:10",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 15,
+      "practitioner_id": 8,
       "source": "dom"
     },
     {
-      "start_date": "16:00",
-      "end_date": "16:00",
+      "start_date": "09:30",
+      "end_date": "09:30",
       "agenda_id": 0,
       "visit_motive_id": 0,
-      "practitioner_id": 15,
+      "practitioner_id": 8,
       "source": "dom"
+    },
+    {
+      "start_date": "09:50",
+      "end_date": "09:50",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "10:10",
+      "end_date": "10:10",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "10:30",
+      "end_date": "10:30",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "09:30",
+      "end_date": "09:30",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "09:50",
+      "end_date": "09:50",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "10:10",
+      "end_date": "10:10",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "10:30",
+      "end_date": "10:30",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "09:30",
+      "end_date": "09:30",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "09:50",
+      "end_date": "09:50",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "10:10",
+      "end_date": "10:10",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "10:30",
+      "end_date": "10:30",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "dom"
+    },
+    {
+      "start_date": "2026-04-19T09:30:00.000+02:00",
+      "end_date": "2026-04-19T09:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T09:50:00.000+02:00",
+      "end_date": "2026-04-19T09:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T10:10:00.000+02:00",
+      "end_date": "2026-04-19T10:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T10:20:00.000+02:00",
+      "end_date": "2026-04-19T10:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T10:30:00.000+02:00",
+      "end_date": "2026-04-19T10:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T10:50:00.000+02:00",
+      "end_date": "2026-04-19T10:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T11:10:00.000+02:00",
+      "end_date": "2026-04-19T11:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T11:30:00.000+02:00",
+      "end_date": "2026-04-19T11:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T11:50:00.000+02:00",
+      "end_date": "2026-04-19T11:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T12:10:00.000+02:00",
+      "end_date": "2026-04-19T12:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T12:20:00.000+02:00",
+      "end_date": "2026-04-19T12:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T12:30:00.000+02:00",
+      "end_date": "2026-04-19T12:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T12:40:00.000+02:00",
+      "end_date": "2026-04-19T12:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T12:50:00.000+02:00",
+      "end_date": "2026-04-19T12:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T13:00:00.000+02:00",
+      "end_date": "2026-04-19T13:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T13:10:00.000+02:00",
+      "end_date": "2026-04-19T13:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T13:20:00.000+02:00",
+      "end_date": "2026-04-19T13:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T13:30:00.000+02:00",
+      "end_date": "2026-04-19T13:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T13:40:00.000+02:00",
+      "end_date": "2026-04-19T13:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T13:50:00.000+02:00",
+      "end_date": "2026-04-19T13:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T14:00:00.000+02:00",
+      "end_date": "2026-04-19T14:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T14:10:00.000+02:00",
+      "end_date": "2026-04-19T14:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T14:20:00.000+02:00",
+      "end_date": "2026-04-19T14:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T14:30:00.000+02:00",
+      "end_date": "2026-04-19T14:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T14:40:00.000+02:00",
+      "end_date": "2026-04-19T14:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T14:50:00.000+02:00",
+      "end_date": "2026-04-19T14:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T15:00:00.000+02:00",
+      "end_date": "2026-04-19T15:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T15:10:00.000+02:00",
+      "end_date": "2026-04-19T15:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T15:30:00.000+02:00",
+      "end_date": "2026-04-19T15:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T15:40:00.000+02:00",
+      "end_date": "2026-04-19T15:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T15:50:00.000+02:00",
+      "end_date": "2026-04-19T15:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T16:00:00.000+02:00",
+      "end_date": "2026-04-19T16:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T16:10:00.000+02:00",
+      "end_date": "2026-04-19T16:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T16:20:00.000+02:00",
+      "end_date": "2026-04-19T16:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T16:30:00.000+02:00",
+      "end_date": "2026-04-19T16:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T16:40:00.000+02:00",
+      "end_date": "2026-04-19T16:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T16:50:00.000+02:00",
+      "end_date": "2026-04-19T16:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T17:10:00.000+02:00",
+      "end_date": "2026-04-19T17:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T17:30:00.000+02:00",
+      "end_date": "2026-04-19T17:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T17:50:00.000+02:00",
+      "end_date": "2026-04-19T17:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-19T18:10:00.000+02:00",
+      "end_date": "2026-04-19T18:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T09:30:00.000+02:00",
+      "end_date": "2026-04-20T09:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T09:50:00.000+02:00",
+      "end_date": "2026-04-20T09:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T10:10:00.000+02:00",
+      "end_date": "2026-04-20T10:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T10:30:00.000+02:00",
+      "end_date": "2026-04-20T10:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T10:50:00.000+02:00",
+      "end_date": "2026-04-20T10:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T11:10:00.000+02:00",
+      "end_date": "2026-04-20T11:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T11:30:00.000+02:00",
+      "end_date": "2026-04-20T11:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T11:50:00.000+02:00",
+      "end_date": "2026-04-20T11:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T12:10:00.000+02:00",
+      "end_date": "2026-04-20T12:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T12:30:00.000+02:00",
+      "end_date": "2026-04-20T12:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T12:50:00.000+02:00",
+      "end_date": "2026-04-20T12:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T13:10:00.000+02:00",
+      "end_date": "2026-04-20T13:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T13:30:00.000+02:00",
+      "end_date": "2026-04-20T13:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T13:50:00.000+02:00",
+      "end_date": "2026-04-20T13:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T14:10:00.000+02:00",
+      "end_date": "2026-04-20T14:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T14:30:00.000+02:00",
+      "end_date": "2026-04-20T14:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T14:50:00.000+02:00",
+      "end_date": "2026-04-20T14:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T15:10:00.000+02:00",
+      "end_date": "2026-04-20T15:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T15:30:00.000+02:00",
+      "end_date": "2026-04-20T15:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T15:50:00.000+02:00",
+      "end_date": "2026-04-20T15:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T16:10:00.000+02:00",
+      "end_date": "2026-04-20T16:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T16:30:00.000+02:00",
+      "end_date": "2026-04-20T16:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T16:50:00.000+02:00",
+      "end_date": "2026-04-20T16:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T17:10:00.000+02:00",
+      "end_date": "2026-04-20T17:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T17:30:00.000+02:00",
+      "end_date": "2026-04-20T17:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T17:50:00.000+02:00",
+      "end_date": "2026-04-20T17:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T18:10:00.000+02:00",
+      "end_date": "2026-04-20T18:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T18:30:00.000+02:00",
+      "end_date": "2026-04-20T18:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T18:50:00.000+02:00",
+      "end_date": "2026-04-20T18:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T19:10:00.000+02:00",
+      "end_date": "2026-04-20T19:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T19:20:00.000+02:00",
+      "end_date": "2026-04-20T19:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T19:30:00.000+02:00",
+      "end_date": "2026-04-20T19:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T19:40:00.000+02:00",
+      "end_date": "2026-04-20T19:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T19:50:00.000+02:00",
+      "end_date": "2026-04-20T19:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T20:00:00.000+02:00",
+      "end_date": "2026-04-20T20:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T20:10:00.000+02:00",
+      "end_date": "2026-04-20T20:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T20:20:00.000+02:00",
+      "end_date": "2026-04-20T20:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T20:30:00.000+02:00",
+      "end_date": "2026-04-20T20:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T20:40:00.000+02:00",
+      "end_date": "2026-04-20T20:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T20:50:00.000+02:00",
+      "end_date": "2026-04-20T20:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T21:00:00.000+02:00",
+      "end_date": "2026-04-20T21:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T21:10:00.000+02:00",
+      "end_date": "2026-04-20T21:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T21:20:00.000+02:00",
+      "end_date": "2026-04-20T21:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-20T21:30:00.000+02:00",
+      "end_date": "2026-04-20T21:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T09:30:00.000+02:00",
+      "end_date": "2026-04-21T09:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T09:50:00.000+02:00",
+      "end_date": "2026-04-21T09:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T10:10:00.000+02:00",
+      "end_date": "2026-04-21T10:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T10:30:00.000+02:00",
+      "end_date": "2026-04-21T10:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T10:50:00.000+02:00",
+      "end_date": "2026-04-21T10:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T11:10:00.000+02:00",
+      "end_date": "2026-04-21T11:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T11:30:00.000+02:00",
+      "end_date": "2026-04-21T11:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T11:50:00.000+02:00",
+      "end_date": "2026-04-21T11:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T12:10:00.000+02:00",
+      "end_date": "2026-04-21T12:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T12:30:00.000+02:00",
+      "end_date": "2026-04-21T12:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T12:50:00.000+02:00",
+      "end_date": "2026-04-21T12:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T13:10:00.000+02:00",
+      "end_date": "2026-04-21T13:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T13:30:00.000+02:00",
+      "end_date": "2026-04-21T13:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T13:50:00.000+02:00",
+      "end_date": "2026-04-21T13:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T14:10:00.000+02:00",
+      "end_date": "2026-04-21T14:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T14:30:00.000+02:00",
+      "end_date": "2026-04-21T14:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T14:50:00.000+02:00",
+      "end_date": "2026-04-21T14:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T15:10:00.000+02:00",
+      "end_date": "2026-04-21T15:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T15:20:00.000+02:00",
+      "end_date": "2026-04-21T15:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T15:30:00.000+02:00",
+      "end_date": "2026-04-21T15:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T15:40:00.000+02:00",
+      "end_date": "2026-04-21T15:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T15:50:00.000+02:00",
+      "end_date": "2026-04-21T15:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T16:00:00.000+02:00",
+      "end_date": "2026-04-21T16:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T16:10:00.000+02:00",
+      "end_date": "2026-04-21T16:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T16:20:00.000+02:00",
+      "end_date": "2026-04-21T16:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T16:30:00.000+02:00",
+      "end_date": "2026-04-21T16:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T16:40:00.000+02:00",
+      "end_date": "2026-04-21T16:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T16:50:00.000+02:00",
+      "end_date": "2026-04-21T16:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T17:00:00.000+02:00",
+      "end_date": "2026-04-21T17:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T17:10:00.000+02:00",
+      "end_date": "2026-04-21T17:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T17:20:00.000+02:00",
+      "end_date": "2026-04-21T17:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T17:30:00.000+02:00",
+      "end_date": "2026-04-21T17:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T17:40:00.000+02:00",
+      "end_date": "2026-04-21T17:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T17:50:00.000+02:00",
+      "end_date": "2026-04-21T17:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T18:00:00.000+02:00",
+      "end_date": "2026-04-21T18:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T18:10:00.000+02:00",
+      "end_date": "2026-04-21T18:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T18:20:00.000+02:00",
+      "end_date": "2026-04-21T18:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-21T18:30:00.000+02:00",
+      "end_date": "2026-04-21T18:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T09:30:00.000+02:00",
+      "end_date": "2026-04-22T09:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T09:50:00.000+02:00",
+      "end_date": "2026-04-22T09:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T10:00:00.000+02:00",
+      "end_date": "2026-04-22T10:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T10:10:00.000+02:00",
+      "end_date": "2026-04-22T10:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T10:20:00.000+02:00",
+      "end_date": "2026-04-22T10:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T10:30:00.000+02:00",
+      "end_date": "2026-04-22T10:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T10:40:00.000+02:00",
+      "end_date": "2026-04-22T10:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T10:50:00.000+02:00",
+      "end_date": "2026-04-22T10:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T11:10:00.000+02:00",
+      "end_date": "2026-04-22T11:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T11:20:00.000+02:00",
+      "end_date": "2026-04-22T11:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T11:30:00.000+02:00",
+      "end_date": "2026-04-22T11:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T11:40:00.000+02:00",
+      "end_date": "2026-04-22T11:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T11:50:00.000+02:00",
+      "end_date": "2026-04-22T11:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T12:00:00.000+02:00",
+      "end_date": "2026-04-22T12:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T12:10:00.000+02:00",
+      "end_date": "2026-04-22T12:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T12:20:00.000+02:00",
+      "end_date": "2026-04-22T12:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T12:30:00.000+02:00",
+      "end_date": "2026-04-22T12:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T12:40:00.000+02:00",
+      "end_date": "2026-04-22T12:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T12:50:00.000+02:00",
+      "end_date": "2026-04-22T12:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T13:00:00.000+02:00",
+      "end_date": "2026-04-22T13:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T13:10:00.000+02:00",
+      "end_date": "2026-04-22T13:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T13:20:00.000+02:00",
+      "end_date": "2026-04-22T13:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T13:30:00.000+02:00",
+      "end_date": "2026-04-22T13:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T13:40:00.000+02:00",
+      "end_date": "2026-04-22T13:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T13:50:00.000+02:00",
+      "end_date": "2026-04-22T13:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T14:10:00.000+02:00",
+      "end_date": "2026-04-22T14:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T14:20:00.000+02:00",
+      "end_date": "2026-04-22T14:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T14:30:00.000+02:00",
+      "end_date": "2026-04-22T14:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T14:40:00.000+02:00",
+      "end_date": "2026-04-22T14:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T14:50:00.000+02:00",
+      "end_date": "2026-04-22T14:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T15:00:00.000+02:00",
+      "end_date": "2026-04-22T15:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T15:10:00.000+02:00",
+      "end_date": "2026-04-22T15:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T15:20:00.000+02:00",
+      "end_date": "2026-04-22T15:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T15:30:00.000+02:00",
+      "end_date": "2026-04-22T15:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T15:40:00.000+02:00",
+      "end_date": "2026-04-22T15:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T15:50:00.000+02:00",
+      "end_date": "2026-04-22T15:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T16:00:00.000+02:00",
+      "end_date": "2026-04-22T16:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T16:10:00.000+02:00",
+      "end_date": "2026-04-22T16:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T16:20:00.000+02:00",
+      "end_date": "2026-04-22T16:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T16:30:00.000+02:00",
+      "end_date": "2026-04-22T16:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T16:40:00.000+02:00",
+      "end_date": "2026-04-22T16:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T16:50:00.000+02:00",
+      "end_date": "2026-04-22T16:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T17:00:00.000+02:00",
+      "end_date": "2026-04-22T17:00:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T17:10:00.000+02:00",
+      "end_date": "2026-04-22T17:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T17:20:00.000+02:00",
+      "end_date": "2026-04-22T17:20:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T17:30:00.000+02:00",
+      "end_date": "2026-04-22T17:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T17:40:00.000+02:00",
+      "end_date": "2026-04-22T17:40:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T17:50:00.000+02:00",
+      "end_date": "2026-04-22T17:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T18:10:00.000+02:00",
+      "end_date": "2026-04-22T18:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-22T18:30:00.000+02:00",
+      "end_date": "2026-04-22T18:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T09:30:00.000+02:00",
+      "end_date": "2026-04-23T09:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T09:50:00.000+02:00",
+      "end_date": "2026-04-23T09:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T10:10:00.000+02:00",
+      "end_date": "2026-04-23T10:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T10:30:00.000+02:00",
+      "end_date": "2026-04-23T10:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T10:50:00.000+02:00",
+      "end_date": "2026-04-23T10:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T11:10:00.000+02:00",
+      "end_date": "2026-04-23T11:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T11:30:00.000+02:00",
+      "end_date": "2026-04-23T11:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T11:50:00.000+02:00",
+      "end_date": "2026-04-23T11:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T12:10:00.000+02:00",
+      "end_date": "2026-04-23T12:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T12:30:00.000+02:00",
+      "end_date": "2026-04-23T12:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T12:50:00.000+02:00",
+      "end_date": "2026-04-23T12:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T13:10:00.000+02:00",
+      "end_date": "2026-04-23T13:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T13:30:00.000+02:00",
+      "end_date": "2026-04-23T13:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T13:50:00.000+02:00",
+      "end_date": "2026-04-23T13:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T14:10:00.000+02:00",
+      "end_date": "2026-04-23T14:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T14:30:00.000+02:00",
+      "end_date": "2026-04-23T14:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T14:50:00.000+02:00",
+      "end_date": "2026-04-23T14:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T15:10:00.000+02:00",
+      "end_date": "2026-04-23T15:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T15:30:00.000+02:00",
+      "end_date": "2026-04-23T15:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T15:50:00.000+02:00",
+      "end_date": "2026-04-23T15:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T16:10:00.000+02:00",
+      "end_date": "2026-04-23T16:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T16:30:00.000+02:00",
+      "end_date": "2026-04-23T16:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T16:50:00.000+02:00",
+      "end_date": "2026-04-23T16:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T17:10:00.000+02:00",
+      "end_date": "2026-04-23T17:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T17:30:00.000+02:00",
+      "end_date": "2026-04-23T17:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T17:50:00.000+02:00",
+      "end_date": "2026-04-23T17:50:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T18:10:00.000+02:00",
+      "end_date": "2026-04-23T18:10:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
+    },
+    {
+      "start_date": "2026-04-23T18:30:00.000+02:00",
+      "end_date": "2026-04-23T18:30:00.000+02:00",
+      "agenda_id": 0,
+      "visit_motive_id": 0,
+      "practitioner_id": 8,
+      "source": "api"
     }
   ]
 }
