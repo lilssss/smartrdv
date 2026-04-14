@@ -180,17 +180,43 @@ def scrape(specialty: str, location: str) -> dict:
                 card.scroll_into_view_if_needed()
                 human_delay(1.5, 2.5)  # Doctolib charge le calendrier
 
-                # Récupère le nom
-                name = "Médecin inconnu"
-                for name_selector in ["h2", "h3", "[class*='name']", "a"]:
+                # Récupère le nom — sélecteurs Doctolib 2024/2025
+                name = ""
+                for name_selector in [
+                    "[data-test='doctor-name']",
+                    "[class*='dl-doctor-name']",
+                    "[class*='doctor-name']",
+                    "[class*='practitioner-name']",
+                    "h2[class*='name']",
+                    "h3[class*='name']",
+                    "h2[class*='title']",
+                    "h3[class*='title']",
+                    "h2", "h3",
+                    "[class*='name']",
+                ]:
                     try:
                         name_el = card.locator(name_selector).first
-                        if name_el.is_visible():
-                            name = name_el.inner_text().strip().split("\n")[0]
-                            if len(name) > 3:
+                        if name_el.is_visible(timeout=500):
+                            candidate = name_el.inner_text().strip().split("\n")[0].strip()
+                            if len(candidate) > 4 and not any(w in candidate.lower() for w in ["prendre", "voir", "disponible", "rdv"]):
+                                name = candidate
                                 break
                     except:
                         pass
+
+                # Fallback : premier lien qui ressemble à un nom
+                if not name:
+                    try:
+                        for link in card.locator("a").all()[:5]:
+                            txt = link.inner_text().strip().split("\n")[0].strip()
+                            if len(txt) > 4 and any(w in txt for w in ["Dr", "Mme", "M.", "Docteur"]):
+                                name = txt
+                                break
+                    except:
+                        pass
+
+                if not name:
+                    name = f"Praticien {i+1}"
 
                 # Récupère l'adresse
                 address = ""

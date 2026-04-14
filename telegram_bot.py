@@ -1,10 +1,22 @@
 """
 SmartRDV — Bot Telegram
 ========================
-Lance : python telegram_bot.py
-Nécessite : pip install python-telegram-bot requests
+Flux 1 (passif)  : scan Gmail toutes les 30s → notifications automatiques
+Flux 2 (actif)   : messages naturels → réservation médicale Doctolib
+
+Lancement :
+    Terminal 1 : python -m uvicorn main:app --reload --port 8000
+    Terminal 2 : python telegram_bot.py
+
+Test :
+    1. /start dans Telegram → le bot répond et démarre le scan Gmail
+    2. Envoie-toi un mail de cinéma/restaurant → notif Telegram dans les 30s
+    3. Écris "gynécologue demain matin" → recherche Doctolib
 """
+import asyncio
 import logging
+import os
+import json
 import requests
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
@@ -15,11 +27,23 @@ from telegram.ext import (
 # ── Config ────────────────────────────────────────────────────
 TELEGRAM_TOKEN = "8092250364:AAHO2X3uFXIvBRlYh3M_OK6BaneBJT1cnrE"
 API_BASE       = "http://localhost:8000"
+SCAN_INTERVAL  = 30  # secondes
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-# ── Helpers API ───────────────────────────────────────────────
+# ── État global ───────────────────────────────────────────────
+subscribed_users   = set()   # user_ids abonnés aux notifs Gmail
+user_sessions      = {}      # sessions conversations RDV
+pending_cal_events = {}      # id → event, pour les boutons calendrier
+
+def get_session(user_id: int) -> dict:
+    if user_id not in user_sessions:
+        user_sessions[user_id] = {"history": [], "nlp": {}, "data": {}}
+    return user_sessions[user_id]
+
+
+# ── Helpers API FastAPI ───────────────────────────────────────
 
 def call_chat(message: str, history: list = []) -> dict:
     r = requests.post(f"{API_BASE}/chat", json={"message": message, "history": history}, timeout=20)
@@ -33,30 +57,24 @@ def call_crawl_auto(specialty: str, location: str = "Paris") -> dict:
     r.raise_for_status()
     return r.json()
 
-def call_recommend(specialty: str, location: str, preferred_day: int = None,
-                   preferred_hours: list = None) -> dict:
+def call_recommend(specialty: str, location: str, preferred_day=None, preferred_hours=None) -> dict:
     prefs = {
         "preferred_hours_start": preferred_hours[0] if preferred_hours else 9,
         "preferred_hours_end":   preferred_hours[1] if preferred_hours else 18,
         "preferred_day":         preferred_day,
     }
     r = requests.post(f"{API_BASE}/recommend",
-        json={
-            "specialty":  specialty or "medecin-generaliste",
-            "location":   location or "Paris",
-            "top_n":      5,
-            "preferences": prefs
-        },
+        json={"specialty": specialty or "medecin-generaliste",
+              "location":  location or "Paris",
+              "top_n": 5, "preferences": prefs},
         timeout=20)
     r.raise_for_status()
     return r.json()
 
 def call_book(profile_url: str, slot_time: str) -> dict:
-    r = requests.post(f"{API_BASE}/book", json={
-        "profile_url":    profile_url,
-        "slot_datetime":  slot_time,
-        "is_new_patient": True,
-    }, timeout=10)
+    r = requests.post(f"{API_BASE}/book",
+        json={"profile_url": profile_url, "slot_datetime": slot_time, "is_new_patient": True},
+        timeout=10)
     r.raise_for_status()
     return r.json()
 
@@ -65,60 +83,168 @@ def call_book_status() -> dict:
     r.raise_for_status()
     return r.json()
 
-# ── État des conversations ────────────────────────────────────
-user_sessions = {}
 
-def get_session(user_id: int) -> dict:
-    if user_id not in user_sessions:
-        user_sessions[user_id] = {"history": [], "nlp": {}, "data": {}}
-    return user_sessions[user_id]
+# ── Scanner Gmail ─────────────────────────────────────────────
+
+def scan_new_emails() -> list:
+    """Retourne les nouveaux événements Gmail détectés depuis le dernier scan."""
+    try:
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            pass
+
+        import sys
+        sys.path.insert(0, os.getcwd())
+        from gmail_parser import get_gmail_service, fetch_recent_emails, parse_email_with_gemini
+
+        service = get_gmail_service()
+        emails  = fetch_recent_emails(service, max_results=10)
+
+        events = []
+        for email in emails:
+            result = parse_email_with_gemini(email)
+            if result and result.get("type") not in ("rien", None):
+                events.append(result)
+                print(f"[Gmail] Nouveau : [{result['type']}] {result['titre']}")
+
+        return events
+    except Exception as e:
+        log.error(f"[Gmail scan] Erreur : {e}")
+        return []
+
+
+def format_event_message(event: dict) -> str:
+    """Formate un événement pour Telegram."""
+    emoji = {
+        "cinema": "🎬", "meeting": "📅", "transport": "🚂",
+        "restaurant": "🍽️", "medical": "🏥", "livraison": "📦",
+        "concert_evenement": "🎵", "autre_reservation": "📋",
+    }.get(event.get("type", ""), "📩")
+
+    msg  = f"{emoji} *Nouvel événement détecté dans tes mails*\n\n"
+    msg += f"📌 *{event.get('titre', 'Événement')}*\n"
+    if event.get("date"):  msg += f"📅 {event['date']}"
+    if event.get("heure"): msg += f" à {event['heure']}"
+    if event.get("date") or event.get("heure"): msg += "\n"
+    if event.get("lieu"):  msg += f"📍 {event['lieu']}\n"
+    if event.get("lien"):  msg += f"🔗 {event['lien']}\n"
+    if event.get("details"): msg += f"\n_{event['details']}_\n"
+    return msg
+
+
+# ── Scan en arrière-plan ──────────────────────────────────────
+
+async def gmail_scan_loop(app):
+    """Tourne en arrière-plan, scanne Gmail toutes les 30s."""
+    await asyncio.sleep(3)
+    print(f"[Gmail] Scan automatique démarré — toutes les {SCAN_INTERVAL}s")
+
+    while True:
+        await asyncio.sleep(SCAN_INTERVAL)
+
+        if not subscribed_users:
+            continue
+
+        new_events = scan_new_emails()
+        if not new_events:
+            continue
+
+        for user_id in list(subscribed_users):
+            for i, event in enumerate(new_events):
+                try:
+                    msg = format_event_message(event)
+                    action = event.get("action_suggérée", "rien")
+                    # Stocke l'événement en mémoire avec un ID unique
+                    import uuid
+                    ev_id = str(uuid.uuid4())[:8]
+                    pending_cal_events[ev_id] = event
+                    buttons = []
+                    if action == "ajouter_calendrier":
+                        buttons.append([InlineKeyboardButton("📅 Ajouter au calendrier", callback_data=f"cal:{ev_id}")])
+                    elif action == "reserver":
+                        buttons.append([InlineKeyboardButton("🎟️ Réserver", callback_data=f"reserve:{ev_id}")])
+                    buttons.append([InlineKeyboardButton("❌ Ignorer", callback_data=f"ignore:{ev_id}")])
+
+                    await app.bot.send_message(
+                        user_id, msg,
+                        parse_mode="Markdown",
+                        reply_markup=InlineKeyboardMarkup(buttons)
+                    )
+                except Exception as e:
+                    log.error(f"[Notif] Erreur user {user_id} : {e}")
+
 
 # ── Commandes ─────────────────────────────────────────────────
 
 async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    user_sessions.pop(update.effective_user.id, None)
+    user_sessions.pop(user.id, None)
+    subscribed_users.add(user.id)
     await update.message.reply_text(
-        f"👋 Bonjour {user.first_name} ! Je suis *SmartRDV*, ton assistant médical IA.\n\n"
-        "Dis-moi simplement ce dont tu as besoin :\n"
+        f"👋 Bonjour *{user.first_name}* ! Je suis *SmartRDV*, ton assistant IA.\n\n"
+        "Je fais deux choses en parallèle :\n\n"
+        "📧 *Notifications automatiques* — Je surveille tes mails toutes les 30s. "
+        "Si tu reçois une confirmation de cinéma, restaurant, concert ou meeting, "
+        "je t'envoie une notif ici directement.\n\n"
+        "🏥 *Prise de RDV médical* — Dis-moi simplement ce que tu veux :\n"
         "• _Je veux un gynécologue vendredi soir_\n"
         "• _Dermatologue demain matin à Paris_\n"
         "• _Cardiologue après le travail_\n\n"
-        "Commandes disponibles :\n"
-        "/start — Recommencer\n"
-        "/status — État du backend\n"
-        "/annuler — Annuler la recherche en cours",
+        "Commandes :\n"
+        "/status — État du système\n"
+        "/scan — Scanner les mails maintenant\n"
+        "/annuler — Annuler une recherche en cours",
         parse_mode="Markdown"
     )
 
 async def cmd_status(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    subscribed_users.add(update.effective_user.id)
     try:
         r = requests.get(f"{API_BASE}/status", timeout=5)
         d = r.json()
-        if d.get("has_data"):
-            msg = (f"✅ Backend actif\n"
-                   f"📋 {d['slots']} créneaux ({d['specialty']} — {d['location']})\n"
-                   f"👨‍⚕️ {d['practitioners']} praticiens")
-        else:
-            msg = "✅ Backend actif\n⚠️ Pas de données crawlées"
-        await update.message.reply_text(msg)
+        backend = f"✅ Backend actif — {d.get('slots',0)} créneaux" if d.get("has_data") else "✅ Backend actif"
     except:
-        await update.message.reply_text("❌ Backend inaccessible — lance uvicorn !")
+        backend = "❌ Backend inaccessible"
+    await update.message.reply_text(
+        f"{backend}\n📧 Scan Gmail actif toutes les {SCAN_INTERVAL}s\n"
+        f"👥 {len(subscribed_users)} utilisateur(s) abonné(s)"
+    )
+
+async def cmd_scan(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    """Force un scan Gmail immédiat."""
+    subscribed_users.add(update.effective_user.id)
+    await update.message.reply_text("🔍 Scan Gmail en cours...")
+    events = scan_new_emails()
+    if not events:
+        await update.message.reply_text("📭 Aucun nouvel événement détecté.")
+        return
+    for i, event in enumerate(events):
+        msg = format_event_message(event)
+        action = event.get("action_suggérée", "rien")
+        buttons = []
+        if action == "ajouter_calendrier":
+            buttons.append([InlineKeyboardButton("📅 Ajouter au calendrier", callback_data=f"cal:{i}")])
+        buttons.append([InlineKeyboardButton("❌ Ignorer", callback_data=f"ignore:{i}")])
+        await update.message.reply_text(msg, parse_mode="Markdown",
+                                        reply_markup=InlineKeyboardMarkup(buttons))
 
 async def cmd_annuler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     user_sessions.pop(update.effective_user.id, None)
-    await update.message.reply_text("🔄 Recherche annulée. Dis-moi ce que tu cherches !")
+    await update.message.reply_text("🔄 Recherche annulée.")
 
-# ── Message principal ─────────────────────────────────────────
+
+# ── Messages — RDV médical ────────────────────────────────────
 
 async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
+    subscribed_users.add(user_id)
     session = get_session(user_id)
     text    = update.message.text.strip()
 
     await update.message.chat.send_action("typing")
 
-    # ── Appel NLP ─────────────────────────────────────────────
     try:
         nlp = call_chat(text, session["history"])
     except Exception as e:
@@ -129,12 +255,10 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     session["history"].append({"role": "assistant", "content": str(nlp)})
     session["nlp"] = nlp
 
-    # ── Pas un booking ────────────────────────────────────────
     if nlp.get("intent") != "book":
         await update.message.reply_text(nlp.get("message", "Comment puis-je t'aider ?"))
         return
 
-    # ── Booking intent — valeurs avec fallback ────────────────
     specialty = nlp.get("specialty") or "medecin-generaliste"
     location  = nlp.get("location") or "Paris"
 
@@ -143,15 +267,12 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
-    # ── Crawl ─────────────────────────────────────────────────
     try:
         crawl = call_crawl_auto(specialty, location)
-        slots_count = crawl.get("slots_count", 0)
-        await update.message.reply_text(f"✅ {slots_count} créneaux trouvés — analyse en cours...")
+        await update.message.reply_text(f"✅ {crawl.get('slots_count', 0)} créneaux trouvés — analyse en cours...")
     except Exception as e:
         await update.message.reply_text(f"⚠️ Crawl échoué : {e}\nJ'utilise les données existantes.")
 
-    # ── Recommend ─────────────────────────────────────────────
     try:
         data = call_recommend(
             specialty       = specialty,
@@ -164,45 +285,102 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Erreur recommandation : {e}")
         return
 
-    # ── Affiche les résultats ──────────────────────────────────
     best   = data["best"]
     ranked = data.get("ranked", [])[:5]
-
     keyboard = []
     for i, slot in enumerate(ranked):
         label = slot["label"]
         score = int(slot["total_score"] * 100)
         emoji = "⭐" if i == 0 else f"#{i+1}"
-        keyboard.append([InlineKeyboardButton(
-            f"{emoji} {label} — score {score}",
-            callback_data=f"book:{i}"
-        )])
+        keyboard.append([InlineKeyboardButton(f"{emoji} {label} — score {score}", callback_data=f"book:{i}")])
     keyboard.append([InlineKeyboardButton("❌ Annuler", callback_data="cancel")])
 
     warning = data.get("warning") or ""
     msg  = f"🏥 *Meilleur créneau trouvé :*\n\n"
     msg += f"👨‍⚕️ *{best['label']}*\n"
     msg += f"📊 Score : {int(best['total_score']*100)}/100 _(plus c'est bas, mieux c'est)_\n"
-    if warning:
-        msg += f"\n⚠️ {warning}\n"
+    if warning: msg += f"\n⚠️ {warning}\n"
     msg += f"\n_{data['total_slots_analyzed']} créneaux analysés — source : {data['data_source']}_\n\n"
     msg += "Clique sur un créneau pour le réserver :"
 
-    await update.message.reply_text(
-        msg,
-        parse_mode="Markdown",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+    await update.message.reply_text(msg, parse_mode="Markdown",
+                                    reply_markup=InlineKeyboardMarkup(keyboard))
 
-# ── Callback boutons ──────────────────────────────────────────
+
+# ── Callbacks ─────────────────────────────────────────────────
 
 async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     query   = update.callback_query
     user_id = query.from_user.id
     session = get_session(user_id)
     data    = query.data
-
     await query.answer()
+
+    if data.startswith("ignore:") or data.startswith("reserve:"):
+        await query.edit_message_text("✅ Noté !")
+        return
+
+    if data.startswith("cal:"):
+        await query.edit_message_text("⏳ Vérification du calendrier en cours...")
+        try:
+            import sys, os
+            sys.path.insert(0, os.getcwd())
+            from google_calendar import add_event
+
+            ev_id = data.split(":")[1]
+            event = pending_cal_events.get(ev_id, {})
+            if not event:
+                await query.edit_message_text("❌ Événement introuvable — relance un scan.")
+                return
+
+            result = add_event(event)
+
+            if result.get("success"):
+                await query.edit_message_text(
+                    f"✅ *{event.get('titre','Événement')}* ajouté à Google Calendar !\n📅 {event.get('date','')} {event.get('heure','')}",
+                    parse_mode="Markdown"
+                )
+            elif result.get("conflicts"):
+                # Conflit détecté — demande confirmation
+                keyboard = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("✅ Ajouter quand même", callback_data=f"force_cal:{idx}")],
+                    [InlineKeyboardButton("❌ Annuler", callback_data="ignore:0")],
+                ])
+                await query.edit_message_text(
+                    result["conflict_message"],
+                    parse_mode="Markdown",
+                    reply_markup=keyboard
+                )
+            else:
+                await query.edit_message_text(f"❌ Erreur : {result.get('error')}")
+        except Exception as e:
+            await query.edit_message_text(f"❌ Erreur calendrier : {e}")
+        return
+
+    if data.startswith("force_cal:"):
+        await query.edit_message_text("⏳ Ajout forcé en cours...")
+        try:
+            import sys, os
+            sys.path.insert(0, os.getcwd())
+            from google_calendar import _insert_event
+
+            ev_id = data.split(":")[1]
+            event = pending_cal_events.get(ev_id, {})
+            if not event:
+                await query.edit_message_text("❌ Événement introuvable.")
+                return
+
+            result = _insert_event(event)
+            if result.get("success"):
+                await query.edit_message_text(
+                    f"✅ *{event.get('titre','Événement')}* ajouté malgré le conflit !\n📅 {event.get('date','')} {event.get('heure','')}",
+                    parse_mode="Markdown"
+                )
+            else:
+                await query.edit_message_text(f"❌ Erreur : {result.get('error')}")
+        except Exception as e:
+            await query.edit_message_text(f"❌ Erreur : {e}")
+        return
 
     if data == "cancel":
         user_sessions.pop(user_id, None)
@@ -222,22 +400,24 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         label     = slot["label"]
         slot_time = label[-5:] if len(label) >= 5 else "09:00"
 
-        best_name   = label.split(" — ")[0].strip()
         profile_url = ""
         prac_map    = session.get("data", {}).get("practitioners_map", {})
+        best_name   = label.split(" — ")[0].strip()
         if best_name in prac_map:
             profile_url = prac_map[best_name]
-
+        if not profile_url:
+            for url in prac_map.values():
+                if url and url.startswith("http"):
+                    profile_url = url
+                    break
         if not profile_url:
             spec = nlp.get("specialty") or "medecin-generaliste"
             loc  = (nlp.get("location") or "Paris").lower()
-            slug = best_name.lower().replace("dr. ","").replace("dr ","").replace(" ","-")
-            profile_url = f"https://www.doctolib.fr/{spec}/{loc}/{slug}"
+            profile_url = f"https://www.doctolib.fr/{spec}/{loc}"
 
         await query.edit_message_text(
             f"🚀 Réservation lancée pour *{label}*...\n\n"
-            f"Un navigateur Doctolib va s'ouvrir sur la machine qui fait tourner le backend.\n"
-            f"⏳ J'attends la confirmation...",
+            f"Un navigateur Doctolib va s'ouvrir sur le PC.\n⏳ J'attends la confirmation...",
             parse_mode="Markdown"
         )
 
@@ -247,7 +427,6 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             await ctx.bot.send_message(user_id, f"❌ Erreur booking : {e}")
             return
 
-        import asyncio
         for _ in range(36):
             await asyncio.sleep(5)
             try:
@@ -255,38 +434,40 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                 state  = status.get("booking_state")
                 result = status.get("result", {})
                 if state == "done":
-                    if result.get("status") == "success":
-                        await ctx.bot.send_message(user_id,
-                            f"✅ *{result.get('message', 'Rendez-vous confirmé !')}*",
-                            parse_mode="Markdown")
-                    else:
-                        await ctx.bot.send_message(user_id,
-                            f"⚠️ {result.get('message', 'Erreur lors de la réservation')}")
+                    msg = f"✅ *{result.get('message','Confirmé !')}*" if result.get("status") == "success" else f"⚠️ {result.get('message','Erreur')}"
+                    await ctx.bot.send_message(user_id, msg, parse_mode="Markdown")
                     return
                 elif state == "error":
-                    await ctx.bot.send_message(user_id,
-                        f"❌ {result.get('message', 'Erreur inconnue')}")
+                    await ctx.bot.send_message(user_id, f"❌ {result.get('message','Erreur inconnue')}")
                     return
             except:
                 pass
 
         await ctx.bot.send_message(user_id, "⏰ Timeout — vérifie le navigateur manuellement.")
 
+
 # ── Main ──────────────────────────────────────────────────────
 
 def main():
     print("🤖 SmartRDV Bot Telegram démarré...")
     print(f"📡 Backend : {API_BASE}")
+    print(f"📧 Scan Gmail toutes les {SCAN_INTERVAL}s")
 
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
     app.add_handler(CommandHandler("start",   cmd_start))
     app.add_handler(CommandHandler("status",  cmd_status))
+    app.add_handler(CommandHandler("scan",    cmd_scan))
     app.add_handler(CommandHandler("annuler", cmd_annuler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(handle_callback))
 
-    print("✅ Bot en écoute — appuie sur Ctrl+C pour arrêter")
+    async def on_startup(application):
+        asyncio.ensure_future(gmail_scan_loop(application))
+
+    app.post_init = on_startup
+
+    print("✅ Bot en écoute — Ctrl+C pour arrêter")
     app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__":

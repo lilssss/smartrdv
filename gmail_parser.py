@@ -102,45 +102,71 @@ def get_email_body(msg: dict) -> str:
     return body[:3000]  # Limite pour Gemini
 
 
+HISTORY_FILE = "gmail_history_id.txt"
+
+def get_last_history_id() -> str:
+    if os.path.exists(HISTORY_FILE):
+        return open(HISTORY_FILE).read().strip()
+    return None
+
+def save_history_id(history_id: str):
+    open(HISTORY_FILE, "w").write(str(history_id))
+
+def fetch_email_by_id(service, msg_id: str) -> dict:
+    msg = service.users().messages().get(userId="me", id=msg_id, format="full").execute()
+    headers = {h["name"]: h["value"] for h in msg.get("payload", {}).get("headers", [])}
+    return {
+        "id":      msg_id,
+        "subject": headers.get("Subject", ""),
+        "from":    headers.get("From", ""),
+        "date":    headers.get("Date", ""),
+        "body":    get_email_body(msg)[:2000],
+    }
+
 def fetch_recent_emails(service, max_results: int = MAX_EMAILS) -> list:
-    """Récupère les mails récents."""
-    results = service.users().messages().list(
-        userId="me",
-        maxResults=max_results,
-        q="newer_than:7d"  # 7 derniers jours
-    ).execute()
-
-    messages = results.get("messages", [])
+    """
+    Premier appel : sauvegarde le historyId courant sans analyser les anciens mails.
+    Appels suivants : retourne uniquement les NOUVEAUX mails via l'API History.
+    """
     emails = []
+    last_history_id = get_last_history_id()
+    profile = service.users().getProfile(userId="me").execute()
+    current_history_id = str(profile.get("historyId", ""))
 
-    for msg_ref in messages:
-        try:
-            msg = service.users().messages().get(
-                userId="me",
-                id=msg_ref["id"],
-                format="full"
-            ).execute()
+    if not last_history_id:
+        save_history_id(current_history_id)
+        print(f"[Gmail] Premier lancement — historyId sauvegardé.")
+        print(f"[Gmail] Les prochains nouveaux mails seront détectés automatiquement.")
+        return []
 
-            # Headers
-            headers = {h["name"]: h["value"] for h in msg.get("payload", {}).get("headers", [])}
-            subject = headers.get("Subject", "")
-            sender  = headers.get("From", "")
-            date    = headers.get("Date", "")
-            body    = get_email_body(msg)
+    if last_history_id == current_history_id:
+        return []
 
-            emails.append({
-                "id":      msg_ref["id"],
-                "subject": subject,
-                "from":    sender,
-                "date":    date,
-                "body":    body[:2000],
-            })
-        except Exception as e:
-            print(f"[Gmail] Erreur lecture mail : {e}")
-            continue
+    try:
+        history_result = service.users().history().list(
+            userId="me",
+            startHistoryId=last_history_id,
+            historyTypes=["messageAdded"]
+        ).execute()
 
-    print(f"[Gmail] {len(emails)} mails récupérés")
+        new_message_ids = set()
+        for record in history_result.get("history", []):
+            for msg_added in record.get("messagesAdded", []):
+                new_message_ids.add(msg_added["message"]["id"])
+
+        print(f"[Gmail] {len(new_message_ids)} nouveaux mails détectés")
+        for msg_id in new_message_ids:
+            try:
+                emails.append(fetch_email_by_id(service, msg_id))
+            except Exception as e:
+                print(f"[Gmail] Erreur lecture {msg_id} : {e}")
+    except Exception as e:
+        print(f"[Gmail] Erreur history API : {e}")
+
+    save_history_id(current_history_id)
     return emails
+
+
 
 
 # ── Parsing IA via Gemini ─────────────────────────────────────
@@ -180,9 +206,18 @@ Règles :
 
 def parse_email_with_gemini(email: dict) -> Optional[dict]:
     """Analyse un mail avec Gemini et extrait l'événement."""
+    import time
+
     if not GOOGLE_API_KEY:
-        print("[Parser] Pas de clé Google — utilise le NLP local")
         return parse_email_local(email)
+
+    # Filtre rapide sujets sans intérêt
+    subject_lower = email["subject"].lower()
+    skip_keywords = ["tender", "cfdi", "report", "notification", "invoice",
+                     "unsubscribe", "newsletter", "no-reply", "noreply",
+                     "desinscri", "promo", "publicite"]
+    if any(kw in subject_lower for kw in skip_keywords):
+        return None
 
     prompt = f"""{SYSTEM_PROMPT}
 
@@ -194,28 +229,37 @@ Corps :
 {email['body']}
 """
 
-    for model in ["gemini-2.5-flash", "gemini-2.0-flash-lite"]:
-        try:
-            r = _req.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GOOGLE_API_KEY}",
-                json={"contents": [{"parts": [{"text": prompt}]}]},
-                timeout=15
-            )
-            if r.status_code == 404:
-                continue
-            r.raise_for_status()
-            text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
-            text = text.strip().replace("```json", "").replace("```", "").strip()
-            result = json.loads(text)
-            result["email_id"]      = email["id"]
-            result["email_subject"] = email["subject"]
-            result["email_from"]    = email["from"]
-            return result
-        except Exception as e:
-            print(f"[Gemini/{model}] Erreur : {e}")
-            continue
+    for model in ["gemini-2.5-flash", "gemini-2.0-flash-lite", "gemini-2.0-flash"]:
+        for attempt in range(3):
+            try:
+                time.sleep(1)
+                r = _req.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GOOGLE_API_KEY}",
+                    json={"contents": [{"parts": [{"text": prompt}]}]},
+                    timeout=20
+                )
+                if r.status_code == 404:
+                    break
+                if r.status_code == 503:
+                    print(f"[Gemini/{model}] 503 — retry {attempt+1}/3")
+                    time.sleep(3 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
+                text = text.strip().replace("```json","").replace("```","").strip()
+                result = json.loads(text)
+                result["email_id"]      = email["id"]
+                result["email_subject"] = email["subject"]
+                result["email_from"]    = email["from"]
+                return result
+            except json.JSONDecodeError:
+                return None
+            except Exception as e:
+                print(f"[Gemini/{model}] Erreur : {e}")
+                break
 
-    return None
+    return parse_email_local(email)
+
 
 
 # ── Fallback NLP local ────────────────────────────────────────
