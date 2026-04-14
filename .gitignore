@@ -8,3 +8,7 @@ doctolib_session.json
 *.ics
 venv/
 smartrdv.db
+gmail_token.json
+calendar_token.json
+gmail_history_id.txt
+parsed_events.json

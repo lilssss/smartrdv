@@ -220,14 +220,28 @@ def scrape(specialty: str, location: str) -> dict:
 
                 # Récupère l'adresse
                 address = ""
-                for addr_sel in ["[data-test='address']", "[class*='address']", "address"]:
-                    try:
-                        addr_el = card.locator(addr_sel).first
-                        if addr_el.is_visible():
-                            address = addr_el.inner_text().strip().replace("\n", " ")
-                            break
-                    except:
-                        pass
+
+                # Priorité 1 : structure Oxygen (div flex flex-wrap gap-x-4 > p[data-design-system="oxygen"])
+                try:
+                    addr_div = card.locator('div.flex.flex-wrap.gap-x-4').first
+                    if addr_div.is_visible(timeout=500):
+                        parts = addr_div.locator('p[data-design-system="oxygen"]').all_inner_texts()
+                        parts = [p.strip() for p in parts if p.strip()]
+                        if parts:
+                            address = ", ".join(parts)
+                except:
+                    pass
+
+                # Priorité 2 : fallbacks classiques
+                if not address:
+                    for addr_sel in ["[data-test='address']", "[class*='address']", "address"]:
+                        try:
+                            addr_el = card.locator(addr_sel).first
+                            if addr_el.is_visible():
+                                address = addr_el.inner_text().strip().replace("\n", " ")
+                                break
+                        except:
+                            pass
 
                 # Récupère le lien du profil
                 profile_url = ""

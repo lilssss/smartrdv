@@ -18,7 +18,7 @@ import logging
 import os
 import json
 import requests
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler,
     CallbackQueryHandler, ContextTypes, filters
@@ -36,6 +36,8 @@ log = logging.getLogger(__name__)
 subscribed_users   = set()   # user_ids abonnés aux notifs Gmail
 user_sessions      = {}      # sessions conversations RDV
 pending_cal_events = {}      # id → event, pour les boutons calendrier
+pending_searches   = {}      # user_id → nlp dict, recherche en attente de position
+user_locations     = {}      # user_id → "adresse" (position partagée)
 
 def get_session(user_id: int) -> dict:
     if user_id not in user_sessions:
@@ -57,17 +59,20 @@ def call_crawl_auto(specialty: str, location: str = "Paris") -> dict:
     r.raise_for_status()
     return r.json()
 
-def call_recommend(specialty: str, location: str, preferred_day=None, preferred_hours=None) -> dict:
+def call_recommend(specialty: str, location: str, preferred_day=None,
+                   preferred_hours=None, preferred_date=None, user_origin: str = "") -> dict:
     prefs = {
         "preferred_hours_start": preferred_hours[0] if preferred_hours else 9,
         "preferred_hours_end":   preferred_hours[1] if preferred_hours else 18,
         "preferred_day":         preferred_day,
+        "preferred_date":        preferred_date,
     }
     r = requests.post(f"{API_BASE}/recommend",
-        json={"specialty": specialty or "medecin-generaliste",
-              "location":  location or "Paris",
+        json={"specialty":   specialty or "medecin-generaliste",
+              "location":    location or "Paris",
+              "user_origin": user_origin,
               "top_n": 5, "preferences": prefs},
-        timeout=20)
+        timeout=60)
     r.raise_for_status()
     return r.json()
 
@@ -196,7 +201,11 @@ async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         "/status — État du système\n"
         "/scan — Scanner les mails maintenant\n"
         "/annuler — Annuler une recherche en cours",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
+        reply_markup=ReplyKeyboardMarkup(
+            [[KeyboardButton("📍 Partager ma position", request_location=True)]],
+            resize_keyboard=True, one_time_keyboard=True
+        )
     )
 
 async def cmd_status(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
@@ -235,6 +244,57 @@ async def cmd_annuler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔄 Recherche annulée.")
 
 
+# ── Localisation GPS ─────────────────────────────────────────
+
+async def handle_location(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    """Reçoit la position GPS partagée depuis Telegram."""
+    user_id  = update.effective_user.id
+    location = update.message.location
+    subscribed_users.add(user_id)
+
+    # Convertit coordonnées → adresse via Maps API
+    coords = f"{location.latitude},{location.longitude}"
+    address = None
+
+    maps_key = os.environ.get("MAPS_API_KEY", "")
+    if maps_key:
+        try:
+            import requests as _r
+            r = _r.get(
+                "https://maps.googleapis.com/maps/api/geocode/json",
+                params={"latlng": coords, "key": maps_key, "language": "fr"},
+                timeout=10
+            )
+            data = r.json()
+            results = data.get("results", [])
+            print(f"[Geocode] Status: {data.get('status')} — {len(results)} résultats")
+            if results:
+                address = results[0].get("formatted_address")
+                print(f"[Geocode] ✅ {coords} → {address}")
+            else:
+                print(f"[Geocode] ⚠️ Aucun résultat — réponse : {data}")
+        except Exception as e:
+            print(f"[Geocode] Erreur : {e}")
+
+    # Les coordonnées GPS fonctionnent directement avec Distance Matrix API
+    user_locations[user_id] = address if address and address != "None" else coords
+    user_locations[f"{user_id}_doctolib"] = "Paris"
+    print(f"[Geocode] Origin Maps = {user_locations[user_id]}")
+
+    user_locations[user_id] = address
+    display = address if address and address != "None" else f"📌 {coords}"
+    await update.message.reply_text(
+        f"📍 Position enregistrée : *{display}*\nJe l'utiliserai pour calculer les trajets.",
+        parse_mode="Markdown",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+    # Si une recherche était en attente → la lancer maintenant
+    if user_id in pending_searches:
+        nlp = pending_searches.pop(user_id)
+        await _run_search(update, ctx, nlp, user_id, address)
+
+
 # ── Messages — RDV médical ────────────────────────────────────
 
 async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
@@ -242,6 +302,12 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     subscribed_users.add(user_id)
     session = get_session(user_id)
     text    = update.message.text.strip()
+
+    # Traite le partage de localisation texte (ex: "je suis à Montmartre")
+    if any(w in text.lower() for w in ["je suis à", "je suis a", "ma position", "je me trouve"]):
+        user_locations[user_id] = text
+        await update.message.reply_text(f"📍 Position enregistrée : *{text}*\nJe l'utiliserai pour calculer les trajets.", parse_mode="Markdown")
+        return
 
     await update.message.chat.send_action("typing")
 
@@ -260,7 +326,33 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         return
 
     specialty = nlp.get("specialty") or "medecin-generaliste"
-    location  = nlp.get("location") or "Paris"
+    location  = nlp.get("location") or user_locations.get(user_id, "Paris")
+
+    # Si pas de position → stocker la recherche et attendre
+    if user_id not in user_locations:
+        pending_searches[user_id] = nlp
+        kb = ReplyKeyboardMarkup(
+            [[KeyboardButton("📍 Partager ma position", request_location=True)]],
+            resize_keyboard=True, one_time_keyboard=True
+        )
+        await update.message.reply_text(
+            f"📍 Partage ta position pour que je calcule les trajets vers les médecins.\n"
+            f"_(La recherche démarrera dès que tu auras partagé ta position)_",
+            parse_mode="Markdown", reply_markup=kb
+        )
+        return
+
+    await _run_search(update, ctx, nlp, user_id, location)
+
+
+async def _run_search(update, ctx, nlp, user_id, location=None):
+    """Lance le crawl + recommend après avoir reçu la position."""
+    session   = get_session(user_id)
+    specialty = nlp.get("specialty") or "medecin-generaliste"
+    # Pour Doctolib on cherche à Paris, pour Maps on utilise la vraie position
+    doctolib_location = user_locations.get(f"{user_id}_doctolib") or nlp.get("location") or "Paris"
+    maps_origin       = location or user_locations.get(user_id, "Paris")
+    location          = doctolib_location
 
     await update.message.reply_text(
         f"🔍 {nlp.get('message', '')}\n\n⏳ Je crawle Doctolib pour *{specialty}* à *{location}*...",
@@ -279,25 +371,43 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             location        = location,
             preferred_day   = nlp.get("preferred_day_num"),
             preferred_hours = nlp.get("preferred_hours"),
+            preferred_date  = nlp.get("preferred_date"),
+            user_origin     = user_locations.get(user_id, ""),
         )
         session["data"] = data
     except Exception as e:
-        await update.message.reply_text(f"❌ Erreur recommandation : {e}")
+        err_msg = str(e)
+        # Extraire le message d'erreur de l'HTTPException
+        if "detail" in err_msg:
+            import re as _re2
+            m = _re2.search(r"'detail': '([^']+)'", err_msg)
+            if m: err_msg = m.group(1)
+        await update.message.reply_text(f"❌ {err_msg}")
         return
 
     best   = data["best"]
     ranked = data.get("ranked", [])[:5]
     keyboard = []
     for i, slot in enumerate(ranked):
-        label = slot["label"]
+        try:
+            label = slot["label"].encode('latin-1').decode('utf-8')
+        except:
+            label = slot["label"]
         score = int(slot["total_score"] * 100)
         emoji = "⭐" if i == 0 else f"#{i+1}"
         keyboard.append([InlineKeyboardButton(f"{emoji} {label} — score {score}", callback_data=f"book:{i}")])
     keyboard.append([InlineKeyboardButton("❌ Annuler", callback_data="cancel")])
 
     warning = data.get("warning") or ""
+    def fix_encoding(s):
+        try:
+            return s.encode('latin-1').decode('utf-8')
+        except:
+            return s
+
+    best_label = fix_encoding(best['label'])
     msg  = f"🏥 *Meilleur créneau trouvé :*\n\n"
-    msg += f"👨‍⚕️ *{best['label']}*\n"
+    msg += f"👨‍⚕️ *{best_label}*\n"
     msg += f"📊 Score : {int(best['total_score']*100)}/100 _(plus c'est bas, mieux c'est)_\n"
     if warning: msg += f"\n⚠️ {warning}\n"
     msg += f"\n_{data['total_slots_analyzed']} créneaux analysés — source : {data['data_source']}_\n\n"
@@ -459,6 +569,7 @@ def main():
     app.add_handler(CommandHandler("status",  cmd_status))
     app.add_handler(CommandHandler("scan",    cmd_scan))
     app.add_handler(CommandHandler("annuler", cmd_annuler))
+    app.add_handler(MessageHandler(filters.LOCATION, handle_location))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(handle_callback))
 
