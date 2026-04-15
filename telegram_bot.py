@@ -25,7 +25,12 @@ from telegram.ext import (
 )
 
 # ── Config ────────────────────────────────────────────────────
-TELEGRAM_TOKEN = "8092250364:AAHO2X3uFXIvBRlYh3M_OK6BaneBJT1cnrE"
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "") #— à créer dans BotFather et mettre dans .env
 API_BASE       = "http://localhost:8000"
 SCAN_INTERVAL  = 30  # secondes
 
