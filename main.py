@@ -301,6 +301,14 @@ def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
         if hasattr(p,'name'): prac_map[p.name] = p.profile_url
         elif isinstance(p,dict): prac_map[p.get('name','')] = p.get('profile_url','')
 
+    # Récupère les conflits Calendar pour les créneaux classés
+    conflicts_map = {}
+    if scoring_source == "calendar+maps" and _scheduler and hasattr(_scheduler, 'slot_conflicts'):
+        for d in top:
+            label = d.slot.time
+            if label in _scheduler.slot_conflicts:
+                conflicts_map[label] = _scheduler.slot_conflicts[label]
+
     return {
         "best":                  to_slot_result(0, ranked[0]).dict(),
         "ranked":                [to_slot_result(i, d).dict() for i, d in enumerate(top)],
@@ -310,6 +318,7 @@ def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
         "data_source":           data_source,
         "scoring_source":        scoring_source,
         "practitioners_map":     prac_map,
+        "conflicts":             conflicts_map,
         "warning":               None,
     }
 
@@ -536,6 +545,15 @@ def recommend_planity(req: RecommendRequest):
 
         ranked = optimizer.rank(scoring_slots)
         top    = ranked[:req.top_n]
+        print(f"[Planity] Ranked {len(ranked)} slots — best: {ranked[0].slot.time} (score={ranked[0].total:.4f})")
+
+        # Récupère les conflits Calendar pour les créneaux classés
+        conflicts_map = {}
+        if scoring_source == "calendar+maps" and hasattr(scheduler, 'slot_conflicts'):
+            for d in top:
+                label = d.slot.time
+                if label in scheduler.slot_conflicts:
+                    conflicts_map[label] = scheduler.slot_conflicts[label]
 
         return {
             "best":                 to_slot_result(0, ranked[0]).dict(),
@@ -546,9 +564,12 @@ def recommend_planity(req: RecommendRequest):
             "data_source":          "planity",
             "scoring_source":       scoring_source,
             "practitioners_map":    prac_map,
+            "conflicts":            conflicts_map,
             "warning":              None,
         }
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 

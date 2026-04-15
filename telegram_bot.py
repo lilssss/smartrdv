@@ -338,6 +338,7 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     try:
         nlp = call_chat(text, session["history"])
+        nlp["_raw_message"] = text  # Stocker pour fallback date
     except Exception as e:
         await update.message.reply_text(f"❌ Erreur NLP : {e}\nVérifie que uvicorn tourne.")
         return
@@ -374,12 +375,25 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def _run_search(update, ctx, nlp, user_id, location=None):
     """Lance le crawl + recommend après avoir reçu la position."""
+    from datetime import date as _date
     session   = get_session(user_id)
     specialty = nlp.get("specialty") or "medecin-generaliste"
     # Pour Doctolib on cherche à Paris, pour Maps on utilise la vraie position
     doctolib_location = user_locations.get(f"{user_id}_doctolib") or nlp.get("location") or "Paris"
     maps_origin       = location or user_locations.get(user_id, "Paris")
     location          = doctolib_location
+
+    # ── Fallback date : si Gemini n'a pas extrait preferred_date mais le message
+    # contient des mots signifiant "aujourd'hui", on force la date du jour
+    if not nlp.get("preferred_date"):
+        msg_lower = (nlp.get("_raw_message") or "").lower()
+        TODAY_KEYWORDS = [
+            "aujourd'hui", "ajourd'hui", "ce matin", "cet après-midi",
+            "cet apres-midi", "ce soir", "tout de suite", "maintenant",
+            "dans la journée", "dans la soirée",
+        ]
+        if any(kw in msg_lower for kw in TODAY_KEYWORDS):
+            nlp["preferred_date"] = _date.today().isoformat()
 
     platform = nlp.get("platform", "doctolib")
     platform_name = "Planity" if platform == "planity" else "Doctolib"
@@ -546,6 +560,25 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if data == "cancel":
         user_sessions.pop(user_id, None)
         await query.edit_message_text("❌ Réservation annulée.")
+        return
+
+    if data.startswith("force_search:"):
+        # L'utilisateur veut chercher malgré les conflits Calendar
+        nlp_saved = session.get("pending_calendar_nlp", {})
+        loc_saved = session.get("pending_calendar_location") or user_locations.get(user_id)
+        if not nlp_saved:
+            await query.edit_message_text("❌ Session expirée — relance ta recherche.")
+            return
+        await query.edit_message_text(
+            f"⏳ Recherche en cours malgré les conflits...",
+        )
+        # Injecte un faux update.message pour _run_search
+        class _FakeMsg:
+            async def reply_text(self, *a, **kw):
+                await ctx.bot.send_message(user_id, *a, **kw)
+        class _FakeUpdate:
+            message = _FakeMsg()
+        await _run_search(_FakeUpdate(), ctx, nlp_saved, user_id, loc_saved)
         return
 
     if data.startswith("retry_search:"):

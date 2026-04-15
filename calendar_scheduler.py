@@ -161,15 +161,29 @@ class CalendarScheduler:
         1.0 = chevauchement complet
         """
         for ev in self.calendar_events:
-            # Chevauchement si start < ev.end ET end > ev.start
             if start < ev["end"] and end > ev["start"]:
-                # Calcule le % de chevauchement
                 overlap_start = max(start, ev["start"])
                 overlap_end   = min(end,   ev["end"])
                 overlap_mins  = (overlap_end - overlap_start).total_seconds() / 60
                 slot_mins     = (end - start).total_seconds() / 60
                 return min(1.0, overlap_mins / max(slot_mins, 1))
         return 0.0
+
+    def _get_conflicting_events(self, start: datetime, end: datetime) -> list:
+        """
+        Retourne la liste des événements Calendar en conflit avec ce créneau.
+        Chaque événement : {title, start, end, location}
+        """
+        conflicts = []
+        for ev in self.calendar_events:
+            if start < ev["end"] and end > ev["start"]:
+                conflicts.append({
+                    "title":    ev.get("title", "Événement"),
+                    "start":    ev["start"].strftime("%H:%M"),
+                    "end":      ev["end"].strftime("%H:%M"),
+                    "location": ev.get("location", ""),
+                })
+        return conflicts
 
     def _fatigue_score(self, dt: datetime) -> float:
         """
@@ -328,6 +342,8 @@ class CalendarScheduler:
 
         # ── Scoring ───────────────────────────────────────────
         scored = []
+        self.slot_conflicts = {}  # label → [{title, start, end, location}]
+
         for s in raw_slots:
             slot_datetime = s.get("start_date", "")
             slot_location = s.get("address", "") or location
@@ -335,7 +351,6 @@ class CalendarScheduler:
             # Parse la date (gère les timezones +02:00)
             try:
                 if "T" in slot_datetime:
-                    # Supprime la timezone pour comparaison naïve
                     clean = slot_datetime[:19].replace("Z","")
                     start = datetime.fromisoformat(clean)
                 else:
@@ -350,6 +365,9 @@ class CalendarScheduler:
             fatigue      = self._fatigue_score(start)
             interruption = self._interruption_score(start)
             preference   = self._preference_score(start, preferred_hours)
+
+            # Détails des conflits Calendar
+            conflicting_events = self._get_conflicting_events(start, end)
 
             # Travel depuis le cache pré-calculé
             travel_mins  = travel_cache.get(slot_location)
@@ -385,7 +403,6 @@ class CalendarScheduler:
             # Label lisible — fix encodage UTF-8
             try:
                 prac_name = s.get("practitioner_name", s.get("name", "Médecin"))
-                # Fix encodage latin-1 → utf-8 si nécessaire
                 try:
                     prac_name = prac_name.encode('latin-1').decode('utf-8')
                 except:
@@ -393,6 +410,10 @@ class CalendarScheduler:
                 label = f"{prac_name} — {start.strftime('%a %d/%m %H:%M')}"
             except Exception:
                 label = slot_datetime
+
+            # Stocke les conflits Calendar pour ce créneau
+            if conflicting_events:
+                self.slot_conflicts[label] = conflicting_events
 
             try:
                 scored.append(Slot(time=label, **scores))
