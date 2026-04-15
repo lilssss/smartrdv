@@ -165,7 +165,7 @@ def get_practitioners(db: Session = Depends(get_db)):
 
 # ── Recommend ─────────────────────────────────────────────────
 
-@app.post("/recommend", response_model=RecommendResponse)
+@app.post("/recommend")
 def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
     weights   = build_weights(req.preferences)
     engine    = ScoringEngine(weights)
@@ -277,14 +277,21 @@ def recommend(req: RecommendRequest, db: Session = Depends(get_db)):
     if not scoring_slots:
         day_names = {0:"lundi",1:"mardi",2:"mercredi",3:"jeudi",4:"vendredi",5:"samedi",6:"dimanche"}
         if req.preferences.preferred_date:
-            raise HTTPException(status_code=404,
-                detail=f"Aucun créneau disponible le {req.preferences.preferred_date}. Essaie une autre date.")
+            msg = f"Aucun créneau disponible le {req.preferences.preferred_date}."
         elif req.preferences.preferred_day is not None:
             day_label = day_names.get(req.preferences.preferred_day, "ce jour")
-            raise HTTPException(status_code=404,
-                detail=f"Aucun créneau disponible le {day_label}. Essaie un autre jour.")
+            msg = f"Aucun créneau disponible le {day_label}."
         else:
-            raise HTTPException(status_code=404, detail="Aucun créneau disponible.")
+            msg = "Aucun créneau disponible."
+        return {
+            "no_slots": True,
+            "message":  msg,
+            "best": None, "ranked": [], "total_slots_analyzed": 0,
+            "practitioners_found": len(practitioners),
+            "weights_used": weights.as_dict(),
+            "data_source": data_source, "scoring_source": scoring_source,
+            "practitioners_map": {}, "warning": msg,
+        }
 
     ranked = optimizer.rank(scoring_slots)
     top    = ranked[:req.top_n]
@@ -316,12 +323,14 @@ def chat(req: ChatRequest):
     tomorrow_date       = (now + timedelta(days=1)).strftime("%Y-%m-%d")
     after_tomorrow_date = (now + timedelta(days=2)).strftime("%Y-%m-%d")
 
-    SYSTEM = f"""Tu es SmartRDV, assistant médical IA.
+    SYSTEM = f"""Tu es kAIros, assistant IA de planning.
 Aujourd'hui : {today_name} {now.strftime('%d/%m/%Y')}. Demain : {tomorrow_date}.
 Réponds UNIQUEMENT en JSON valide, sans markdown :
-{{"intent":"book"|"chat","specialty":"dermatologue"|"gynecologue"|"cardiologue"|"medecin-generaliste"|"ophtalmologue"|"psychiatre"|"dentiste"|"kinesitherapeute","location":"Paris","preferred_hours":[start,end]|null,"preferred_day_num":0|1|2|3|4|5|6|null,"preferred_date":"YYYY-MM-DD"|null,"prefer_weekend":false,"is_new_patient":true|false|null,"motive":null,"is_teleconsult":false|null,"prefer_close":false,"message":"réponse courte en français"}}
+{{"intent":"book"|"chat","platform":"doctolib"|"planity","specialty":"dermatologue"|"gynecologue"|"cardiologue"|"medecin-generaliste"|"ophtalmologue"|"psychiatre"|"dentiste"|"kinesitherapeute"|"coiffeur"|"barbier"|"spa"|"manucure"|"institut-de-beaute"|"massotherapeute"|"sophrologue"|"naturopathe","location":"Paris","preferred_hours":[start,end]|null,"preferred_day_num":0|1|2|3|4|5|6|null,"preferred_date":"YYYY-MM-DD"|null,"prefer_weekend":false,"is_new_patient":true|false|null,"motive":null,"is_teleconsult":false|null,"prefer_close":false,"message":"réponse courte en français"}}
 Règles :
-- intent="book" si rdv médical demandé, sinon "chat"
+- intent="book" si réservation demandée (rdv médical, coiffeur, spa, etc.), sinon "chat"
+- platform="doctolib" pour tout ce qui est médical (médecin, spécialiste, kiné...)
+- platform="planity" pour tout ce qui est bien-être/beauté (coiffeur, barbier, spa, manucure, massage, sophrologue, naturopathe...)
 - preferred_date : date précise → "YYYY-MM-DD" (ex: "17 avril"→"{now.year}-04-17", "demain"→"{tomorrow_date}", "après-demain"→"{after_tomorrow_date}")
 - preferred_day_num : lundi=0,mardi=1,mercredi=2,jeudi=3,vendredi=4,samedi=5,dimanche=6
 - preferred_hours : matin=[8,12], après-midi=[13,18], soir=[17,20], après le travail=[18,20], null si non précisé
@@ -401,6 +410,81 @@ def auto_crawl(req: CrawlRequest, db: Session = Depends(get_db)):
         except Exception as e:
             print(f"[Crawl] Erreur DB : {e}")
     return {"status":"error","message":"slots.json introuvable"}
+
+# ── Planity ───────────────────────────────────────────────────
+
+class PlanityRequest(BaseModel):
+    category: str = "coiffeur"
+    location: str = "Paris"
+
+@app.post("/crawl/planity")
+def crawl_planity(req: PlanityRequest):
+    """Lance le crawler Planity en arrière-plan."""
+    def run():
+        subprocess.run([sys.executable, "planity_crawler.py", req.category, req.location],
+                       capture_output=False)
+    threading.Thread(target=run, daemon=True).start()
+    return {"status": "started", "category": req.category, "location": req.location}
+
+@app.post("/crawl/planity/auto")
+def crawl_planity_auto(req: PlanityRequest):
+    """Lance le crawler Planity et retourne les résultats."""
+    subprocess.run([sys.executable, "planity_crawler.py", req.category, req.location],
+                   capture_output=False)
+    if os.path.exists("planity_slots.json"):
+        try:
+            with open("planity_slots.json", encoding="utf-8") as f:
+                data = json.load(f)
+            return {
+                "status":    "success",
+                "category":  req.category,
+                "location":  req.location,
+                "slots_count":    len(data.get("slots", [])),
+                "practitioners":  len(data.get("practitioners", [])),
+            }
+        except Exception as e:
+            print(f"[Planity] Erreur : {e}")
+    return {"status": "error", "message": "planity_slots.json introuvable"}
+
+@app.post("/recommend/planity")
+def recommend_planity(req: RecommendRequest):
+    """Recommande les meilleurs créneaux Planity."""
+    weights   = build_weights(req.preferences)
+    engine    = ScoringEngine(weights)
+    optimizer = Optimizer(engine)
+
+    try:
+        from planity_client import load_planity_data, PlanityAdapter, PlanityUserPreferences
+        pros, raw_slots = load_planity_data("planity_slots.json")
+        if not raw_slots:
+            return {"no_slots": True, "message": "Aucun créneau Planity disponible.",
+                    "best": None, "ranked": [], "total_slots_analyzed": 0,
+                    "practitioners_found": 0, "weights_used": weights.as_dict(),
+                    "data_source": "planity", "practitioners_map": {}, "warning": None}
+
+        up = PlanityUserPreferences(
+            preferred_hours=(req.preferences.preferred_hours_start, req.preferences.preferred_hours_end),
+            preferred_day=req.preferences.preferred_day,
+        )
+        scoring_slots = PlanityAdapter(up).convert(raw_slots)
+        ranked = optimizer.rank(scoring_slots)
+        top    = ranked[:req.top_n]
+
+        prac_map = {p.name: p.profile_url for p in pros}
+
+        return {
+            "best":                 to_slot_result(0, ranked[0]).dict(),
+            "ranked":               [to_slot_result(i, d).dict() for i, d in enumerate(top)],
+            "total_slots_analyzed": len(scoring_slots),
+            "practitioners_found":  len(pros),
+            "weights_used":         weights.as_dict(),
+            "data_source":          "planity",
+            "practitioners_map":    prac_map,
+            "warning":              None,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # ── Book ──────────────────────────────────────────────────────
 

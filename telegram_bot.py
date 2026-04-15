@@ -76,6 +76,30 @@ def call_recommend(specialty: str, location: str, preferred_day=None,
     r.raise_for_status()
     return r.json()
 
+def call_crawl_planity(category: str, location: str = "Paris") -> dict:
+    r = requests.post(f"{API_BASE}/crawl/planity/auto",
+        json={"category": category or "coiffeur", "location": location or "Paris"},
+        timeout=300)
+    r.raise_for_status()
+    return r.json()
+
+def call_recommend_planity(specialty: str, location: str, preferred_day=None,
+                            preferred_hours=None, preferred_date=None, user_origin: str = "") -> dict:
+    prefs = {
+        "preferred_hours_start": preferred_hours[0] if preferred_hours else 9,
+        "preferred_hours_end":   preferred_hours[1] if preferred_hours else 18,
+        "preferred_day":         preferred_day,
+        "preferred_date":        preferred_date,
+    }
+    r = requests.post(f"{API_BASE}/recommend/planity",
+        json={"specialty": specialty or "coiffeur",
+              "location":  location or "Paris",
+              "user_origin": user_origin,
+              "top_n": 5, "preferences": prefs},
+        timeout=60)
+    r.raise_for_status()
+    return r.json()
+
 def call_book(profile_url: str, slot_time: str) -> dict:
     r = requests.post(f"{API_BASE}/book",
         json={"profile_url": profile_url, "slot_datetime": slot_time, "is_new_patient": True},
@@ -188,15 +212,17 @@ async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     user_sessions.pop(user.id, None)
     subscribed_users.add(user.id)
     await update.message.reply_text(
-        f"👋 Bonjour *{user.first_name}* ! Je suis *SmartRDV*, ton assistant IA.\n\n"
-        "Je fais deux choses en parallèle :\n\n"
-        "📧 *Notifications automatiques* — Je surveille tes mails toutes les 30s. "
-        "Si tu reçois une confirmation de cinéma, restaurant, concert ou meeting, "
-        "je t'envoie une notif ici directement.\n\n"
-        "🏥 *Prise de RDV médical* — Dis-moi simplement ce que tu veux :\n"
+        f"👋 Bonjour *{user.first_name}* ! Je suis *kAIros*, ton assistant IA de planning.\n\n"
+        "Je gère tout ton agenda en parallèle :\n\n"
+        "📧 *Notifications automatiques* — Je surveille tes mails toutes les 30s et te notifie pour chaque confirmation "
+        "(cinéma, restaurant, concert, meeting, livraison...)\n\n"
+        "🏥 *RDV médical* — Sur Doctolib, avec scoring intelligent basé sur ton calendrier et tes trajets :\n"
         "• _Je veux un gynécologue vendredi soir_\n"
-        "• _Dermatologue demain matin à Paris_\n"
-        "• _Cardiologue après le travail_\n\n"
+        "• _Cardiologue le 25 avril après le travail_\n\n"
+        "💇 *Bien-être & beauté* — Sur Planity, même logique :\n"
+        "• _Je veux un coiffeur samedi matin_\n"
+        "• _Massage dimanche après-midi_\n\n"
+        "📅 *Google Calendar* — J'ajoute automatiquement tes événements et détecte les conflits\n\n"
         "Commandes :\n"
         "/status — État du système\n"
         "/scan — Scanner les mails maintenant\n"
@@ -277,11 +303,10 @@ async def handle_location(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             print(f"[Geocode] Erreur : {e}")
 
     # Les coordonnées GPS fonctionnent directement avec Distance Matrix API
-    user_locations[user_id] = address if address and address != "None" else coords
+    # Utilise l'adresse geocodée si disponible, sinon les coordonnées GPS brutes
+    user_locations[user_id] = (address if address and address not in ("None", None) else coords) or ""
     user_locations[f"{user_id}_doctolib"] = "Paris"
     print(f"[Geocode] Origin Maps = {user_locations[user_id]}")
-
-    user_locations[user_id] = address
     display = address if address and address != "None" else f"📌 {coords}"
     await update.message.reply_text(
         f"📍 Position enregistrée : *{display}*\nJe l'utiliserai pour calculer les trajets.",
@@ -335,8 +360,10 @@ async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             [[KeyboardButton("📍 Partager ma position", request_location=True)]],
             resize_keyboard=True, one_time_keyboard=True
         )
+        platform = nlp.get("platform", "doctolib")
+        dest_label = "professionnels" if platform == "planity" else "médecins"
         await update.message.reply_text(
-            f"📍 Partage ta position pour que je calcule les trajets vers les médecins.\n"
+            f"📍 Partage ta position pour que je calcule les trajets vers les {dest_label}.\n"
             f"_(La recherche démarrera dès que tu auras partagé ta position)_",
             parse_mode="Markdown", reply_markup=kb
         )
@@ -354,35 +381,59 @@ async def _run_search(update, ctx, nlp, user_id, location=None):
     maps_origin       = location or user_locations.get(user_id, "Paris")
     location          = doctolib_location
 
+    platform = nlp.get("platform", "doctolib")
+    platform_name = "Planity" if platform == "planity" else "Doctolib"
     await update.message.reply_text(
-        f"🔍 {nlp.get('message', '')}\n\n⏳ Je crawle Doctolib pour *{specialty}* à *{location}*...",
+        f"🔍 {nlp.get('message', '')}\n\n⏳ Je crawle *{platform_name}* pour *{specialty}* à *{location}*...",
         parse_mode="Markdown"
     )
 
     try:
-        crawl = call_crawl_auto(specialty, location)
+        if platform == "planity":
+            crawl = call_crawl_planity(specialty, location)
+        else:
+            crawl = call_crawl_auto(specialty, location)
         await update.message.reply_text(f"✅ {crawl.get('slots_count', 0)} créneaux trouvés — analyse en cours...")
     except Exception as e:
         await update.message.reply_text(f"⚠️ Crawl échoué : {e}\nJ'utilise les données existantes.")
 
     try:
-        data = call_recommend(
-            specialty       = specialty,
-            location        = location,
-            preferred_day   = nlp.get("preferred_day_num"),
-            preferred_hours = nlp.get("preferred_hours"),
-            preferred_date  = nlp.get("preferred_date"),
-            user_origin     = user_locations.get(user_id, ""),
-        )
+        if platform == "planity":
+            data = call_recommend_planity(
+                specialty       = specialty,
+                location        = location,
+                preferred_day   = nlp.get("preferred_day_num"),
+                preferred_hours = nlp.get("preferred_hours"),
+                preferred_date  = nlp.get("preferred_date"),
+                user_origin     = user_locations.get(user_id) or "",
+            )
+        else:
+            data = call_recommend(
+                specialty       = specialty,
+                location        = location,
+                preferred_day   = nlp.get("preferred_day_num"),
+                preferred_hours = nlp.get("preferred_hours"),
+                preferred_date  = nlp.get("preferred_date"),
+                user_origin     = user_locations.get(user_id) or "",
+            )
         session["data"] = data
     except Exception as e:
-        err_msg = str(e)
-        # Extraire le message d'erreur de l'HTTPException
-        if "detail" in err_msg:
-            import re as _re2
-            m = _re2.search(r"'detail': '([^']+)'", err_msg)
-            if m: err_msg = m.group(1)
-        await update.message.reply_text(f"❌ {err_msg}")
+        await update.message.reply_text(f"❌ Erreur recommandation : {e}")
+        return
+
+    # ── Pas de créneaux disponibles ───────────────────────────
+    if data.get("no_slots"):
+        msg = data.get("message", "Aucun créneau disponible.")
+        session["pending_retry_nlp"] = nlp
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔍 Chercher sans contrainte de date", callback_data=f"retry_search:{specialty}:{location}")],
+            [InlineKeyboardButton("❌ Annuler", callback_data="cancel")],
+        ])
+        await update.message.reply_text(
+            f"😕 *{msg}*\n\nVeux-tu que je cherche le prochain créneau disponible ?",
+            parse_mode="Markdown",
+            reply_markup=keyboard
+        )
         return
 
     best   = data["best"]
@@ -497,6 +548,19 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("❌ Réservation annulée.")
         return
 
+    if data.startswith("retry_search:"):
+        parts   = data.split(":")
+        spec    = parts[1] if len(parts) > 1 else "medecin-generaliste"
+        loc     = parts[2] if len(parts) > 2 else "Paris"
+        nlp     = session.get("pending_retry_nlp", {})
+        # Retry sans preferred_date ni preferred_day
+        nlp_retry = dict(nlp)
+        nlp_retry["preferred_date"]    = None
+        nlp_retry["preferred_day_num"] = None
+        await query.edit_message_text("🔍 Recherche du prochain créneau disponible...")
+        await _run_search(query, ctx, nlp_retry, user_id, user_locations.get(user_id))
+        return
+
     if data.startswith("book:"):
         idx    = int(data.split(":")[1])
         ranked = session.get("data", {}).get("ranked", [])
@@ -559,7 +623,7 @@ async def handle_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 # ── Main ──────────────────────────────────────────────────────
 
 def main():
-    print("🤖 SmartRDV Bot Telegram démarré...")
+    print("🤖 kAIros Bot Telegram démarré...")
     print(f"📡 Backend : {API_BASE}")
     print(f"📧 Scan Gmail toutes les {SCAN_INTERVAL}s")
 

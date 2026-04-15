@@ -1,0 +1,42 @@
+{
+  "scraped_at": "2026-04-15T02:14:27.459866",
+  "platform": "planity",
+  "category": "coiffeur",
+  "location": "Paris",
+  "practitioners": [
+    {
+      "id": 1,
+      "name": "Un coiffeur pour ces messieurs à Paris ?",
+      "category": "coiffeur",
+      "address": "",
+      "city": "Paris",
+      "profile_url": "",
+      "services": [],
+      "slots_count": 0,
+      "agenda_ids": []
+    },
+    {
+      "id": 2,
+      "name": "Le coiffeur parisien se met au bio",
+      "category": "coiffeur",
+      "address": "",
+      "city": "Paris",
+      "profile_url": "",
+      "services": [],
+      "slots_count": 0,
+      "agenda_ids": []
+    },
+    {
+      "id": 3,
+      "name": "Comment choisir son coiffeur parisien ?",
+      "category": "coiffeur",
+      "address": "",
+      "city": "Paris",
+      "profile_url": "",
+      "services": [],
+      "slots_count": 0,
+      "agenda_ids": []
+    }
+  ],
+  "slots": []
+}
