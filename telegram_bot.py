@@ -407,14 +407,41 @@ async def _run_search(update, ctx, nlp, user_id, location=None):
         parse_mode="Markdown"
     )
 
-    try:
-        if platform == "planity":
-            crawl = call_crawl_planity(specialty, location)
-        else:
-            crawl = call_crawl_auto(specialty, location)
-        await update.message.reply_text(f"✅ {crawl.get('slots_count', 0)} créneaux trouvés — analyse en cours...")
-    except Exception as e:
-        await update.message.reply_text(f"⚠️ Crawl échoué : {e}\nJ'utilise les données existantes.")
+    # ── Cache : vérifie si les données sont récentes (< 2h) ──
+    import os as _os, json as _json
+    from datetime import datetime as _dt2
+    CACHE_FILE    = "planity_slots.json" if platform == "planity" else "slots.json"
+    CACHE_MAX_AGE = 2  # heures
+    use_cache     = False
+
+    if _os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, encoding="utf-8") as _f:
+                _cached = _json.load(_f)
+            scraped_at = _cached.get("scraped_at", "")
+            if scraped_at:
+                age_hours = (_dt2.now() - _dt2.fromisoformat(scraped_at)).total_seconds() / 3600
+                cached_cat = _cached.get("category") or _cached.get("specialty") or ""
+                # Cache valide si < 2h ET même catégorie
+                if age_hours < CACHE_MAX_AGE and specialty.lower() in cached_cat.lower():
+                    use_cache     = True
+                    slots_count   = len(_cached.get("slots", []))
+                    age_min       = int(age_hours * 60)
+                    await update.message.reply_text(
+                        f"📂 Données en cache ({age_min} min) — {slots_count} créneaux disponibles, analyse en cours...",
+                    )
+        except Exception:
+            pass
+
+    if not use_cache:
+        try:
+            if platform == "planity":
+                crawl = call_crawl_planity(specialty, location)
+            else:
+                crawl = call_crawl_auto(specialty, location)
+            await update.message.reply_text(f"✅ {crawl.get('slots_count', 0)} créneaux trouvés — analyse en cours...")
+        except Exception as e:
+            await update.message.reply_text(f"⚠️ Crawl échoué : {e}\nJ'utilise les données existantes.")
 
     try:
         if platform == "planity":
