@@ -115,6 +115,84 @@ def parse_planity_slots(api_data: dict) -> list:
 # SCRAPER PRINCIPAL
 # ============================================================
 
+
+def scrape_exact_slots(page, profile_url: str) -> list:
+    """
+    Ouvre le profil du pro dans un NOUVEL ONGLET, scrape les horaires,
+    ferme l'onglet. La page de recherche reste intacte.
+    Retourne une liste de dicts: {date_str, day_str, times: [...]}
+    """
+    if not profile_url:
+        return []
+    new_page = None
+    try:
+        # Ouvrir dans un nouvel onglet
+        new_page = page.context.new_page()
+        new_page.goto(profile_url, wait_until="domcontentloaded", timeout=20000)
+        human_delay(1.5, 2.5)
+
+        # Cliquer sur le premier bouton "Choisir" visible
+        clicked = False
+        for btn_id in ["button-choose-0-0", "button-choose-0-1", "button-choose-0-2"]:
+            try:
+                btns = new_page.locator(f"button[id='{btn_id}']").all()
+                for btn in btns:
+                    if btn.is_visible(timeout=500):
+                        btn.click()
+                        clicked = True
+                        break
+                if clicked:
+                    break
+            except:
+                pass
+
+        if not clicked:
+            return []
+
+        # Attendre le calendrier
+        try:
+            new_page.wait_for_selector("div[class*='page-module_dayWrapper']", timeout=8000)
+        except:
+            return []
+
+        human_delay(0.8, 1.5)
+
+        # Scraper chaque colonne jour
+        results = []
+        day_wrappers = new_page.locator("div[class*='page-module_dayWrapper']").all()
+        for wrapper in day_wrappers:
+            try:
+                day_txt = wrapper.locator("span[class*='page-module_day']").first.inner_text().strip()
+                date_txt = wrapper.locator("span[class*='page-module_date']").first.inner_text().strip()
+                time_btns = wrapper.locator("button[class*='planity_appointment_days_slider_hour_availability'] span[class*='hourWithIcon']").all()
+                times = []
+                for tb in time_btns:
+                    try:
+                        t = tb.inner_text().strip()
+                        if t:
+                            times.append(t)
+                    except:
+                        pass
+                if times:
+                    results.append({
+                        "day_str": day_txt,
+                        "date_str": date_txt,
+                        "times": times
+                    })
+            except:
+                pass
+
+        return results
+    except Exception as e:
+        print(f"  [exact_slots] Erreur: {e}")
+        return []
+    finally:
+        if new_page:
+            try:
+                new_page.close()
+            except:
+                pass
+
 def scrape(category: str, location: str) -> dict:
     cat_slug = slugify(category)
 
@@ -210,21 +288,17 @@ def scrape(category: str, location: str) -> dict:
 
         # ── Attend les cartes pro ──────────────────────────────
         print("[Planity] Attente des cartes professionnels...")
-        # Les vraies cartes salon ont des boutons de créneaux avec 'hasAvailabilities'
-        # On scroll d'abord pour charger les cartes
         page.evaluate("window.scrollTo(0, 300)")
         human_delay(1, 2)
 
         CARD_SELECTORS = [
-            # Cartes qui contiennent des boutons de disponibilité
-            "div[class*='availabilities-module']",
-            "div[class*='businessCard']",
-            "div[class*='business-card']",
-            "a[class*='business-card']",
-            # Sélection par présence de boutons hasAvailabilities
+            # Sélecteurs précis basés sur le vrai DOM Planity
+            "div[class*='business_item_search-module_infos']",
+            "div[class*='infos-SQlqX']",
+            # Fallbacks
+            "div:has(a[class*='business_item_search-module_title'])",
             "div:has(button[class*='hasAvailabilities'])",
             "article:has(button[class*='hasAvailabilities'])",
-            "li:has(button[class*='hasAvailabilities'])",
             "li[class*='result']",
         ]
         cards_locator = None
@@ -255,9 +329,18 @@ def scrape(category: str, location: str) -> dict:
         limit = min(MAX_PROS, len(cards))
         print(f"[Planity] Traitement de {limit} professionnels...\n")
 
-        for i, card in enumerate(cards[:limit]):
+        CARD_SEL = "div[class*='business_item_search-module_infos']"
+
+        for i in range(limit):
             try:
                 print(f"[Planity] ── Pro {i+1}/{limit}")
+
+                # Re-fetch les cartes à chaque itération (évite les références stale)
+                cards_fresh = page.locator(CARD_SEL).all()
+                if i >= len(cards_fresh):
+                    print(f"  Carte {i+1} introuvable après navigation")
+                    continue
+                card = cards_fresh[i]
 
                 # ── TECHNIQUE CLÉ : scroll → lazy loading ─────
                 card.scroll_into_view_if_needed()
@@ -283,48 +366,40 @@ def scrape(category: str, location: str) -> dict:
                 if not name:
                     name = f"Salon {i+1}"
 
-                # ── Adresse — structure Oxygen-like ──────────
+                # ── Adresse ───────────────────────────────────
                 address = ""
-
-                # Essai 1 : div flex wrap (même structure que Doctolib Oxygen)
-                try:
-                    addr_div = card.locator('div.flex.flex-wrap').first
-                    if addr_div.is_visible(timeout=500):
-                        parts = [p.strip() for p in addr_div.all_inner_texts() if p.strip()]
-                        if parts:
-                            address = ", ".join(parts[:2])
-                except:
-                    pass
-
-                # Essai 2 : sélecteurs sémantiques Planity
-                if not address:
-                    for addr_sel in [
-                        "[class*='address']",
-                        "[class*='location']",
-                        "[class*='city']",
-                        "address",
-                        "p[class*='address']",
-                    ]:
-                        try:
-                            el = card.locator(addr_sel).first
-                            if el.is_visible(timeout=500):
-                                address = el.inner_text().strip().replace("\n", ", ")
+                for addr_sel in [
+                    "[class*='business_item_search-module_address']",
+                    "[id='address-value']",
+                    "[class*='address-E34Px']",
+                    "[class*='address']",
+                    "[class*='location']",
+                ]:
+                    try:
+                        el = card.locator(addr_sel).first
+                        if el.is_visible(timeout=500):
+                            address = el.inner_text().strip().replace("\n", " ").strip()
+                            if address:
                                 break
-                        except:
-                            pass
+                    except:
+                        pass
 
                 # ── URL du profil ─────────────────────────────
                 profile_url = ""
-                try:
-                    href = card.locator("a").first.get_attribute("href")
-                    if href:
-                        profile_url = (
-                            "https://www.planity.com" + href
-                            if href.startswith("/") else href
-                        )
-                        profile_url = profile_url.split("?")[0]
-                except:
-                    pass
+                for url_sel in [
+                    "a[class*='business_item_search-module_title']",
+                    "a[class*='title-ryICj']",
+                    "h2 a",
+                ]:
+                    try:
+                        href = card.locator(url_sel).first.get_attribute("href")
+                        if href:
+                            profile_url = ("https://www.planity.com" + href
+                                           if href.startswith("/") else href)
+                            profile_url = profile_url.split("?")[0]
+                            break
+                    except:
+                        pass
 
                 # ── Services disponibles ──────────────────────
                 services = []
@@ -340,24 +415,34 @@ def scrape(category: str, location: str) -> dict:
                 print(f"  Adresse : {address[:60] if address else 'N/A'}")
                 print(f"  URL     : {profile_url[:60] if profile_url else 'N/A'}")
 
-                # ── Créneaux DOM (boutons de slots visibles) ──
+                # ── Créneaux DOM (aperçu) : date + période ──
                 dom_slots_text = []
-                for slot_sel in [
-                    'button[class*="hasAvailabilities"]',
-                    'button[class*="availab"]',
-                    'button[class*="slot"]',
-                    'button[class*="timeslot"]',
-                    'button[class*="time-slot"]',
-                    '[data-testid*="slot"]',
-                ]:
-                    try:
-                        texts = card.locator(slot_sel).all_inner_texts()
-                        if texts:
-                            dom_slots_text = [s.strip() for s in texts if s.strip()]
-                            break
-                    except:
-                        pass
+                try:
+                    day_cols = card.locator("div[class*='dispos']").all()
+                    for col in day_cols:
+                        btns = col.locator("button[class*='hasAvailabilities']").all()
+                        for idx, btn in enumerate(btns):
+                            try:
+                                label = btn.locator("span[class*='label']").first
+                                date_txt = label.inner_text().strip()
+                                period = "Matin" if idx == 0 else "Après-midi"
+                                if date_txt:
+                                    dom_slots_text.append(f"{date_txt} {period}")
+                            except:
+                                pass
+                except:
+                    pass
                 print(f"  Créneaux DOM : {len(dom_slots_text)}")
+
+                # ── Horaires exacts via page de réservation ──
+                exact_days = []
+                if profile_url:
+                    print(f"  Scraping horaires exacts...")
+                    exact_days = scrape_exact_slots(page, profile_url)
+                    # Pas besoin de go_back — on a utilisé un nouvel onglet
+                    pass
+                    total_exact = sum(len(d["times"]) for d in exact_days)
+                    print(f"  Horaires exacts : {total_exact} créneaux sur {len(exact_days)} jours")
 
                 # ── Intercepte l'appel AJAX en cliquant "suivant" ──
                 api_slots = []
@@ -389,16 +474,30 @@ def scrape(category: str, location: str) -> dict:
 
                 pro_id = i + 1
 
-                # Sauvegarde créneaux DOM
-                for slot_text in dom_slots_text:
-                    all_slots.append({
-                        "start_date":      slot_text,
-                        "end_date":        slot_text,
-                        "service_id":      "",
-                        "agenda_id":       "",
-                        "practitioner_id": pro_id,
-                        "source":          "dom",
-                    })
+                # Sauvegarde horaires exacts (priorité) ou DOM fallback
+                if exact_days:
+                    for day_info in exact_days:
+                        for t in day_info["times"]:
+                            slot_str = f"{day_info['day_str']} {day_info['date_str']} {t}"
+                            all_slots.append({
+                                "start_date":      slot_str,
+                                "end_date":        slot_str,
+                                "service_id":      "",
+                                "agenda_id":       "",
+                                "practitioner_id": pro_id,
+                                "source":          "exact",
+                            })
+                else:
+                    # Fallback DOM si la page de réservation n'a pas chargé
+                    for slot_text in dom_slots_text:
+                        all_slots.append({
+                            "start_date":      slot_text,
+                            "end_date":        slot_text,
+                            "service_id":      "",
+                            "agenda_id":       "",
+                            "practitioner_id": pro_id,
+                            "source":          "dom",
+                        })
 
                 # Sauvegarde créneaux API
                 for slot in api_slots:
@@ -415,7 +514,7 @@ def scrape(category: str, location: str) -> dict:
                     "city":        location,
                     "profile_url": profile_url,
                     "services":    services,
-                    "slots_count": total,
+                    "slots_count": (sum(len(d["times"]) for d in exact_days) if exact_days else len(dom_slots_text)) + len(api_slots),
                     "agenda_ids":  list({s["agenda_id"] for s in api_slots if s.get("agenda_id")}),
                 })
 

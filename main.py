@@ -331,7 +331,7 @@ Règles :
 - intent="book" si réservation demandée (rdv médical, coiffeur, spa, etc.), sinon "chat"
 - platform="doctolib" pour tout ce qui est médical (médecin, spécialiste, kiné...)
 - platform="planity" pour tout ce qui est bien-être/beauté (coiffeur, barbier, spa, manucure, massage, sophrologue, naturopathe...)
-- preferred_date : date précise → "YYYY-MM-DD" (ex: "17 avril"→"{now.year}-04-17", "demain"→"{tomorrow_date}", "après-demain"→"{after_tomorrow_date}")
+- preferred_date : date précise → "YYYY-MM-DD" (ex: "17 avril"→"{now.year}-04-17", "demain"→"{tomorrow_date}", "après-demain"→"{after_tomorrow_date}", "aujourd'hui"/"ce matin"/"cet après-midi"/"ce soir"/"maintenant"→"{now.strftime('%Y-%m-%d')}")
 - preferred_day_num : lundi=0,mardi=1,mercredi=2,jeudi=3,vendredi=4,samedi=5,dimanche=6
 - preferred_hours : matin=[8,12], après-midi=[13,18], soir=[17,20], après le travail=[18,20], null si non précisé
 - message : résume en 1 phrase ce que tu as compris"""
@@ -448,7 +448,7 @@ def crawl_planity_auto(req: PlanityRequest):
 
 @app.post("/recommend/planity")
 def recommend_planity(req: RecommendRequest):
-    """Recommande les meilleurs créneaux Planity."""
+    """Recommande les meilleurs créneaux Planity — scoring Calendar+Maps si dispo."""
     weights   = build_weights(req.preferences)
     engine    = ScoringEngine(weights)
     optimizer = Optimizer(engine)
@@ -462,15 +462,80 @@ def recommend_planity(req: RecommendRequest):
                     "practitioners_found": 0, "weights_used": weights.as_dict(),
                     "data_source": "planity", "practitioners_map": {}, "warning": None}
 
-        up = PlanityUserPreferences(
-            preferred_hours=(req.preferences.preferred_hours_start, req.preferences.preferred_hours_end),
-            preferred_day=req.preferences.preferred_day,
-        )
-        scoring_slots = PlanityAdapter(up).convert(raw_slots)
+        prac_map = {p.name: p.profile_url for p in pros}
+
+        # ── Scoring Calendar + Maps (identique à /recommend Doctolib) ──
+        scoring_source = "mock"
+        scoring_slots  = []
+
+        try:
+            scheduler = _scheduler
+            if not scheduler:
+                raise Exception("CalendarScheduler non disponible")
+
+            scheduler.user_location = req.user_origin if req.user_origin else req.location
+
+            # Convertit les slots Planity en format enrichi pour CalendarScheduler
+            # On réutilise PlanityAdapter._parse_date pour normaliser les dates
+            adapter_parser = PlanityAdapter(PlanityUserPreferences())
+            pro_map_by_id = {p.id: p for p in pros}
+
+            raw_slots_enriched = []
+            for rs in raw_slots:
+                if not rs.start_date:
+                    continue
+                try:
+                    dt = adapter_parser._parse_date(rs.start_date)
+                    iso_date = dt.strftime("%Y-%m-%dT%H:%M:%S")
+                except Exception:
+                    continue
+                pro = rs.pro
+                raw_slots_enriched.append({
+                    "start_date": iso_date,
+                    "address":    pro.address or req.location,
+                    "name":       pro.name,
+                })
+
+            scoring_slots = scheduler.score_slots(
+                raw_slots_enriched,
+                preferred_hours = [req.preferences.preferred_hours_start, req.preferences.preferred_hours_end],
+                preferred_day   = req.preferences.preferred_day,
+                preferred_date  = req.preferences.preferred_date,
+                location        = req.location,
+            )
+            scoring_source = "calendar+maps"
+            print(f"[Planity] Scoring Calendar+Maps : {len(scoring_slots)} slots")
+
+        except Exception as e:
+            print(f"[Planity] Fallback scoring mock : {e}")
+            # Fallback PlanityAdapter (scoring estimé sans Calendar/Maps)
+            up = PlanityUserPreferences(
+                preferred_hours=(req.preferences.preferred_hours_start, req.preferences.preferred_hours_end),
+                preferred_day=req.preferences.preferred_day,
+                preferred_date=req.preferences.preferred_date,
+            )
+            scoring_slots  = PlanityAdapter(up).convert(raw_slots)
+            scoring_source = "mock"
+
+        # ── Vérification finale ──────────────────────────────────
+        if not scoring_slots:
+            day_names = {0:"lundi",1:"mardi",2:"mercredi",3:"jeudi",4:"vendredi",5:"samedi",6:"dimanche"}
+            if req.preferences.preferred_date:
+                warning = f"Aucun créneau disponible le {req.preferences.preferred_date}."
+            elif req.preferences.preferred_day is not None:
+                warning = f"Aucun créneau disponible le {day_names.get(req.preferences.preferred_day, 'ce jour')}."
+            else:
+                warning = "Aucun créneau disponible."
+            return {
+                "no_slots": True, "message": warning,
+                "best": None, "ranked": [], "total_slots_analyzed": 0,
+                "practitioners_found": len(pros), "weights_used": weights.as_dict(),
+                "data_source": "planity", "scoring_source": scoring_source,
+                "practitioners_map": prac_map, "warning": warning,
+            }
+
         ranked = optimizer.rank(scoring_slots)
         top    = ranked[:req.top_n]
-
-        prac_map = {p.name: p.profile_url for p in pros}
 
         return {
             "best":                 to_slot_result(0, ranked[0]).dict(),
@@ -479,6 +544,7 @@ def recommend_planity(req: RecommendRequest):
             "practitioners_found":  len(pros),
             "weights_used":         weights.as_dict(),
             "data_source":          "planity",
+            "scoring_source":       scoring_source,
             "practitioners_map":    prac_map,
             "warning":              None,
         }

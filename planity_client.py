@@ -141,6 +141,7 @@ def load_planity_data(path: str = PLANITY_SLOTS_FILE):
 class PlanityUserPreferences:
     preferred_hours:    tuple = (9, 18)
     preferred_day:      Optional[int] = None   # 0=lundi…6=dimanche
+    preferred_date:     Optional[str] = None   # "YYYY-MM-DD" — filtre strict
     busy_days:          list  = field(default_factory=list)
 
 
@@ -153,15 +154,83 @@ class PlanityAdapter:
     def __init__(self, prefs: PlanityUserPreferences = None):
         self.prefs = prefs or PlanityUserPreferences()
 
+    # Mapping jours abrégés français → weekday
+    DAY_MAP = {
+        "lun": 0, "mar": 1, "mer": 2, "jeu": 3,
+        "ven": 4, "sam": 5, "dim": 6,
+    }
+    # Heures par défaut selon la période
+    PERIOD_HOURS = {
+        "matin": 9,
+        "après-midi": 14,
+        "apres-midi": 14,
+        "soir": 18,
+    }
+
+    # Mapping mois français abrégés
+    MONTH_MAP = {
+        "janv": 1, "févr": 2, "mars": 3, "avr": 4, "mai": 5, "juin": 6,
+        "juil": 7, "août": 8, "sept": 9, "oct": 10, "nov": 11, "déc": 12,
+    }
+
     def _parse_date(self, s: str) -> datetime:
+        """
+        Parse les formats Planity :
+        - "mercredi 15 avr. 13:30"  → 2026-04-15 13:30 (format exact)
+        - "Mer.15 Matin"            → mercredi 15 à 9h  (format DOM)
+        - "Jeu.16 Après-midi"       → jeudi 16 à 14h
+        - "10:30"                   → aujourd'hui à 10h30
+        - ISO datetime              → tel quel
+        """
         s = s.strip()
+        today = date.today()
+
+        # Format exact : "mercredi 15 avr. 13:30"
+        # Ou : "lundi 27 avr. 10:00"
+        import re
+        m = re.match(r"\w+\s+(\d{1,2})\s+(\w+)\.?\s+(\d{1,2}):(\d{2})", s)
+        if m:
+            day_num = int(m.group(1))
+            month_abbr = m.group(2).lower().rstrip(".")
+            hour = int(m.group(3))
+            minute = int(m.group(4))
+            month = self.MONTH_MAP.get(month_abbr, today.month)
+            year = today.year
+            if month < today.month or (month == today.month and day_num < today.day):
+                year += 1
+            try:
+                return datetime(year, month, day_num, hour, minute)
+            except:
+                pass
+
+        # Format Planity DOM : "Mer.15 Matin" ou "Ven.17 Après-midi"
+        parts = s.split(" ")
+        if len(parts) >= 2 and "." in parts[0]:
+            try:
+                day_abbr = parts[0].split(".")[0].lower()
+                day_num  = int(parts[0].split(".")[1])
+                period   = " ".join(parts[1:]).lower()
+                hour     = self.PERIOD_HOURS.get(period, 9)
+
+                # Trouve le prochain mois/jour correspondant
+                month = today.month
+                year  = today.year
+                if day_num < today.day:
+                    # Mois suivant
+                    month = month + 1 if month < 12 else 1
+                    if month == 1: year += 1
+
+                return datetime(year, month, day_num, hour, 0)
+            except:
+                pass
+
         # Heure seule : "10:30" ou "10h30"
         if len(s) <= 5 and (":" in s or "h" in s):
             s = s.replace("h", ":")
             h, *rest = s.split(":")
             m = int(rest[0]) if rest else 0
-            today = date.today()
             return datetime(today.year, today.month, today.day, int(h), m)
+
         try:
             return datetime.fromisoformat(s)
         except:
@@ -173,6 +242,14 @@ class PlanityAdapter:
             day = rs.start_date[:10]
             day_density[day] = day_density.get(day, 0) + 1
 
+        # Parse preferred_date une seule fois
+        target_date = None
+        if self.prefs.preferred_date:
+            try:
+                target_date = datetime.strptime(self.prefs.preferred_date, "%Y-%m-%d").date()
+            except Exception:
+                pass
+
         slots = []
         for rs in raw_slots:
             if not rs.start_date:
@@ -180,16 +257,34 @@ class PlanityAdapter:
             dt      = self._parse_date(rs.start_date)
             day_key = rs.start_date[:10]
 
+            # Filtre strict par date si précisée
+            if target_date:
+                if dt.date() != target_date:
+                    continue  # ignore les créneaux qui ne sont pas ce jour
+                preference = 1.0  # date parfaite
+            else:
+                preference = self._preference(dt.hour, dt.weekday())
+
             wrong_day = (
                 self.prefs.preferred_day is not None and
+                target_date is None and  # pas de filtre date → utilise le jour
                 dt.weekday() != self.prefs.preferred_day
             )
+
+            # Ajuste la préférence horaire même quand date filtrée
+            if target_date:
+                h_start, h_end = self.prefs.preferred_hours
+                if h_start <= dt.hour < h_end:
+                    preference = 1.0
+                else:
+                    distance = min(abs(dt.hour - h_start), abs(dt.hour - h_end))
+                    preference = max(0.3, 1.0 - distance * 0.15)
 
             slots.append(Slot(
                 time=f"{rs.pro.name} — {dt.strftime('%a %d/%m %H:%M')}",
                 conflict=1.0 if wrong_day else 0.0,
                 interruption=self._interruption(dt.hour),
-                preference=self._preference(dt.hour, dt.weekday()),
+                preference=preference,
                 travel=self._travel(rs.pro),
                 fatigue=self._fatigue(day_key, day_density),
             ))
